@@ -1,0 +1,30 @@
+{
+  "home": {
+    "you": "आप",
+    "ashrams": "आश्रम",
+    "live": "लाइव",
+    "compatibility": "संगतता",
+    "goodMorning": "शुभ प्रभात",
+    "goodAfternoon": "शुभ दोपहर",
+    "goodEvening": "शुभ संध्या",
+    "goodNight": "शुभ रात्रि",
+    "moreInfo": "अधिक जानकारी",
+    "daily": "आज",
+    "tomorrow": "कल",
+    "weekly": "इस सप्ताह",
+    "monthly": "इस महीने",
+    "yearly": "इस वर्ष",
+    "readMore": "और पढ़ें",
+    "readLess": "कम पढ़ें",
+    "showFullMonth": "पूरा महीना देखें",
+    "todayFortune": "आज का भाग्य",
+    "luckySigns": "शुभ संकेत",
+    "luckyColor": "लकी रंग",
+    "luckyNumber": "लकी नंबर",
+    "auspiciousTime": "शुभ समय",
+    "dailyMantras": "दैनिक मंत्र",
+    "otherTools": "अन्य उपकरण",
+    "numerology": "अंकशास्त्र",
+    "tarotReading": "टैरो रीडिंग"
+  }
+}

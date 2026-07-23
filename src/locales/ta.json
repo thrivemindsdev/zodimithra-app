@@ -1,0 +1,30 @@
+{
+  "home": {
+    "you": "நீங்கள்",
+    "ashrams": "ஆசிரமங்கள்",
+    "live": "லைவ்",
+    "compatibility": "பொருத்தம்",
+    "goodMorning": "காலை வணக்கம்",
+    "goodAfternoon": "மதிய வணக்கம்",
+    "goodEvening": "மாலை வணக்கம்",
+    "goodNight": "இரவு வணக்கம்",
+    "moreInfo": "கூடுதல் தகவல்கள்",
+    "daily": "இன்று",
+    "tomorrow": "நாளை",
+    "weekly": "இந்த வாரம்",
+    "monthly": "இந்த மாதம்",
+    "yearly": "இந்த ஆண்டு",
+    "readMore": "மேலும் படிக்க",
+    "readLess": "சுருக்கமாகப் படிக்க",
+    "showFullMonth": "முழு மாதத்தைக் காட்டு",
+    "todayFortune": "இன்றைய அதிர்ஷ்டம்",
+    "luckySigns": "அதிர்ஷ்ட அறிகுறிகள்",
+    "luckyColor": "அதிர்ஷ்ட நிறம்",
+    "luckyNumber": "அதிர்ஷ்ட எண்",
+    "auspiciousTime": "நல்ல நேரம்",
+    "dailyMantras": "தினசரி மந்திரங்கள்",
+    "otherTools": "பிற கருவிகள்",
+    "numerology": "எண் கணிதம்",
+    "tarotReading": "டாரோட் வாசிப்பு"
+  }
+}

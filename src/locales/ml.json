@@ -1,0 +1,30 @@
+{
+  "home": {
+    "you": "നിങ്ങൾ",
+    "ashrams": "ആശ്രമങ്ങൾ",
+    "live": "ലൈവ്",
+    "compatibility": "പൊരുത്തം",
+    "goodMorning": "സുപ്രഭാതം",
+    "goodAfternoon": "ശുഭ ഉച്ചനേരം",
+    "goodEvening": "ശുഭ സായാഹ്നം",
+    "goodNight": "ശുഭരാത്രി",
+    "moreInfo": "കൂടുതൽ വിവരങ്ങൾ",
+    "daily": "ഇന്ന്",
+    "tomorrow": "നാളെ",
+    "weekly": "ഈ ആഴ്ച",
+    "monthly": "ഈ മാസം",
+    "yearly": "ഈ വർഷം",
+    "readMore": "കൂടുതൽ വായിക്കുക",
+    "readLess": "ചുരുക്കി വായിക്കുക",
+    "showFullMonth": "പൂർണ്ണ മാസം കാണിക്കുക",
+    "todayFortune": "ഇന്നത്തെ ഭാഗ്യം",
+    "luckySigns": "ഭാഗ്യ ചിഹ്നങ്ങൾ",
+    "luckyColor": "ഭാഗ്യ നിറം",
+    "luckyNumber": "ഭാഗ്യ നമ്പർ",
+    "auspiciousTime": "ശുഭ മുഹൂർത്തം",
+    "dailyMantras": "ദിനചര്യ മന്ത്രങ്ങൾ",
+    "otherTools": "മറ്റു ഉപകരണങ്ങൾ",
+    "numerology": "സംഖ്യാശാസ്ത്രം",
+    "tarotReading": "ടാരറ്റ് കാർഡ് റീഡിംഗ്"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "home": {
+    "you": "మీరు",
+    "ashrams": "ఆశ్రమాలు",
+    "live": "లైవ్",
+    "compatibility": "సరిపోలిక",
+    "goodMorning": "శుభోదయం",
+    "goodAfternoon": "శుభ మధ్యాహ్నం",
+    "goodEvening": "శుభ సాయంత్రం",
+    "goodNight": "శుభరాత్రి",
+    "moreInfo": "మరింత సమాచారం",
+    "daily": "ఈరోజు",
+    "tomorrow": "రేపు",
+    "weekly": "ఈ వారం",
+    "monthly": "ఈ నెల",
+    "yearly": "ఈ సంవత్సరం",
+    "readMore": "మరింత చదవండి",
+    "readLess": "తక్కువ చదవండి",
+    "showFullMonth": "పూర్తి నెల చూడండి",
+    "todayFortune": "నేటి భవిష్యత్తు",
+    "luckySigns": "అదృష్ట సంకేతాలు",
+    "luckyColor": "అదృష్ట రంగు",
+    "luckyNumber": "అదృష్ట సంఖ్య",
+    "auspiciousTime": "శుభ సమయం",
+    "dailyMantras": "నిత్య మంత్రాలు",
+    "otherTools": "ఇతర పరికరాలు",
+    "numerology": "సంఖ్యాశాస్త్రం",
+    "tarotReading": "టారో రీడింగ్"
+  }
+}

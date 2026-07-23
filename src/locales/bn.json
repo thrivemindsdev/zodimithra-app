@@ -1,0 +1,30 @@
+{
+  "home": {
+    "you": "আপনি",
+    "ashrams": "আশ্রম",
+    "live": "লাইভ",
+    "compatibility": "সামঞ্জস্যতা",
+    "goodMorning": "শুভ সকাল",
+    "goodAfternoon": "শুভ অপরাহ্ন",
+    "goodEvening": "শুভ সন্ধ্যা",
+    "goodNight": "শুভ রাত্রি",
+    "moreInfo": "আরও তথ্য",
+    "daily": "আজ",
+    "tomorrow": "আগামীকাল",
+    "weekly": "এই সপ্তাহ",
+    "monthly": "এই মাস",
+    "yearly": "এই বছর",
+    "readMore": "আরও পড়ুন",
+    "readLess": "সংক্ষেপে পড়ুন",
+    "showFullMonth": "সম্পূর্ণ মাস দেখুন",
+    "todayFortune": "আজকের ভাগ্য",
+    "luckySigns": "ভাগ্যবান চিহ্ন",
+    "luckyColor": "শুভ রং",
+    "luckyNumber": "শুভ সংখ্যা",
+    "auspiciousTime": "শুভ সময়",
+    "dailyMantras": "দৈনিক মন্ত্র",
+    "otherTools": "অন্যান্য সরঞ্জাম",
+    "numerology": "সংখ্যা জ্যোতিষ",
+    "tarotReading": "ট্যারোট রিডিং"
+  }
+}

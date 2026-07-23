@@ -1,0 +1,112 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+package-lock.json
+.env
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# # IDEs and OS
+# .DS_Store
+# .idea/
+# .vscode/*
+# !.vscode/extensions.json
+# *.suo
+# *.ntvs*
+# *.njsproj
+# *.sln
+# *.sw?
+# *.iml
+
+# # Node / Dependencies
+# node_modules/
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+# bun.lockb
+
+# # Web Build Outputs
+# dist/
+# dist-ssr/
+# build/
+
+# # External / Local Environment Secrets
+# .env
+# .env.local
+# .env.*.local
+# *.local
+# local.properties
+# *.keystore
+# !debug.keystore
+
+# # Logs
+# logs
+# *.log
+# npm-debug.log*
+# yarn-debug.log*
+# yarn-error.log*
+# pnpm-debug.log*
+# lerna-debug.log*
+
+# # iOS (Capacitor & Xcode)
+# # --------------------------------------------------------------------
+# ios/App/build/
+# ios/App/Pods/
+# ios/App/Frameworks/
+# ios/App/DevelopmentPods/
+# ios/App/DerivedData/
+# ios/App/Index.noindex/
+# ios/App/Config/GoogleService-Info.plist
+# *.pbxuser
+# !default.pbxuser
+# *.mode1v3
+# !default.mode1v3
+# *.mode2v3
+# !default.mode2v3
+# *.perspectivev3
+# !default.perspectivev3
+# xcuserdata/
+# *.xccheckout
+# *.moved-aside
+# *.hmap
+# *.ipa
+# *.xcuserstate
+# **/.xcode.env.local
+
+# # Android (Capacitor & Android Studio)
+# # --------------------------------------------------------------------
+# android/build/
+# android/app/build/
+# android/.gradle/
+# android/captures/
+# .gradle/
+# .cxx/
+# *.hprof
+# .kotlin/
+
+# # Capacitor Specific Web Asset Copies
+# # --------------------------------------------------------------------
+# # Capacitor automatically copies your web build folder into these 
+# # locations when you run 'npx cap sync'. They should not be tracked.
+# android/app/src/main/assets/public/
+# ios/App/App/public/

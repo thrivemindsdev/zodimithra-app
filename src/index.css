@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  --font-header: "Calistoga", serif;
+  --font-body: "Cactus Classical Serif", serif;
+  --font-body-content: "Inter", sans-serif;
+  --font-button: "Poppins", sans-serif;
+
+  --color-primary: #2d126b;
+  --color-secondary: #d1197e;
+  --color-text-primary: #0a0a0a;
+  --color-text-secondary: #555555;
+  --color-text-gold: #EBB863;
+  --color-light-bg: #eeeaff;
+  --color-input-bg: #ececec80;
+  --color-input-border: #ececec;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-placeholder: #757575;
+}
+
+@layer base {
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  button {
+    @apply font-button bg-none cursor-pointer p-0;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+input[type="date"],
+input[type="time"] {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+.text-gradient {
+  background: -webkit-linear-gradient(45deg, #D1197E, #D1197E, #2D126B, #2D126B);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-linear {
+  background: -webkit-linear-gradient(45deg, #D1197E, #2D126B);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
