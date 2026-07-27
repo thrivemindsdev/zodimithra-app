@@ -1,9 +1,9 @@
 import { memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 import ArtImage from "@/assets/home/Art.png";
 import GreetingBg from "@/assets/home/Greetings.png";
+import { AvatarGroup } from "./AvatarGroup";
 
 interface HomeGreetingsProps {
   loading: boolean;
@@ -14,8 +14,11 @@ interface HomeGreetingsProps {
   moreInfo?: boolean;
 }
 
-const HomeGreetings = ({ loading, data, moreInfo = true }: HomeGreetingsProps) => {
-  const navigate = useNavigate();
+const HomeGreetings = ({
+  loading,
+  data,
+  moreInfo = true,
+}: HomeGreetingsProps) => {
   const { t } = useTranslation();
 
   const greeting = useMemo(() => {
@@ -68,15 +71,7 @@ const HomeGreetings = ({ loading, data, moreInfo = true }: HomeGreetingsProps) =
               {data?.name || "Guest"}
             </p>
 
-            {moreInfo && (
-              <button
-                type="button"
-                onClick={() => navigate("/family-members")}
-                className="mt-2 w-fit rounded-full bg-white px-5 py-2.5 text-xs font-body-content font-semibold text-black transition hover:bg-gray-100"
-              >
-                {t("home.viewDetails")}
-              </button>
-            )}
+            {moreInfo && <AvatarGroup />}
           </>
         )}
       </div>

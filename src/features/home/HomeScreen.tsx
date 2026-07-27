@@ -62,7 +62,7 @@ const HomeScreen = () => {
             isPremium={isPremium}
           />
         </div>
-        <HomeCalendar />
+        <HomeCalendar isPremium={isPremium} />
         <div className="px-4">
           <DailyMantras />
           <HomeTools />

@@ -10,7 +10,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-const HomeCalendar = () => {
+const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -80,6 +80,14 @@ const HomeCalendar = () => {
   const { data } = useGetAffirmationQuery();
 
   const affirmation = data?.description;
+
+  const handleSubmit = () => {
+    if (isPremium) {
+      navigate("/calendar");
+    } else {
+      navigate("/premium");
+    }
+  };
 
   return (
     <section className="mt-6 relative overflow-hidden">
@@ -204,7 +212,7 @@ const HomeCalendar = () => {
 
         {/* Route Action Button */}
         <button
-          onClick={() => navigate("/calendar")}
+          onClick={handleSubmit}
           className="bg-linear-to-r from-button-primary to-button-secondary w-full rounded-3xl py-3 mt-6 text-white font-body-content uppercase text-xs font-semibold tracking-wider shadow-md hover:opacity-95 transition"
         >
           {t("calendar.showFullMonth")}
