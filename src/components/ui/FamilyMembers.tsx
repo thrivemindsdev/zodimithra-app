@@ -24,6 +24,7 @@ import SagittariusImage from "@/assets/signs/SAGITTARUIS.png";
 import CapricornImage from "@/assets/signs/CAPRICON.png";
 import AquariusImage from "@/assets/signs/AQUARIUS.png";
 import PiscesImage from "@/assets/signs/PISCES.png";
+import { useActiveUserStore } from "@/store/useActiveUserStore";
 
 const zodiacSigns: Record<string, string> = {
   Aries: AriesImage,
@@ -51,6 +52,7 @@ const FamilyMembers = () => {
   const { data: familyMembersData, isLoading } = useGetFamilyMembersQuery();
   const { data: userData, isLoading: isUserLoading } = useGetUserDetailsQuery();
   const isPremium = userData?.is_subscribed;
+  const { setActiveUser } = useActiveUserStore();
 
   const filteredMembers =
     familyMembersData &&
@@ -121,6 +123,10 @@ const FamilyMembers = () => {
           {filteredMembers?.map((member: any) => (
             <div
               key={member.user_id}
+              onClick={() => {
+                setActiveUser(member);
+                navigate("/home");
+              }}
               className="flex items-center rounded-3xl border border-gray-200 border-t-0 bg-white p-3 shadow-[0_1px_0_rgba(0,0,0,0.12)] transition-all duration-300 hover:shadow-md"
             >
               {/* Avatar */}

@@ -58,7 +58,7 @@ const GemStoneResult = () => {
       />
       <BodyLayout>
         {/* Circle Showcase Header */}
-        <div className="relative -mb-10 z-10 flex justify-center items-center">
+        <div className="relative mb-10 z-10 flex justify-center items-center">
           <div className="w-56 h-56 rounded-full border-2 border-dashed border-purple-200 bg-purple-50/50 flex justify-center items-center relative p-4">
             {/* Background decorative sparkles */}
             <Sparkles className="w-4 h-4 text-secondary absolute top-8 left-8 opacity-70" />
@@ -75,7 +75,7 @@ const GemStoneResult = () => {
         </div>
 
         {/* Card Body */}
-        <div className="w-full font-body bg-white rounded-3xl pt-14 pb-8 px-6 shadow-sm border border-gray-100 flex flex-col items-center text-center">
+        <div className="w-full font-body bg-white rounded-3xl pb-8 px-6 card-shadow flex flex-col items-center text-center">
           {/* Header Badge */}
           <span className="text-sm font-bold tracking-[2px] text-secondary uppercase pt-5 pb-2">
             {t("gemstone.recommanded")}

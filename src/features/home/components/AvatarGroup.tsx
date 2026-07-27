@@ -1,4 +1,5 @@
 import { useGetFamilyMembersQuery } from "@/queries/userQueries";
+import { useActiveUserStore } from "@/store/useActiveUserStore";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -28,6 +29,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
   maxVisible = 5,
 }) => {
   const navigate = useNavigate();
+  const { clearActiveUser } = useActiveUserStore();
   const { data, isLoading } = useGetFamilyMembersQuery();
   const [imageErrors, setImageErrors] = useState<
     Record<string | number, boolean>
@@ -71,7 +73,10 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = ({
   return (
     <div
       className="flex items-center -space-x-4 mt-3"
-      onClick={() => navigate("/family-members")}
+      onClick={() => {
+        clearActiveUser();
+        navigate("/family-members");
+      }}
     >
       {visibleUsers.map((user: any, index: number) => {
         // Safe key assignment checking both `user_id` and `id`

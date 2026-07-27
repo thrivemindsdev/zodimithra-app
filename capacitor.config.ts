@@ -5,9 +5,7 @@ const config: CapacitorConfig = {
   appName: "ZodiMithra",
   webDir: "dist",
   server: {
-    // url: "http://10.234.162.172:5172",
-    // url: "http://192.168.20.107:5172",
-    url: "http://192.168.37.49:5172",
+    url: "https://customer.zodimithra.com/",
     cleartext: true,
     androidScheme: "https",
   },
