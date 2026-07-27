@@ -4,6 +4,7 @@ import poojaBookingImg from "@/assets/well-being/pooja.jpg";
 import vastuSastraImg from "@/assets/well-being/vastusastra.jpg";
 import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";
+import { useNavigate } from "react-router-dom";
 
 interface CardData {
   id: string;
@@ -52,6 +53,7 @@ const cardsData: CardData[] = [
 ];
 
 const WellBeingScreen = () => {
+  const navigate = useNavigate();
   return (
     <>
       <Header title="WellBeing" subtitle="Find your perfect Astrologer" />
@@ -61,6 +63,11 @@ const WellBeingScreen = () => {
             <div
               key={card.id}
               className="relative group h-44 rounded-2xl overflow-hidden shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-[1.01]"
+              onClick={() =>
+                card.id === "1"
+                  ? navigate("/mantras")
+                  : navigate("/coming-soon")
+              }
             >
               {/* Background Image */}
               <img

@@ -1,16 +1,42 @@
 import { memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import ArtImage from "@/assets/home/Art.png";
 import GreetingBg from "@/assets/home/Greetings.png";
+import AquariusImage from "@/assets/signs/AQUARIUS.png";
+import AriesImage from "@/assets/signs/ARIES.png";
+import CancerImage from "@/assets/signs/CANCER.png";
+import CapricornImage from "@/assets/signs/CAPRICON.png";
+import GeminiImage from "@/assets/signs/GEMINI.png";
+import LeoImage from "@/assets/signs/LEO.png";
+import LibraImage from "@/assets/signs/LIBRA.png";
+import PiscesImage from "@/assets/signs/PISCES.png";
+import SagittariusImage from "@/assets/signs/SAGITTARUIS.png";
+import ScorpioImage from "@/assets/signs/SCORPION.png";
+import TaurusImage from "@/assets/signs/TAURUS.png";
+import VirgoImage from "@/assets/signs/VIRGO.png";
 import { AvatarGroup } from "./AvatarGroup";
+
+const zodiacSigns: Record<string, string> = {
+  Aries: AriesImage,
+  Taurus: TaurusImage,
+  Gemini: GeminiImage,
+  Cancer: CancerImage,
+  Leo: LeoImage,
+  Virgo: VirgoImage,
+  Libra: LibraImage,
+  Scorpio: ScorpioImage,
+  Sagittarius: SagittariusImage,
+  Capricorn: CapricornImage,
+  Aquarius: AquariusImage,
+  Pisces: PiscesImage,
+};
 
 interface HomeGreetingsProps {
   loading: boolean;
   data: {
     name?: string;
-    zodiac_sign?: string;
-  } | null;
+    zodiac_sign: string;
+  };
   moreInfo?: boolean;
 }
 
@@ -82,7 +108,7 @@ const HomeGreetings = ({
           <div className="h-48 w-32 animate-pulse rounded-xl bg-white/20" />
         ) : (
           <img
-            src={ArtImage}
+            src={zodiacSigns[data?.zodiac_sign]}
             alt={`${data?.zodiac_sign || "Zodiac"} sign icon`}
             className="h-48 w-auto max-w-none object-contain"
             loading="lazy"

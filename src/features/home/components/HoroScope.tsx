@@ -1,10 +1,11 @@
 import DurationTabs, { type TabId } from "@/components/common/DurationTabs";
 import { motion } from "framer-motion";
-import { ArrowRight, Gem } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { memo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface DetailItem {
+  icon: string | null;
   category_id: string | number;
   category: string;
   description: string;
@@ -36,7 +37,7 @@ const HoroScope = ({
     if (!scrollRef.current) return;
 
     const index = Math.round(
-      scrollRef.current.scrollLeft / scrollRef.current.clientWidth
+      scrollRef.current.scrollLeft / scrollRef.current.clientWidth,
     );
 
     setActive(index);
@@ -110,7 +111,8 @@ const HoroScope = ({
               >
                 <div className="mb-2 flex items-center gap-3">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#4F6685] text-white shadow-sm">
-                    <Gem className="h-4 w-4 stroke-[2.2]" />
+                    {/* <Gem className="h-4 w-4 stroke-[2.2]" /> */}
+                    <img src={item.icon ?? ""} className="h-4 w-4" />
                   </div>
 
                   {/* Header Text */}
