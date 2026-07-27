@@ -68,13 +68,10 @@ interface AuthStore {
   phoneNumber: string | null;
   token: string | null;
   hasOnboarded: boolean;
-  language: string;
   setPhoneNumber: (num: string) => void;
   clearPhoneNumber: () => void;
   setToken: (token: string) => void;
   clearToken: () => void;
-  setLanguage: (language: string) => void;
-  clearLanguage: () => void;
   setOnboarded: (status: boolean) => void;
   clearOnboarded: () => void;
   logout: () => void; // Convenient single action to reset auth state
@@ -87,7 +84,6 @@ export const useAuthStore = create<AuthStore>()(
       phoneNumber: null,
       token: null,
       hasOnboarded: false,
-      language: "en",
 
       // Phone Actions
       setPhoneNumber: (num) => set({ phoneNumber: num }),
@@ -96,10 +92,6 @@ export const useAuthStore = create<AuthStore>()(
       // Token Actions
       setToken: (token) => set({ token }),
       clearToken: () => set({ token: null }),
-
-      // Language Actions
-      setLanguage: (language) => set({ language }),
-      clearLanguage: () => set({ language: "" }),
 
       // Onboarding Actions
       setOnboarded: (status) => set({ hasOnboarded: status }),
@@ -111,7 +103,6 @@ export const useAuthStore = create<AuthStore>()(
           phoneNumber: null,
           token: null,
           hasOnboarded: false,
-          language: "",
         }),
     }),
     {

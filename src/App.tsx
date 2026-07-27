@@ -20,9 +20,8 @@ function App() {
   }, []);
 
   // Show splash screen while reading native disk storage
-  if (!isHydrated) {
-    return <div>Loading...</div>;
-  }
+  if (!isHydrated) return;
+  
   return (
     <QueryProvider>
       <AppRoutes />

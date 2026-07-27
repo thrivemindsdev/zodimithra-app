@@ -1,32 +1,41 @@
 import DateInput from "@/components/common/DateInput";
 import Input from "@/components/common/Input";
 import PlaceInput from "@/components/common/PlaceInput";
-import RadioGroup from "@/components/common/RadioGroup";
 import TimeInput from "@/components/common/TimeInput";
 import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";
-import { useGetUserDetailsQuery } from "@/queries/userQueries";
+import { useGetUserDetailsQuery, USER_QUERY_KEYS } from "@/queries/userQueries";
+import { updateUserDetailsApi } from "@/services/user.api";
 import { getCroppedImg } from "@/utils/cropImage";
+import { useQueryClient } from "@tanstack/react-query";
 import { Camera, User, X } from "lucide-react";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import Cropper, { type Area } from "react-easy-crop";
-import { RELATIONSHIP_OPTIONS, type FormState } from "../auth/BirthDetailsForm";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { type FormState } from "../auth/BirthDetailsForm";
 
 const EditProfile = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data: userDetails } = useGetUserDetailsQuery();
 
   const [formData, setFormData] = useState<FormState>({
-    fullName: userDetails?.name ?? "",
-    dob: userDetails?.date_of_birth ?? "",
-    tob: userDetails?.birth_time ?? "",
-    pob: userDetails?.birth_place ?? "",
-    lat: userDetails?.latitude ?? "",
-    lon: userDetails?.longitude ?? "",
-    gender: userDetails?.gender ?? "",
-    relationshipStatus: userDetails?.marital_status ?? "",
-    profileImage: userDetails?.image_url ?? "",
-    phone: userDetails?.phone ?? "",
+    fullName: "",
+    dob: "",
+    tob: "",
+    pob: "",
+    lat: "",
+    lon: "",
+    gender: "",
+    relationshipStatus: "",
+    profileImage: "",
+    phone: "",
   });
+
+  // Track actual cropped File object for FormData submission
+  const [croppedFile, setCroppedFile] = useState<File | null>(null);
 
   // Image Cropper States
   const [tempImage, setTempImage] = useState<string | null>(null);
@@ -34,6 +43,24 @@ const EditProfile = () => {
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [isCroppingModalOpen, setIsCroppingModalOpen] = useState(false);
+
+  // Sync state when React Query fetches user details
+  useEffect(() => {
+    if (userDetails) {
+      setFormData({
+        fullName: userDetails.name ?? "",
+        dob: userDetails.date_of_birth ?? "",
+        tob: userDetails.birth_time ?? "",
+        pob: userDetails.birth_place ?? "",
+        lat: userDetails.latitude ?? "",
+        lon: userDetails.longitude ?? "",
+        gender: userDetails.gender ?? "",
+        relationshipStatus: userDetails.marital_status ?? "",
+        profileImage: userDetails.image_url ?? userDetails.image ?? "",
+        phone: userDetails.phone ?? "",
+      });
+    }
+  }, [userDetails]);
 
   const updateField = (field: keyof FormState, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -76,15 +103,16 @@ const EditProfile = () => {
     setCroppedAreaPixels(croppedPixels);
   };
 
-  // 3. Confirm crop and save base64 image into formData
+  // 3. Confirm crop, update image preview URL & store File object
   const handleCropSave = async () => {
     if (tempImage && croppedAreaPixels) {
       try {
-        const croppedImageBase64 = await getCroppedImg(
-          tempImage,
+        const { file, url } = await getCroppedImg(
+          tempImage, // FIXED: pass tempImage instead of formData.profileImage
           croppedAreaPixels,
         );
-        updateField("profileImage", croppedImageBase64);
+        updateField("profileImage", url); // Display preview URL in avatar
+        setCroppedFile(file); // Store File object to append in FormData
         setIsCroppingModalOpen(false);
         setTempImage(null);
       } catch (error) {
@@ -93,49 +121,54 @@ const EditProfile = () => {
     }
   };
 
-  // Extract profileImage away from the rest of the fields
+  // Check required text fields validation
   const { profileImage, ...requiredFields } = formData;
-
-  // Only check if required text fields are empty
   const isFormIncomplete = Object.values(requiredFields).some(
-    (val) => !val.trim(),
+    (val) => !val?.toString().trim(),
   );
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!isFormIncomplete) {
-      const formDeatils = new FormData();
+      try {
+        const formDetails = new FormData();
 
-      formDeatils.append("name", formData.fullName);
-      formDeatils.append("gender", formData.gender);
-      formDeatils.append("marital_status", formData.relationshipStatus ?? "");
-      formDeatils.append("date_of_birth", formData.dob ?? "");
-      formDeatils.append("birth_time", formData.tob ?? "");
-      formDeatils.append("birth_place", formData.pob ?? "");
-      formDeatils.append("latitude", formData.lat ?? "");
-      formDeatils.append("longitude", formData.lon ?? "");
-      formDeatils.append("role", "customer");
-      formDeatils.append("phone", formData.phone ?? "");
-      formDeatils.append("onboarding_completed", "1");
-      // formDeatils.append("current_location", currentPlace?.city ?? "");
-      formDeatils.append("profile_image", "");
+        formDetails.append("name", formData.fullName);
+        formDetails.append("gender", formData.gender);
+        formDetails.append("marital_status", formData.relationshipStatus ?? "");
+        formDetails.append("date_of_birth", formData.dob ?? "");
+        formDetails.append("birth_time", formData.tob ?? "");
+        formDetails.append("birth_place", formData.pob ?? "");
+        formDetails.append("latitude", formData.lat ?? "");
+        formDetails.append("longitude", formData.lon ?? "");
 
-      // const response = await RegistrationApi(formDeatils);
-      // if (response?.status === 200) {
-      //   navigate("/home");
-      // }
+        // FIXED: Only append image if a new cropped file exists
+        if (croppedFile) {
+          formDetails.append("image", croppedFile);
+        }
+
+        const response = await updateUserDetailsApi(formDetails);
+        if (response.status === 200) {
+          await queryClient.invalidateQueries({
+            queryKey: [USER_QUERY_KEYS.userDetails],
+          });
+          navigate("/profile");
+        }
+      } catch (error) {
+        console.error("Updating failed:", error);
+      }
     }
   };
 
   return (
     <>
       <Header
-        title="Edit Profile"
-        subtitle="Find your perfect Astrologer"
+        title={t("profile.editProfile")}
         showBackButton
+        redirectPath="/profile"
       />
       <BodyLayout>
-        <div className="p-4 rounded-2xl border border-gray-200">
+        <div className="p-4 font-body rounded-2xl border border-gray-200">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Profile Image Section */}
             <div className="flex flex-col items-center justify-center my-4">
@@ -170,13 +203,13 @@ const EditProfile = () => {
                 </label>
               </div>
 
-              <span className="text-xs text-gray-500 mt-2.5 font-medium sm:hidden">
+              <span className="text-xs font-body text-gray-500 mt-2.5 font-medium sm:hidden">
                 Tap camera icon to edit
               </span>
             </div>
 
             <Input
-              label="Full Name"
+              label={t("onboard.fullName")}
               name="fullName"
               icon={User}
               value={formData.fullName}
@@ -186,13 +219,13 @@ const EditProfile = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <DateInput
-                label="Date of Birth"
+                label={t("onboard.dateOfBirth")}
                 name="dob"
                 value={formData.dob}
                 onChange={handleInputChange}
               />
               <TimeInput
-                label="Time of Birth"
+                label={t("onboard.timeofBirth")}
                 name="tob"
                 value={formData.tob}
                 onChange={handleInputChange}
@@ -200,24 +233,17 @@ const EditProfile = () => {
             </div>
 
             <PlaceInput
-              label="Place of Birth"
+              label={t("onboard.placeOfBirth")}
               value={formData.pob}
               onChange={handlePlaceChange}
-            />
-
-            <RadioGroup
-              label="Relationship Status"
-              options={RELATIONSHIP_OPTIONS}
-              selectedValue={formData.relationshipStatus}
-              onChange={(val) => updateField("relationshipStatus", val)}
             />
 
             <button
               type="submit"
               disabled={isFormIncomplete}
-              className="w-full mt-6 bg-primary text-white font-semibold py-2.5 px-4 rounded-lg transition outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-6 font-body bg-primary text-white font-semibold py-2.5 px-4 rounded-lg transition outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Submit
+              {t("profile.saveChanges")}
             </button>
           </form>
         </div>
@@ -238,7 +264,6 @@ const EditProfile = () => {
               Crop Profile Picture
             </h3>
 
-            {/* Cropper Container - Needs relative position & specific height */}
             <div className="relative w-full h-64 bg-gray-900 rounded-xl overflow-hidden">
               <Cropper
                 image={tempImage}

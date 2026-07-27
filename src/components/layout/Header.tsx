@@ -10,6 +10,7 @@ interface HeaderProps {
   walletAmount?: number;
   onWalletClick?: () => void;
   onChatClick?: () => void;
+  redirectPath?: string;
 }
 
 const Header = ({
@@ -20,12 +21,17 @@ const Header = ({
   walletAmount = 0,
   onWalletClick,
   onChatClick,
+  redirectPath,
 }: HeaderProps) => {
   const navigate = useNavigate();
 
   const handleBack = useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
+    if (redirectPath) {
+      navigate(redirectPath);
+    } else {
+      navigate(-1);
+    }
+  }, [navigate, redirectPath]);
 
   return (
     <header className="flex items-center justify-between bg-white pb-4">

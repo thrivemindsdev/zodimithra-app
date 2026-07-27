@@ -1,4 +1,4 @@
-import { axiosSubInstance } from "@/lib/axios";
+import { axiosInstance, axiosSubInstance } from "@/lib/axios";
 import type { BirthDetailsParams } from "@/types/common.types";
 
 export const KundliMatchApi = async (data: any) => {
@@ -74,6 +74,45 @@ export const GetChartApi = async ({
     return response?.data;
   } catch (error) {
     console.error("Error fetching chart:", error);
+    throw error;
+  }
+};
+
+export const GetGemStoneFinderApi = async ({
+  dob,
+  lat,
+  lon,
+  tz,
+}: BirthDetailsParams) => {
+  try {
+    const response = await axiosSubInstance.get("/gemstone-finder", {
+      params: { dob, lat, lon, tz },
+    });
+
+    return response?.data?.data;
+  } catch (error) {
+    console.error("Error fetching gemstone finder:", error);
+    throw error;
+  }
+};
+
+export const MangalDoshApi = async (data: any) => {
+  try {
+    const response = await axiosInstance.post("/vedika/mangal-dosha", data);
+
+    return response?.data?.data;
+  } catch (error) {
+    console.error("Error mangal dosha:", error);
+    throw error;
+  }
+};
+
+export const NumerologyCalculatorApi = async (data: any) => {
+  try {
+    const response = await axiosInstance.post("/numerology/calculate", data);
+    return response?.data?.data;
+  } catch (error) {
+    console.error("Error mangal dosha:", error);
     throw error;
   }
 };

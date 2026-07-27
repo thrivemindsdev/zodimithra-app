@@ -9,6 +9,7 @@ const Numerology = () => {
         title="Numerology Calculator"
         subtitle="Find the luck wth the numbers"
         showBackButton
+        redirectPath="/home"
       />
       <BodyLayout>
         <NumerologyForm />

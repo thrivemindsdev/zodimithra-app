@@ -8,6 +8,7 @@ import {
 } from "@ishubhamx/panchangam-js";
 import { MapPin, Moon, Sunrise, Sunset } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface PanchangData {
   sunrise: string;
@@ -51,6 +52,7 @@ interface CalendarCardProps {
 }
 
 export const PanchangCard: React.FC = () => {
+  const { t } = useTranslation();
   const [panchangData, setPanchangData] = useState<PanchangData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -105,7 +107,6 @@ export const PanchangCard: React.FC = () => {
       // Fetch the true Panchang object matching the structure definition
       const panchang = getPanchangam(today, observer, { timezoneOffset });
 
-      // FIX: Access array properties through valid aliases exposed in the interface
       const activeTithi = panchang.tithis?.[0];
       const activeNakshatra = panchang.nakshatras?.[0];
       const activeYoga = panchang.yogas?.[0];
@@ -158,12 +159,71 @@ export const PanchangCard: React.FC = () => {
     }
   }, [location]);
 
+  // Show Skeleton loading when either location or panchang data calculation is pending
   if (isLocationLoading || loading) {
     return (
-      <div className="flex flex-col gap-2 justify-center items-center min-h-88 text-text-primary font-body font-medium text-sm">
-        <MapPin className="w-5 h-5 animate-bounce text-indigo-600" />
-        <div className="text-text-secondary text-xs font-normal">
-          Loading dynamic panchang attributes...
+      <div className="mx-auto max-w-md space-y-5 bg-gray-50/50 font-body antialiased pt-6">
+        {/* Header Skeleton */}
+        <div className="mx-auto flex max-w-md items-center justify-between rounded-3xl border border-gray-100 bg-white p-5 shadow-sm">
+          <div className="space-y-1.5">
+            <div className="h-5 w-20 animate-pulse rounded bg-gray-200" />
+            <div className="h-4 w-36 animate-pulse rounded bg-gray-200" />
+          </div>
+          <div className="h-9 w-28 animate-pulse rounded-full bg-gray-200" />
+        </div>
+
+        {/* 1. Sun & Moon Skeleton */}
+        <div className="flex items-center justify-between rounded-3xl border border-gray-100 bg-white p-5 shadow-sm">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className="flex flex-1 flex-col items-center">
+              <div className="mb-2 h-6 w-6 animate-pulse rounded-full bg-gray-200" />
+              <div className="h-3 w-12 animate-pulse rounded bg-gray-200" />
+              <div className="mt-1.5 h-4 w-14 animate-pulse rounded bg-gray-200" />
+            </div>
+          ))}
+        </div>
+
+        {/* 2. Muhurat & Kaal Blocks Skeleton */}
+        <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm">
+          <div className="mb-4 h-5 w-40 animate-pulse rounded bg-gray-200" />
+          <div className="grid grid-cols-2 gap-3">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={index}
+                className="space-y-1.5 rounded-2xl border border-indigo-200/50 bg-indigo-50/20 p-3 text-center"
+              >
+                <div className="mx-auto h-3 w-20 animate-pulse rounded bg-gray-200" />
+                <div className="mx-auto h-4 w-28 animate-pulse rounded bg-gray-200" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 3. Five Limbs Panchang List Skeleton */}
+        <div className="space-y-4 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+          <div className="h-5 w-32 animate-pulse rounded bg-gray-200" />
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="flex justify-between items-center">
+              <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
+              <div className="h-4 w-36 animate-pulse rounded bg-gray-200" />
+            </div>
+          ))}
+        </div>
+
+        {/* 4. Hindu Calendar Skeleton */}
+        <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm">
+          <div className="mb-4 h-5 w-36 animate-pulse rounded bg-gray-200" />
+          <div className="grid grid-cols-2 gap-3">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={index}
+                className="space-y-2 rounded-2xl border border-gray-100 bg-light-bg p-4 text-center"
+              >
+                <div className="mx-auto h-3 w-20 animate-pulse rounded bg-gray-200" />
+                <div className="mx-auto h-4 w-24 animate-pulse rounded bg-gray-200" />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -171,134 +231,160 @@ export const PanchangCard: React.FC = () => {
 
   if (locationError || !panchangData) {
     return (
-      <div className="max-w-md mx-auto p-5 text-center text-sm font-body bg-amber-50 text-amber-800 rounded-2xl border border-amber-200">
+      <div className="mx-auto max-w-md rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center font-body text-sm text-amber-800">
         Please verify that location permissions are granted to compute regional
         panchang parameters.
       </div>
     );
   }
 
-  // --- Tiny Reusable UI Blocks (Eliminates Tailwind Redundancy) ---
+  // --- Tiny Reusable UI Blocks ---
   const TimingItem: React.FC<TimingItemProps> = ({ icon, label, time }) => (
-    <div className="flex flex-col items-center flex-1">
+    <div className="flex flex-1 min-w-0 flex-col items-center">
       <div className="text-secondary mb-1">{icon}</div>
-      <span className="text-xs text-text-secondary font-medium">{label}</span>
-      <span className="text-sm font-bold text-text-primary mt-0.5">{time}</span>
+      <span className="w-full truncate text-center font-medium text-xs text-text-secondary">
+        {label}
+      </span>
+      <span className="mt-0.5 font-bold text-sm text-text-primary">{time}</span>
     </div>
   );
 
   const TimeBlock: React.FC<TimeBlockProps> = ({ label, value }) => (
-    <div className="bg-indigo-50/40 border border-indigo-200 rounded-2xl p-3 text-center">
-      <div className="text-[11px] text-text-secondary font-medium">{label}</div>
-      <div className="text-[13px] font-bold text-text-primary mt-0.5">
+    <div className="rounded-2xl border border-indigo-200 bg-indigo-50/40 p-3 text-center">
+      <div className="font-medium text-[11px] text-text-secondary">{label}</div>
+      <div className="mt-0.5 font-bold text-[13px] text-text-primary">
         {value}
       </div>
     </div>
   );
 
   const PanchangRow: React.FC<PanchangRowProps> = ({ label, value }) => (
-    <div className="flex justify-between items-start text-sm">
-      <span className="text-text-secondary font-medium">{label}</span>
-      <span className="text-text-primary font-medium text-right max-w-[70%]">
+    <div className="flex items-start justify-between text-sm">
+      <span className="font-medium text-text-secondary">{label}</span>
+      <span className="max-w-[70%] text-right font-medium text-text-primary">
         {value}
       </span>
     </div>
   );
 
   const CalendarCard: React.FC<CalendarCardProps> = ({ label, value }) => (
-    <div className="bg-light-bg border border-primary rounded-2xl p-4 text-center">
-      <div className="text-xs text-text-secondary font-medium">{label}</div>
-      <div className="text-sm font-body font-black text-text-primary mt-1 first-letter:capitalize">
+    <div className="rounded-2xl border border-primary bg-light-bg p-4 text-center">
+      <div className="font-medium text-xs text-text-secondary">{label}</div>
+      <div className="mt-1 font-body font-black text-sm text-text-primary first-letter:capitalize">
         {value}
       </div>
     </div>
   );
 
   return (
-    <div className="max-w-md mx-auto pt-6 bg-gray-50/50 space-y-5 font-body selection:bg-indigo-100 antialiased">
-      <div className="max-w-md mx-auto p-5 bg-white rounded-3xl shadow-sm border border-gray-100 flex justify-between items-center font-body selection:bg-indigo-100 antialiased">
+    <div className="mx-auto max-w-md space-y-5 bg-gray-50/50 font-body antialiased selection:bg-indigo-100 pt-6">
+      <div className="mx-auto flex max-w-md items-center justify-between rounded-3xl border border-gray-100 bg-white p-5 font-body antialiased shadow-sm selection:bg-indigo-100">
         {/* Date Information */}
         <div className="flex flex-col">
-          <h1 className="text-lg font-body font-bold text-primary">Today</h1>
-          <span className="text-sm text-text-secondary font-medium mt-0.5">
+          <h1 className="font-body font-bold text-lg text-primary">
+            {t("panchang.today", { defaultValue: "Today" })}
+          </h1>
+          <span className="mt-0.5 font-medium text-sm text-text-secondary">
             {formattedDate}
           </span>
         </div>
 
         {/* Location Pill */}
-        <div className="flex items-center gap-2 bg-primary text-white px-4 py-2.5 rounded-full shadow-sm">
-          <MapPin className="w-4 h-4 text-white/90 stroke-[2.5]" />
-          <span className="text-sm font-body font-medium tracking-wide">
+        <div className="flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-white shadow-sm">
+          <MapPin className="h-4 w-4 stroke-[2.5] text-white/90" />
+          <span className="font-body font-medium tracking-wide text-sm">
             {location?.city}
           </span>
         </div>
       </div>
+
       {/* 1. Dynamic Sun & Moon Elements */}
-      <div className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex justify-between items-center text-center">
+      <div className="flex items-center justify-between rounded-3xl border border-gray-100 bg-white p-5 text-center shadow-sm">
         <TimingItem
-          icon={<Sunrise className="w-6 h-6" />}
-          label="Sunrise"
+          icon={<Sunrise className="h-6 w-6" />}
+          label={t("panchang.sunRise")}
           time={panchangData.sunrise}
         />
         <TimingItem
-          icon={<Sunset className="w-6 h-6" />}
-          label="Sunset"
+          icon={<Sunset className="h-6 w-6" />}
+          label={t("panchang.sunSet")}
           time={panchangData.sunset}
         />
         <TimingItem
-          icon={<Moon className="w-6 h-6" />}
-          label="Moonrise"
+          icon={<Moon className="h-6 w-6" />}
+          label={t("panchang.moonRise")}
           time={panchangData.moonrise}
         />
         <TimingItem
-          icon={<Moon className="w-6 h-6" />}
-          label="Moonset"
+          icon={<Moon className="h-6 w-6" />}
+          label={t("panchang.moonSet")}
           time={panchangData.moonset}
         />
       </div>
 
       {/* 2. Muhurat & Kaal Blocks */}
-      <div className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
-        <h2 className="text-lg font-body font-bold text-primary mb-4">
-          Auspicious / Inauspicious Time
+      <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm">
+        <h2 className="mb-4 font-body font-bold text-lg text-primary">
+          {t("panchang.auspiciousTitle")}
         </h2>
         <div className="grid grid-cols-2 gap-3">
-          <TimeBlock label="Abhijit Muhurat" value={panchangData.abhijit} />
-          <TimeBlock label="Gulikaal" value={panchangData.gulika} />
-          <TimeBlock label="Rahukaal" value={panchangData.rahukaal} />
-          <TimeBlock label="Yamghant Kaal" value={panchangData.yamhand} />
+          <TimeBlock
+            label={t("panchang.abhijeetMuhurat")}
+            value={panchangData.abhijit}
+          />
+          <TimeBlock
+            label={t("panchang.guliKaal")}
+            value={panchangData.gulika}
+          />
+          <TimeBlock
+            label={t("panchang.rahukaal")}
+            value={panchangData.rahukaal}
+          />
+          <TimeBlock
+            label={t("panchang.yamghantKaal")}
+            value={panchangData.yamhand}
+          />
         </div>
       </div>
 
       {/* 3. Five Limbs of Panchang List */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 space-y-4">
-        <h2 className="text-lg font-body font-bold text-primary mb-2">
-          Panchang
+      <div className="space-y-4 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+        <h2 className="mb-2 font-body font-bold text-lg text-primary">
+          {t("panchang.title")}
         </h2>
-        <PanchangRow label="Tithi" value={panchangData.tithi} />
-        <PanchangRow label="Karan" value={panchangData.karana1} />
-        <PanchangRow label="Nakshatra" value={panchangData.nakshatra} />
-        <PanchangRow label="Yog" value={panchangData.yoga} />
-        <PanchangRow label="Karan End Time" value={panchangData.karana2} />
+        <PanchangRow label={t("panchang.tithi")} value={panchangData.tithi} />
+        <PanchangRow label={t("panchang.karan")} value={panchangData.karana1} />
+        <PanchangRow
+          label={t("panchang.nakshatra")}
+          value={panchangData.nakshatra}
+        />
+        <PanchangRow label={t("panchang.yog")} value={panchangData.yoga} />
+        <PanchangRow
+          label={t("panchang.karanEndTime")}
+          value={panchangData.karana2}
+        />
       </div>
 
       {/* 4. Traditional Hindu Calendar Blocks */}
-      <div className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
-        <h2 className="text-lg font-body font-bold text-primary mb-4">
-          Hindu Calendar
+      <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm">
+        <h2 className="mb-4 font-body font-bold text-lg text-primary">
+          {t("panchang.hinduCalendar")}
         </h2>
         <div className="grid grid-cols-2 gap-3">
           <CalendarCard
-            label="Vikram Samvat"
+            label={t("panchang.Vikram Samvat")}
             value={panchangData.vikramSamvat}
           />
           <CalendarCard
-            label="Month"
+            label={t("panchang.month")}
             value={panchangData.month.toLowerCase()}
           />
-          <CalendarCard label="Shaka Samvat" value={panchangData.shakaSamvat} />
           <CalendarCard
-            label="Paksha"
+            label={t("panchang.Shaka Samvat")}
+            value={panchangData.shakaSamvat}
+          />
+          <CalendarCard
+            label={t("panchang.paksha")}
             value={panchangData.paksha.toLowerCase()}
           />
         </div>

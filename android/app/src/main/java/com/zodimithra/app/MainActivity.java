@@ -1,4 +1,4 @@
-package com.zodimithra.app;
+package io.zodimithra.main;
 
 import com.getcapacitor.BridgeActivity;
 

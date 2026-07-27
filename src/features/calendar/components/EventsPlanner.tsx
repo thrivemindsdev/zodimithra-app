@@ -6,8 +6,10 @@ import { CreateEventApi } from "@/services/calendar.api";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Sparkles, X } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface EventsPlannerProps {
+  loading: boolean;
   data?: Array<{
     id: string | number;
     title: string;
@@ -17,7 +19,8 @@ interface EventsPlannerProps {
   }>;
 }
 
-const EventsPlanner = ({ data }: EventsPlannerProps) => {
+const EventsPlanner = ({ loading, data }: EventsPlannerProps) => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
@@ -61,40 +64,78 @@ const EventsPlanner = ({ data }: EventsPlannerProps) => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="space-y-4 rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
+        {/* Header Skeleton */}
+        <div className="flex items-center justify-between">
+          <div className="space-y-1.5">
+            <div className="h-5 w-28 animate-pulse rounded bg-gray-200" />
+            <div className="h-3 w-36 animate-pulse rounded bg-gray-200" />
+          </div>
+          {/* Add Button Skeleton */}
+          <div className="h-7 w-16 animate-pulse rounded-full bg-gray-200" />
+        </div>
+
+        {/* List Skeleton Items */}
+        <div className="space-y-2">
+          <div className="space-y-2 rounded-2xl border border-indigo-100/70 bg-white p-4 shadow-sm">
+            <div className="h-3 w-20 animate-pulse rounded bg-gray-200" />
+            <div className="h-5 w-40 animate-pulse rounded bg-gray-200" />
+          </div>
+          <div className="space-y-2 rounded-2xl border border-indigo-100/70 bg-white p-4 shadow-sm">
+            <div className="h-3 w-24 animate-pulse rounded bg-gray-200" />
+            <div className="h-5 w-32 animate-pulse rounded bg-gray-200" />
+          </div>
+        </div>
+
+        {/* Empty state / Footer Card Skeleton */}
+        <div className="flex flex-col items-center justify-center space-y-2 rounded-2xl border border-dashed border-indigo-200/80 p-5 text-center">
+          <div className="h-4 w-44 animate-pulse rounded bg-gray-200" />
+          <div className="h-3 w-56 animate-pulse rounded bg-gray-200" />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 space-y-4">
+    <div className="space-y-4 rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-header font-light text-[#0C0F27]">Planner</h2>
-          <p className="text-xs font-body-content text-[#4C546C]">
-            Upcoming intentions & events
+          <h2 className="font-body-content text-lg font-bold text-[#0C0F27]">
+            {t("calendar.planner")}
+          </h2>
+          <p className="font-body-content text-xs text-[#4C546C]">
+            {t("calendar.upcomingEvents")}
           </p>
         </div>
 
         {!showForm ? (
           <button
+            type="button"
             onClick={() => setShowForm(true)}
-            className="flex items-center space-x-1 bg-linear-to-r from-primary to-secondary text-white px-3.5 py-1.5 rounded-full text-xs font-bold shadow-sm hover:opacity-95 transition-opacity"
+            className="flex items-center space-x-1 rounded-full bg-linear-to-r from-button-primary to-button-secondary px-3.5 py-1.5 text-xs font-bold text-white shadow-sm transition-opacity hover:opacity-95"
           >
-            <Plus className="w-3.5 h-3.5" />
-            <span>ADD</span>
+            <Plus className="h-3.5 w-3.5" />
+            <span>{t("calendar.add")}</span>
           </button>
         ) : (
           <button
+            type="button"
             onClick={resetForm}
-            className="flex items-center space-x-1 bg-linear-to-r from-primary to-secondary text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-sm hover:opacity-95 transition-opacity"
+            className="flex items-center space-x-1 rounded-full bg-linear-to-r from-button-primary to-button-secondary px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-opacity hover:opacity-95"
           >
-            <X className="w-3.5 h-3.5" />
-            <span>CLOSE</span>
+            <X className="h-3.5 w-3.5" />
+            <span>{t("calendar.cancel")}</span>
           </button>
         )}
       </div>
 
       {/* ADD EVENT FORM */}
       {showForm && (
-        <div className="bg-slate-50/70 border border-slate-100 rounded-2xl p-4 space-y-3">
-          <span className="text-[10px] font-bold tracking-wider text-[#0C0F2799] uppercase">
+        <div className="space-y-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
+          <span className="text-[10px] font-bold font-body uppercase tracking-wider text-[#0C0F2799]">
             New Event
           </span>
 
@@ -133,19 +174,23 @@ const EventsPlanner = ({ data }: EventsPlannerProps) => {
             rows={2}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl bg-input-bg border border-input-border text-sm focus:outline-none resize-none"
+            className="bg-input-bg font-body border-input-border w-full resize-none rounded-xl border px-4 py-2.5 text-sm focus:outline-none"
           />
 
           {/* Save Button */}
           <button
+            type="button"
             onClick={handleSaveEvent}
             disabled={
-              !title.trim() || !time.trim() || !eventDate.trim() || isSubmitting
+              !title.trim() ||
+              !time.trim() ||
+              !eventDate.trim() ||
+              isSubmitting
             }
-            className={`w-full py-3 rounded-xl text-xs font-bold tracking-wider text-white uppercase transition-all ${
+            className={`w-full rounded-xl py-3 text-xs font-bold uppercase tracking-wider text-white transition-all ${
               title.trim() && time.trim() && eventDate.trim() && !isSubmitting
-                ? "bg-linear-to-r from-indigo-900 via-purple-800 to-pink-600 hover:opacity-95"
-                : "bg-slate-200 text-[#0C0F2799] cursor-not-allowed"
+                ? "bg-linear-to-r from-button-primary to-button-secondary hover:opacity-95"
+                : "cursor-not-allowed bg-slate-200 text-[#0C0F2799]"
             }`}
           >
             {isSubmitting ? "SAVING..." : "SAVE EVENT"}
@@ -159,13 +204,13 @@ const EventsPlanner = ({ data }: EventsPlannerProps) => {
           {data.map((item) => (
             <div
               key={item.id}
-              className="bg-white border border-indigo-100/70 rounded-2xl p-4 shadow-sm space-y-1"
+              className="space-y-1 rounded-2xl border border-indigo-100/70 bg-white p-4 shadow-sm"
             >
-              <div className="flex items-center space-x-1.5 text-indigo-900 text-[10px] font-bold tracking-wider uppercase">
-                <Sparkles className="w-3 h-3 text-indigo-500" />
+              <div className="flex items-center space-x-1.5 text-[10px] font-bold uppercase tracking-wider text-indigo-900">
+                <Sparkles className="h-3 w-3 text-indigo-500" />
                 <span>{item.date}</span>
               </div>
-              <h4 className="text-lg font-body font-bold text-text-primary">
+              <h4 className="font-body text-lg font-bold text-text-primary">
                 {item.title}
               </h4>
             </div>
@@ -175,18 +220,16 @@ const EventsPlanner = ({ data }: EventsPlannerProps) => {
 
       {/* EMPTY STATE / FOOTER NOTE */}
       {!showForm && (
-        <div className="border border-dashed border-indigo-200/80 rounded-2xl p-5 text-center space-y-1">
-          <p className="text-sm font-body font-bold text-[#0C0F27]">
-            {data && data.length > 0
-              ? "No more upcoming events"
-              : "No upcoming events"}
+        <div className="space-y-1 rounded-2xl border border-dashed border-indigo-200/80 p-5 text-center">
+          <p className="font-body text-sm font-bold text-[#0C0F27]">
+            {t("calendar.noUpcomingEvents")}
           </p>
-          <p className="text-xs text-[#1D1D1D] font-body-content font-normal">
-            Tap{" "}
-            <span className="font-bold font-body-content text-indigo-900">
-              Add
+          <p className="font-body-content text-xs font-normal text-[#1D1D1D]">
+            {t("calendar.tap")}{" "}
+            <span className="font-body-content font-bold text-indigo-900">
+              {t("calendar.add")}
             </span>{" "}
-            to plan something meaningful.
+            {t("calendar.tapToPlan")}
           </p>
         </div>
       )}

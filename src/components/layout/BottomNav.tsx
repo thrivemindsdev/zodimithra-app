@@ -1,9 +1,10 @@
-import AstrologyIcon from "@/assets/bottom-tabs/astrology.png";
+// import AstrologyIcon from "@/assets/bottom-tabs/astrology.png";
 import WaveIcon from "@/assets/bottom-tabs/bend-icon.png";
 import CalendarIcon from "@/assets/bottom-tabs/calendar.png";
 import ExploreIcon from "@/assets/bottom-tabs/explore.png";
 import HomeIcon from "@/assets/bottom-tabs/home.png";
 import WellbeingIcon from "@/assets/bottom-tabs/wellbeing.png";
+import { useGetUserDetailsQuery } from "@/queries/userQueries";
 import { memo, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -18,14 +19,14 @@ const NAV_ITEMS = [
     path: "/calendar",
     label: "Calendar",
     icon: CalendarIcon,
-    premiumScreen: false,
+    premiumScreen: true,
   },
-  {
-    path: "/astrology",
-    label: "Astrology",
-    icon: AstrologyIcon,
-    premiumScreen: false,
-  },
+  // {
+  //   path: "/astrology",
+  //   label: "Astrology",
+  //   icon: AstrologyIcon,
+  //   premiumScreen: false,
+  // },
   {
     path: "/explore",
     label: "Explore",
@@ -42,6 +43,8 @@ const NAV_ITEMS = [
 
 const BottomNav = () => {
   const { pathname } = useLocation();
+  const { data: userDetails } = useGetUserDetailsQuery();
+  const isPremium = userDetails?.is_subscribed;
 
   const activeIndex = useMemo(
     () => NAV_ITEMS.findIndex((item) => item.path === pathname),
@@ -66,12 +69,12 @@ const BottomNav = () => {
 
         {NAV_ITEMS.map((item) => {
           const isActive = location.pathname === item.path;
-          const isLocked = item.premiumScreen;
+          const isLocked = item.premiumScreen && !isPremium;
 
           return (
             <li key={item.path} className="flex-1">
               <Link
-                to={isLocked ? "/home/premium" : item.path}
+                to={isLocked ? "/premium" : item.path}
                 className="flex w-full flex-col items-center justify-center"
               >
                 <span

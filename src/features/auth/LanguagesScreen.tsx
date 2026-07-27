@@ -15,13 +15,10 @@ interface Language {
 export default function LanguageScreen() {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
+  const selectedLanguae = i18n.language ?? "en";
   const token = useAuthStore((state) => state.token);
   const hasOnboarded = useAuthStore((state) => state.hasOnboarded);
-  const setLanguage = useAuthStore((state) => state.setLanguage);
-  const currentLanguage = useAuthStore((state) => state.language) || "en";
-
-  const [selectedLanguage, setSelectedLanguage] =
-    useState<string>(currentLanguage);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(selectedLanguae);
 
   const languages: Language[] = [
     {
@@ -45,7 +42,6 @@ export default function LanguageScreen() {
   const handleLanguageSelect = async (id: string) => {
     await i18n.changeLanguage(id);
     setSelectedLanguage(id);
-    setLanguage(id);
 
     setTimeout(() => {
       if (token && hasOnboarded) {

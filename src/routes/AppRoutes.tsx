@@ -115,23 +115,34 @@ import OtpScreen from "@/features/auth/OtpScreen";
 import SplashScreen from "@/features/splash-screen/SplashScreen";
 
 import FamilyMembersScreen from "@/components/ui/FamilyMembers";
+import AshramsScreen from "@/features/ashrams/AshramsScreen";
+import AshramaDetails from "@/features/ashrams/components/AshramDetails";
+import AshramaLive from "@/features/ashrams/components/AshramLive";
 import AstrologerScreen from "@/features/astrologer/AstrologerScreen";
 import CalendarScreen from "@/features/calendar/CalendarScreen";
+import ShubhDinFinder from "@/features/calendar/components/ShubhDinFinder";
 import ExploreScreen from "@/features/explore/ExploreScreen";
 import FreeKundliScreen from "@/features/explore/pages/free-kundli/FreeKundli";
 import GemStoneScreen from "@/features/explore/pages/gem-stone/GemStone";
 import KundliMatchScreen from "@/features/explore/pages/kundli-match/KundliMatch";
+import MangalDoshScreen from "@/features/explore/pages/mangal-dosh/MangalDoshScreen";
+import Numerology from "@/features/explore/pages/numerology/Numerology";
 import PanchangScreen from "@/features/explore/pages/panchang/Panchang";
+import TarotReading from "@/features/explore/pages/tarot-reading/TarotReading";
 import VastuCompassScreen from "@/features/explore/pages/vastu-compass/VastuCompass";
 import HomeScreen from "@/features/home/HomeScreen";
 import NotFoundPage from "@/features/notfound/NotFoundPage";
+import PremiumScreen from "@/features/premium/PremiumScreen";
+import EditProfile from "@/features/profile/EditProfile";
 import ProfileScreen from "@/features/profile/ProfileScreen";
 import WellBeingScreen from "@/features/well-being/WellBeingScreen";
-import EditProfile from "@/features/profile/EditProfile";
-import PremiumScreen from "@/features/premium/PremiumScreen";
-import ShubhDinFinder from "@/features/calendar/components/ShubhDinFinder";
-import Numerology from "@/features/explore/pages/numerology/Numerology";
-import TarotReading from "@/features/explore/pages/tarot-reading/TarotReading";
+import KundliMatchResult from "@/features/explore/pages/kundli-match/components/KundliMatchResult";
+import MangalDoshResult from "@/features/explore/pages/mangal-dosh/components/MangalDoshResult";
+import NumerologyResult from "@/features/explore/pages/numerology/components/NumerologyResult";
+import TarotCards from "@/features/explore/pages/tarot-reading/components/TarotCards";
+import YesOrNo from "@/features/explore/pages/tarot-reading/components/YesOrNo";
+import YesOrNoResult from "@/features/explore/pages/tarot-reading/components/YesOrNoResult";
+import GemStoneResult from "@/features/explore/pages/gem-stone/components/GemStoneResult";
 
 export function AppRoutes() {
   return (
@@ -168,13 +179,24 @@ export function AppRoutes() {
               <Route path="/premium" element={<PremiumScreen />} />
               <Route path="/family-members" element={<FamilyMembersScreen />} />
               <Route path="/gemstone" element={<GemStoneScreen />} />
+              <Route path="/gemstone-result" element={<GemStoneResult />} />
               <Route path="/panchang" element={<PanchangScreen />} />
               <Route path="/vastu-compass" element={<VastuCompassScreen />} />
               <Route path="/kundli-match" element={<KundliMatchScreen />} />
+              <Route path="/kundli-match-result" element={<KundliMatchResult />} />
               <Route path="/free-kundli" element={<FreeKundliScreen />} />
+              <Route path="/mangal-dosh" element={<MangalDoshScreen />} />
+              <Route path="/mangal-dosh-result" element={<MangalDoshResult />} />
               <Route path="/shubdin-finder" element={<ShubhDinFinder />} />
               <Route path="/numerology" element={<Numerology />} />
+              <Route path="/numerology-result" element={<NumerologyResult />} />
               <Route path="/tarot-reading" element={<TarotReading />} />
+              <Route path="/tarot-cards/:id" element={<TarotCards />} />
+              <Route path="/tarot-yes-or-no" element={<YesOrNo />} />
+              <Route path="/tarot-yes-or-no-result" element={<YesOrNoResult />} />
+              <Route path="/ashrams" element={<AshramsScreen />} />
+              <Route path="/ashram/:id" element={<AshramaDetails />} />
+              <Route path="/ashram-live/:id" element={<AshramaLive />} />
             </Route>
           </Route>
 

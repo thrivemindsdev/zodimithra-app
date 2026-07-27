@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import type { RoomType, VastuData } from '../types/vastu';
+import { useTranslation } from 'react-i18next';
 
 interface VastuGuidanceCardProps {
   selectedRoom: RoomType;
@@ -7,6 +8,7 @@ interface VastuGuidanceCardProps {
 }
 
 export const VastuGuidanceCard = memo<VastuGuidanceCardProps>(({ selectedRoom, vastuInfo }) => {
+  const {t} = useTranslation();
   return (
     <div className="w-full max-w-sm bg-white rounded-3xl p-5 border border-[#F2E8DC] shadow-lg flex flex-col gap-4 mt-2">
       {/* Status Header */}
@@ -25,26 +27,26 @@ export const VastuGuidanceCard = memo<VastuGuidanceCardProps>(({ selectedRoom, v
 
       {/* Interaction Hint */}
       <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#A08875] font-sans">
-        <span>↺</span> Drag compass or rotate device to adjust
+        <span>↺</span> {t("vastuCompass.dragCompass")}
       </div>
 
       {/* Ranges & Badges */}
       <div className="font-sans space-y-2.5 pt-1">
         <h3 className="font-serif font-bold text-[#311B0B] text-sm flex items-center gap-1.5">
-          <span className="text-[#6B3BA7]">✦</span> Direction Guide — {selectedRoom}
+          <span className="text-[#6B3BA7]">✦</span> {t("vastuCompass.directionGuide")} — {t(`vastuCompass.${selectedRoom}`)}
         </h3>
 
-        <div className="space-y-1.5 text-xs">
+        <div className="space-y-3 text-xs">
           <div className="flex justify-between items-center">
-            <span className="text-[#3F721B] font-semibold flex items-center gap-1">✓ Auspicious</span>
+            <span className="text-[#3F721B] font-semibold flex items-center gap-1">✓ {t("vastuCompass.auspicious")}</span>
             <span className="text-[#5C4533] font-mono text-[11px]">{vastuInfo.auspiciousRange}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-[#B36B00] font-semibold flex items-center gap-1">~ Neutral</span>
+            <span className="text-[#B36B00] font-semibold flex items-center gap-1">~ {t("vastuCompass.neutral")}</span>
             <span className="text-[#5C4533] font-mono text-[11px]">{vastuInfo.neutralRange}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-[#C0392B] font-semibold flex items-center gap-1">✕ Avoid</span>
+            <span className="text-[#C0392B] font-semibold flex items-center gap-1">✕ {t("vastuCompass.avoid")}</span>
             <span className="text-[#5C4533] font-mono text-[11px]">{vastuInfo.avoidRange}</span>
           </div>
         </div>
@@ -65,7 +67,7 @@ export const VastuGuidanceCard = memo<VastuGuidanceCardProps>(({ selectedRoom, v
       {/* Tip Section */}
       <div className="pt-2 border-t border-[#F5EFE6]">
         <h4 className="font-serif font-bold text-[#3B1F0A] flex items-center gap-1.5 text-xs mb-1">
-          <span className="text-[#D1197E] text-sm">💡</span> Vastu Tip
+          <span className="text-[#D1197E] text-sm">💡</span> {t("vastuCompass.vastuTip")}
         </h4>
         <p className="text-[11px] text-[#6E5948] leading-relaxed font-sans">{vastuInfo.tip}</p>
       </div>

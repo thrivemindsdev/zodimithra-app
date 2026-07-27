@@ -1,88 +1,116 @@
-import { Clock3, Hash } from "lucide-react";
+import { Clock, Hash } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-export default function LuckyInfo({ data }: any) {
-  const { t } = useTranslation();
-  const isWhite = data?.lucky?.color === "White";
+// Interface for strictly typed props
+interface LuckyInfoProps {
+  loading: boolean;
+  data?: {
+    lucky?: {
+      color?: string;
+      colour_code?: string;
+      number?: string | number;
+    };
+    muhurta?: {
+      abhijit_muhurta?: string;
+    };
+  };
+}
 
-  const luckyDatas = [
-    {
-      id: 1,
-      title: t("home.luckyColor"),
-      value: data?.lucky?.color,
-      type: "color",
-      color: isWhite ? "#000000" : data?.lucky?.colour_code,
-    },
-    {
-      id: 2,
-      title: t("home.luckyNumber"),
-      value: data?.lucky?.number,
-      type: "number",
-    },
-    {
-      id: 3,
-      title: t("home.auspiciousTime"),
-      value: data?.muhurta?.abhijit_muhurta?.split("-")[0],
-      type: "time",
-    },
-  ];
+export default function LuckyInfo({ loading, data }: LuckyInfoProps) {
+  const { t } = useTranslation();
+
+  const isWhite = data?.lucky?.color === "White";
+  const colorHex = isWhite ? "#000000" : data?.lucky?.colour_code;
+  const luckyColor = data?.lucky?.color;
+  const fortuneNumber = data?.lucky?.number;
+  const auspiciousTime = data?.muhurta?.abhijit_muhurta;
 
   return (
-    <div className="py-8 w-full">
-      <h6 className="font-body-content text-xs text-text-primary">
+    <div className="w-full py-6 font-body-content">
+      {/* Title */}
+      <h2 className="button-text-gradient font-body-content pb-2 text-lg font-bold capitalize">
         {t("home.todayFortune")}
-      </h6>
-
-      <h2 className="font-body-content text-xl font-extrabold text-linear pb-4">
-        {t("home.luckySigns")}
       </h2>
 
-      <section className="rounded-3xl bg-[#EBEBEB33] p-4 border border-gray-200 shadow-[0_2px_0_rgba(0,0,0,0.12)]">
-        <div className="flex items-center gap-2">
-          {luckyDatas.map((item) => (
-            <div
-              key={item.id}
-              className="w-[32%] py-4 flex flex-col items-center justify-center rounded-2xl bg-[#F5F5F5] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-            >
-              {/* Icon */}
-              {item.type === "color" && (
-                <div
-                  className="h-6 w-6 rounded-full"
-                  style={{ backgroundColor: item.color }}
-                />
-              )}
-
-              {item.type === "number" && (
-                <div className="flex justify-center items-center h-6 w-6 rounded-full bg-[#D9D9D9]">
-                  <Hash size={12} className="text-gray-700" strokeWidth={2.5} />
-                </div>
-              )}
-
-              {item.type === "time" && (
-                <Clock3 size={24} className="text-gray-700" strokeWidth={2.2} />
-              )}
-
-              {/* Title */}
-              <h3
-                className="pt-2 text-center font-body-content text-xs font-semibold text-text-primary w-full px-1 truncate"
-                title={item.title}
-              >
-                {item.title}
-              </h3>
-
-              {/* Value */}
-              <p
-                className="pt-2 text-md font-header font-light"
-                style={{
-                  color: item.type === "color" ? item.color : undefined,
-                }}
-              >
-                {item.value}
-              </p>
+      {loading ? (
+        /* Skeleton Cards */
+        <div className="flex flex-col gap-3">
+          {/* Top Card Skeleton */}
+          <div className="card-shadow flex flex-col items-center justify-center rounded-full bg-white px-6 py-4">
+            <div className="flex items-center gap-1.5">
+              <Clock className="h-4 w-4 stroke-[2.5] text-gray-300" />
+              <div className="h-4 w-28 animate-pulse rounded bg-gray-200" />
             </div>
-          ))}
+            <div className="mt-2 h-3.5 w-36 animate-pulse rounded bg-gray-200" />
+          </div>
+
+          {/* Bottom Grid Skeletons */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* Lucky Shade Skeleton */}
+            <div className="card-shadow flex items-center justify-between rounded-full bg-white px-5 py-3.5">
+              <div className="flex flex-col justify-center gap-1.5">
+                <div className="h-3.5 w-16 animate-pulse rounded bg-gray-200" />
+                <div className="h-3.5 w-12 animate-pulse rounded bg-gray-200" />
+              </div>
+              <div className="h-8 w-8 shrink-0 animate-pulse rounded-full bg-gray-200" />
+            </div>
+
+            {/* Fortune Number Skeleton */}
+            <div className="card-shadow flex flex-col justify-center rounded-full bg-white px-5 py-3.5">
+              <div className="flex items-center gap-1">
+                <Hash className="h-3.5 w-3.5 stroke-3 text-gray-300" />
+                <div className="h-3.5 w-20 animate-pulse rounded bg-gray-200" />
+              </div>
+              <div className="mt-1.5 h-3.5 w-8 animate-pulse rounded bg-gray-200" />
+            </div>
+          </div>
         </div>
-      </section>
+      ) : (
+        /* Content Cards */
+        <div className="flex flex-col gap-3">
+          {/* Auspicious Time - Top Full Width Card */}
+          <div className="card-shadow flex flex-col items-center justify-center rounded-full bg-white px-6 py-4">
+            <div className="flex items-center gap-1.5 text-sm font-semibold text-text-primary">
+              <Clock className="h-4 w-4 stroke-[2.5]" />
+              <span>{t("home.auspiciousTime", "Auspicious Time")}</span>
+            </div>
+            <span className="mt-1 text-xs font-semibold text-text-primary">
+              {auspiciousTime}
+            </span>
+          </div>
+
+          {/* Bottom 2-Column Grid */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* Lucky Shade Card */}
+            <div className="card-shadow flex items-center justify-between rounded-full bg-white px-5 py-3.5">
+              <div className="flex flex-col justify-center gap-1">
+                <span className="text-xs font-bold leading-tight text-text-primary">
+                  {t("home.luckyColor", "Lucky Shade")}
+                </span>
+                <span className="text-xs font-bold leading-tight text-text-primary">
+                  {luckyColor}
+                </span>
+              </div>
+              <div
+                className="h-8 w-8 shrink-0 rounded-full border border-black/5"
+                style={{ backgroundColor: colorHex }}
+                aria-hidden="true"
+              />
+            </div>
+
+            {/* Fortune Number Card */}
+            <div className="card-shadow flex flex-col justify-center rounded-full bg-white px-5 py-3.5">
+              <div className="flex items-center gap-1 text-xs font-bold text-text-primary">
+                <Hash className="h-3.5 w-3.5 stroke-3" />
+                <span>{t("home.luckyNumber", "Fortune Number")}</span>
+              </div>
+              <span className="mt-0.5 text-xs font-bold text-text-primary">
+                {fortuneNumber}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

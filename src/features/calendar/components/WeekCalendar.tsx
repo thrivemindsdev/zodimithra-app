@@ -1,16 +1,12 @@
-import {
-    addDays,
-    addWeeks,
-    format,
-    isSameDay,
-    startOfWeek
-} from "date-fns";
+import { addDays, addWeeks, format, isSameDay, startOfWeek } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Moon } from "lunarphase-js";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const WeekCalendar = ({ selectedDate, setSelectedDate }: any) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [weekOffset, setWeekOffset] = useState(0);
 
@@ -41,13 +37,13 @@ const WeekCalendar = ({ selectedDate, setSelectedDate }: any) => {
         >
           <ChevronLeft />
         </button>
-        <h2 className="text-lg font-body font-bold">
+        <h2 className="text-base font-body-content font-semibold">
           {weekOffset === 0
-            ? "This Week"
+            ? t("calendar.thisWeek")
             : weekOffset > 0
-              ? "Next Week"
-              : "Previous Week"}{" "}
-          · {format(startOfCurrentWeek, "MMMM")}
+              ? t("calenar.nextWeek")
+              : t("calendar.previousWeek")}{" "}
+          · {t(`calendar.${format(startOfCurrentWeek, "MMMM")}`)}
         </h2>
         <button
           onClick={handleNextWeek}

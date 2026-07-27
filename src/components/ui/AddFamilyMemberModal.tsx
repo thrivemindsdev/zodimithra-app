@@ -4,6 +4,9 @@ import PlaceInput from "../common/PlaceInput";
 import TimeInput from "../common/TimeInput";
 import DateInput from "../common/DateInput";
 import Input from "../common/Input";
+import { AddFamilyMember } from "@/services/user.api";
+import { useQueryClient } from "@tanstack/react-query";
+import { USER_QUERY_KEYS } from "@/queries/userQueries";
 
 interface Props {
   open: boolean;
@@ -40,6 +43,7 @@ const RELATION_OPTIONS = [
 ];
 
 const AddFamilyMemberModal = ({ open, setOpen }: Props) => {
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState<FormState>(initialFormState);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -100,10 +104,25 @@ const AddFamilyMemberModal = ({ open, setOpen }: Props) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (isFormIncomplete) return;
-
-    // TODO: Trigger API mutation here
-    console.log("Submitting Payload:", formData);
-    handleClose();
+    try {
+      const payload = {
+        name: formData.fullName,
+        relation: formData.relation,
+        date_of_birth: formData.dob,
+        birth_time: formData.tob,
+        birth_place: formData.pob,
+        latitude: formData.lat,
+        longitude: formData.lon,
+      };
+      await AddFamilyMember(payload);
+      await queryClient.invalidateQueries({
+        queryKey: [USER_QUERY_KEYS.familyMembers],
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      handleClose();
+    }
   };
 
   return (
@@ -118,13 +137,13 @@ const AddFamilyMemberModal = ({ open, setOpen }: Props) => {
       <div className="relative w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl transition-all">
         {/* Header */}
         <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={handleClose}
-          className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition"
-        >
-          <X size={20} />
-        </button>
+          <button
+            type="button"
+            onClick={handleClose}
+            className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition"
+          >
+            <X size={20} />
+          </button>
         </div>
         <h2 className="text-xl text-center font-body-content font-bold text-gradient">
           Add Family Member

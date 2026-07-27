@@ -23,7 +23,7 @@ const RadioGroup: React.FC<RelationshipRadioGroupProps> = ({
 }) => {
   return (
     <div className="w-full">
-      <label className="block text-sm font-body-content text-text-primary mb-2">
+      <label className="block text-sm font-body text-text-primary mb-2">
         {label}
       </label>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -34,7 +34,7 @@ const RadioGroup: React.FC<RelationshipRadioGroupProps> = ({
               key={opt.value}
               type="button"
               onClick={() => onChange(opt.value)}
-              className={`flex items-center gap-2 px-3 py-1.75 border rounded-lg font-medium font-body-content text-xs transition outline-none select-none text-left w-full ring-offset-1
+              className={`flex items-center gap-2 px-3 py-1.75 border rounded-lg font-medium font-body text-xs transition outline-none select-none text-left w-full ring-offset-1
                 ${
                   isSelected
                     ? "border-blue-500 bg-blue-50 text-blue-700 ring-blue-100 shadow-sm ring-2"

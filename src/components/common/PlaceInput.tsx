@@ -89,7 +89,7 @@ const PlaceInput: React.FC<PlaceInputProps> = ({
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
-      <label className="block text-sm font-body-content text-text-primary mb-1">
+      <label className="block text-sm font-body text-text-primary mb-1">
         {label}
       </label>
       <div className="relative bg-input-bg border border-input-border rounded-lg">
@@ -102,7 +102,7 @@ const PlaceInput: React.FC<PlaceInputProps> = ({
           placeholder={placeholder}
           onChange={(e) => setInputValue(e.target.value)}
           onFocus={() => inputValue.length >= 3 && setIsOpen(true)}
-          className="w-full pl-10 pr-10 py-2.5 outline-none transition font-body-content text-text-primary placeholder:text-xs placeholder:text-placeholder/80 text-xs md:text-base"
+          className="w-full pl-10 pr-10 py-2.5 outline-none transition font-body text-text-primary placeholder:text-xs placeholder:text-placeholder/80 text-xs md:text-base"
         />
         {loading && (
           <div className="absolute right-3 top-2.5">

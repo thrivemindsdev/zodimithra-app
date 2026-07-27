@@ -1,4 +1,5 @@
 export interface HoroscopeParams {
-  sign_key: string;
+  sign: string;
+  period: string;
   lang: string;
 }

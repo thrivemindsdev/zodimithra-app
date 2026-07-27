@@ -30,7 +30,7 @@ const DateInput: React.FC<DateInputProps> = ({
     <div className="w-full">
       <label
         htmlFor={inputId}
-        className="block text-sm font-body-content text-text-primary mb-1 select-none"
+        className="block text-sm font-body text-text-primary mb-1 select-none"
       >
         {label}
       </label>
@@ -46,7 +46,7 @@ const DateInput: React.FC<DateInputProps> = ({
           onClick={handleInteraction}
           {...props}
           className={`
-            w-full pl-10 pr-4 py-2 bg-transparent outline-none transition text-text-primary text-xs md:text-base font-body-content cursor-pointer relative
+            w-full pl-10 pr-4 py-2 bg-transparent outline-none transition text-text-primary text-xs md:text-base font-body cursor-pointer relative
             
             /* 1. Hides the browser's default grey format mask text (dd/mm/yyyy) when there's no data chosen */
             [&::-webkit-datetime-edit-fields-wrapper]:relative 

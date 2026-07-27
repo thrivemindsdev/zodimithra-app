@@ -35,7 +35,7 @@ const DurationTabs = ({
   const handleTabChange = useCallback(
     (item: TabItem) => {
       if (item.premium && !isPremium) {
-        navigate("/home/premium");
+        navigate("/premium");
         return;
       }
 
@@ -45,16 +45,16 @@ const DurationTabs = ({
   );
 
   return (
-    <div className="flex gap-2 overflow-x-auto whitespace-nowrap pb-5 scrollbar-hide">
+    <div className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide">
       {DURATION_TABS.map((item) => (
         <button
           key={item.id}
           type="button"
           onClick={() => handleTabChange(item)}
-          className={`shrink-0 rounded-full border border-secondary font-medium px-5 py-2 font-body-content text-center text-sm capitalize transition-all duration-200 ${
+          className={`shrink-0 rounded-full font-medium border border-button-primary px-5 py-2 font-body-content text-center text-sm capitalize transition-all duration-200 ${
             activeTab === item.id
-              ? "bg-linear-to-r from-primary to-secondary text-white border-transparent"
-              : "text-gradient"
+              ? "bg-linear-to-r from-button-primary to-button-secondary text-white border-transparent"
+              : "button-text-gradient"
           }`}
         >
           {t(`home.${item.id}`)}

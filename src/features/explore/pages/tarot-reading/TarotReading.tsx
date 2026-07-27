@@ -2,6 +2,7 @@ import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";
 import { CalendarDays, MessageCircleQuestion } from "lucide-react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 type MenuItem = {
   id: number;
@@ -60,12 +61,23 @@ const MenuCard: React.FC<MenuCardProps> = ({ item, onClick }) => {
 };
 
 const TarotReading = () => {
+  const navigate = useNavigate();
+
+  const handleMenuClick = (id: number) => {
+    if (id === 1) {
+      navigate("/tarot-cards/1");
+    } else if (id === 2) {
+      navigate("/tarot-yes-or-no");
+    }
+  };
+  
   return (
     <>
       <Header
         title="Tarot Reading"
         subtitle="Tarot gives you ideas for the life"
         showBackButton
+        redirectPath="/home"
       />
       <BodyLayout>
         <div className="pt-6">
@@ -73,7 +85,7 @@ const TarotReading = () => {
             <MenuCard
               key={item.id}
               item={item}
-              onClick={() => console.log(item.title)}
+              onClick={() => handleMenuClick(item.id)}
             />
           ))}
         </div>

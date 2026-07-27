@@ -1,18 +1,14 @@
-import BgImg from "@/assets/moons/background.png";
+import BgImg from "@/assets/home/affirmation.png";
+import CustomAnimatedMoon from "@/components/common/CustomAnimatedMoon";
+import { useGetAffirmationQuery } from "@/queries/homeQueries";
+import { motion } from "framer-motion";
+
 import { addDays, addWeeks, format, isSameDay, startOfWeek } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Moon } from "lunarphase-js";
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import firstQuarterImg from "@/assets/moons/first-quarter.png";
-import fullMoonImg from "@/assets/moons/full-moon.png";
-import newMoonImg from "@/assets/moons/new-moon.png";
-import thirdQuarterImg from "@/assets/moons/third-quarter.png";
-import waningCrescentImg from "@/assets/moons/waning-crescent.png";
-import waningGibbousImg from "@/assets/moons/waning-gibbous.png";
-import waxingCrescentImg from "@/assets/moons/waxing-crescent.png";
-import waxingGibbousImg from "@/assets/moons/waxing-gibbous.png";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const HomeCalendar = () => {
   const navigate = useNavigate();
@@ -20,6 +16,7 @@ const HomeCalendar = () => {
 
   const [weekOffset, setWeekOffset] = useState(0);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  // const [isExpanded, setIsExpanded] = useState(false);
 
   const previousDate = new Date(selectedDate);
   previousDate.setDate(previousDate.getDate() - 1);
@@ -35,15 +32,21 @@ const HomeCalendar = () => {
     return Array.from({ length: 7 }, (_, i) => addDays(start, i));
   }, [start]);
 
-  const phase = Moon.lunarPhase(selectedDate);
-  const agePercent = Moon.lunarAgePercent(selectedDate);
+  const currentPhase = Moon.lunarPhase(selectedDate);
+  const currentAgePercent = Moon.lunarAgePercent(selectedDate);
+  const currentIllumination =
+    ((1 - Math.cos(2 * Math.PI * currentAgePercent)) / 2) * 100;
+
+  const handleDateSelect = (newDate: Date) => {
+    if (isSameDay(newDate, selectedDate)) return;
+    setSelectedDate(newDate);
+  };
 
   const nextWeek = () => {
     if (weekOffset >= 1) {
       navigate("/calendar");
       return;
     }
-
     setWeekOffset((prev) => prev + 1);
   };
 
@@ -52,113 +55,159 @@ const HomeCalendar = () => {
       navigate("/calendar");
       return;
     }
-
     setWeekOffset((prev) => prev - 1);
   };
 
-  const moonImages: Record<string, string> = {
-    New: newMoonImg,
-    "Waxing Crescent": waxingCrescentImg,
-    "First Quarter": firstQuarterImg,
-    "Waxing Gibbous": waxingGibbousImg,
-    Full: fullMoonImg,
-    "Waning Gibbous": waningGibbousImg,
-    "Last Quarter": thirdQuarterImg,
-    "Waning Crescent": waningCrescentImg,
-  };
+  // Fixed keys for visual stability during transitions
+  const visibleMoons = [
+    {
+      id: "prev-moon",
+      date: previousDate,
+      positionClass: "absolute top-10 left-4",
+    },
+    {
+      id: "selected-moon",
+      date: selectedDate,
+      positionClass: "absolute top-0 left-1/2 -translate-x-1/2",
+    },
+    {
+      id: "next-moon",
+      date: nextDate,
+      positionClass: "absolute top-10 right-4",
+    },
+  ];
+
+  const { data } = useGetAffirmationQuery();
+
+  const affirmation = data?.description;
 
   return (
-    <section className="my-6 relative">
-      <div className="w-full">
-        <img
-          src={BgImg}
-          className="w-full object-cover"
-          alt="Calendar background"
-        />
-      </div>
-      <div className="flex justify-between">
-        <img
-          src={moonImages[Moon.lunarPhase(previousDate)]}
-          alt="Previous day moon phase"
-          className="w-20 h-20 absolute top-20"
-        />
+    <section className="mt-6 relative overflow-hidden">
+      <section
+        className="bg-cover h-116"
+        style={{
+          backgroundImage: `url(${BgImg})`,
+        }}
+      >
+        <div className="pt-16 px-4">
+          <h2 className="text-center text-xl pb-2 font-body-content font-extrabold uppercase tracking-[1px] text-white">
+            {t("home.affirmation")}
+          </h2>
 
-        <img
-          src={moonImages[Moon.lunarPhase(selectedDate)]}
-          alt="Selected day moon phase"
-          className="w-20 h-20 absolute top-10 left-1/2 -translate-x-1/2"
-        />
+          <motion.div
+            initial={false}
+            // animate={{ height: isExpanded ? 205 : 150 }}
+            transition={{ duration: 0.4 }}
+            className="overflow-hidden"
+          >
+            <p className="text-sm font-body-content text-center text-white font-bold leading-[1.6]">
+              &ldquo; {affirmation} &rdquo;
+            </p>
+          </motion.div>
+          {/* <div
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="flex items-center justify-center w-full gap-1 my-3 transition-opacity"
+          >
+            <h1 className="text-sm text-white font-semibold font-body">
+              {isExpanded ? t("home.readLess") : t("home.readMore")}
+            </h1>
+            <ArrowRight
+              size={16}
+              color={"#fff"}
+              className={`transition-transform ${isExpanded ? "-rotate-90" : ""}`}
+            />
+          </div> */}
+        </div>
+      </section>
+      {/* Moon Animation Viewport */}
+      <div className="relative h-36 w-full -mt-24 flex justify-center items-center">
+        {visibleMoons.map(({ id, date, positionClass }) => {
+          const age = Moon.lunarAgePercent(date);
 
-        <img
-          src={moonImages[Moon.lunarPhase(nextDate)]}
-          alt="Next day moon phase"
-          className="w-20 h-20 absolute top-20 right-0"
-        />
+          return (
+            <div
+              key={id}
+              className={`flex flex-col items-center ${positionClass}`}
+            >
+              <CustomAnimatedMoon agePercent={age} size={90} />
+            </div>
+          );
+        })}
       </div>
+
+      {/* Phase Details & Calendar Controls */}
       <div className="p-6">
-        <h2 className="pb-2 font-body font-bold text-xl text-center text-text-primary">
-          {phase}
+        <h2 className="pb-1 font-body-content font-semibold text-lg text-center text-text-primary">
+          {t(`calendar.${currentPhase}`)}
         </h2>
-        <p className="pb-6 font-body-content text-sm text-center font-medium text-text-primary">
-          {Number(agePercent.toFixed(2))}% illuminated
+        <p className="pb-6 font-body-content text-xs text-center font-medium text-text-primary opacity-80">
+          {currentIllumination.toFixed(1)}% {t("home.illuminated")}
         </p>
+
+        {/* Week Switcher Header */}
         <div className="flex items-center justify-between">
           <button
             onClick={prevWeek}
-            className="rounded-full p-2 hover:bg-white"
+            aria-label="Previous week"
+            className="rounded-full p-2 hover:bg-black/5 transition"
           >
-            <ChevronLeft />
+            <ChevronLeft className="w-5 h-5" />
           </button>
 
-          <h2 className="text-lg font-body font-bold">
+          <h2 className="text-sm font-body-content font-semibold">
             {weekOffset === 0
-              ? "This Week"
+              ? t("calendar.thisWeek")
               : weekOffset > 0
-                ? "Next Week"
-                : "Previous Week"}{" "}
-            · {format(start, "MMMM")}
+                ? t("calenar.nextWeek")
+                : t("calendar.previousWeek")}{" "}
+            · {t(`calendar.${format(start, "MMMM")}`)}
           </h2>
 
           <button
             onClick={nextWeek}
-            className="rounded-full p-2 hover:bg-white"
+            aria-label="Next week"
+            className="rounded-full p-2 hover:bg-black/5 transition"
           >
-            <ChevronRight />
+            <ChevronRight className="w-5 h-5" />
           </button>
         </div>
-        <div className="mt-4 grid grid-cols-7 gap-3">
+
+        {/* 7-Day Calendar Strip */}
+        <div className="mt-4 grid grid-cols-7 gap-2">
           {week.map((date) => (
-            <div key={date.toString()} className="flex flex-col items-center">
-              <span className="text-xs font-semibold font-body-content">
+            <div
+              key={date.toISOString()}
+              className="flex flex-col items-center"
+            >
+              <span className="text-xs font-semibold font-body-content mb-1 text-slate-500">
                 {format(date, "EEEEE")}
               </span>
 
               <button
-                onClick={() => setSelectedDate(date)}
-                className={`mt-2 h-12 w-12 rounded-md text-xs font-body-content font-semibold transition flex flex-col items-center justify-center gap-0.5
+                onClick={() => handleDateSelect(date)}
+                className={`h-12 w-12 rounded-xl text-xs font-body-content font-semibold transition flex flex-col items-center justify-center gap-0.5
                 ${
                   isSameDay(date, selectedDate)
-                    ? "bg-[#F8D891] text-text-primary"
-                    : "hover:bg-gray-200"
+                    ? "bg-[#F8D891] text-text-primary shadow-sm"
+                    : "hover:bg-slate-100 text-slate-700"
                 }`}
               >
                 <span>{format(date, "d")}</span>
-                <span>{Moon.lunarPhaseEmoji(date)}</span>
-
-                {/* <img
-                  src={moonImages[Moon.lunarPhase(date)]}
-                  alt={phase}
-                  className="w-4 h-4"
-                /> */}
+                <CustomAnimatedMoon
+                  agePercent={Moon.lunarAgePercent(date)}
+                  size={20}
+                />
               </button>
             </div>
           ))}
         </div>
+
+        {/* Route Action Button */}
         <button
           onClick={() => navigate("/calendar")}
-          className="bg-linear-to-r from-primary to-secondary w-full rounded-4xl py-3 mt-4 text-white font-body-content uppercase text-xs font-semibold tracking-wider"
+          className="bg-linear-to-r from-button-primary to-button-secondary w-full rounded-3xl py-3 mt-6 text-white font-body-content uppercase text-xs font-semibold tracking-wider shadow-md hover:opacity-95 transition"
         >
-          {t("home.showFullMonth")}
+          {t("calendar.showFullMonth")}
         </button>
       </div>
     </section>

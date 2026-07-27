@@ -1,15 +1,26 @@
-import { CapgoCompass, CompassAccuracy } from '@capgo/capacitor-compass';
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
-import type { RoomType } from '../types/vastu';
-import { getVastuDetails } from '../utils/vastuConfig';
-import { CompassDial } from './CompassDial';
-import { RoomSelector } from './RoomSelector';
-import { VastuGuidanceCard } from './VastuGuidanceCard';
+import { CapgoCompass, CompassAccuracy } from "@capgo/capacitor-compass";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactElement,
+} from "react";
+import { useTranslation } from "react-i18next";
+import type { RoomType } from "../types/vastu";
+import { getVastuDetails } from "../utils/vastuConfig";
+import { CompassDial } from "./CompassDial";
+import { RoomSelector } from "./RoomSelector";
+import { VastuGuidanceCard } from "./VastuGuidanceCard";
 
 export default function VastuCompassApp(): ReactElement {
-  const [selectedRoom, setSelectedRoom] = useState<RoomType>('Bedroom');
+  const { t } = useTranslation();
+  const [selectedRoom, setSelectedRoom] = useState<RoomType>("Bedroom");
   const [degree, setDegree] = useState<number>(36);
-  const [accuracy, setAccuracy] = useState<CompassAccuracy>(CompassAccuracy.UNKNOWN);
+  const [accuracy, setAccuracy] = useState<CompassAccuracy>(
+    CompassAccuracy.UNKNOWN,
+  );
   const [error, setError] = useState<string | null>(null);
 
   const isDraggingRef = useRef<boolean>(false);
@@ -24,7 +35,10 @@ export default function VastuCompassApp(): ReactElement {
     setDegree(newDegree);
   }, []);
 
-  const vastuInfo = useMemo(() => getVastuDetails(selectedRoom, degree), [selectedRoom, degree]);
+  const vastuInfo = useMemo(
+    () => getVastuDetails(selectedRoom, degree),
+    [selectedRoom, degree],
+  );
 
   // Capgo Native Sensor Management
   const startCapgoCompass = useCallback(async () => {
@@ -32,23 +46,29 @@ export default function VastuCompassApp(): ReactElement {
       setError(null);
 
       let status = await CapgoCompass.checkPermissions();
-      if (status.compass !== 'granted') {
+      if (status.compass !== "granted") {
         status = await CapgoCompass.requestPermissions();
-        if (status.compass !== 'granted') {
-          setError('Location permission is required for compass sensor.');
+        if (status.compass !== "granted") {
+          setError("Location permission is required for compass sensor.");
           return;
         }
       }
 
-      headingListenerRef.current = await CapgoCompass.addListener('headingChange', (event) => {
-        if (!isDraggingRef.current) {
-          setDegree(Math.round(event.value));
-        }
-      });
+      headingListenerRef.current = await CapgoCompass.addListener(
+        "headingChange",
+        (event) => {
+          if (!isDraggingRef.current) {
+            setDegree(Math.round(event.value));
+          }
+        },
+      );
 
-      accuracyListenerRef.current = await CapgoCompass.addListener('accuracyChange', (event) => {
-        setAccuracy(event.accuracy);
-      });
+      accuracyListenerRef.current = await CapgoCompass.addListener(
+        "accuracyChange",
+        (event) => {
+          setAccuracy(event.accuracy);
+        },
+      );
 
       await CapgoCompass.startListening({
         minInterval: 100,
@@ -58,7 +78,7 @@ export default function VastuCompassApp(): ReactElement {
       await CapgoCompass.watchAccuracy();
 
       const initialHeading = await CapgoCompass.getCurrentHeading();
-      if (initialHeading && typeof initialHeading.value === 'number') {
+      if (initialHeading && typeof initialHeading.value === "number") {
         setDegree(Math.round(initialHeading.value));
       }
 
@@ -67,7 +87,10 @@ export default function VastuCompassApp(): ReactElement {
         setAccuracy(initialAccuracy.accuracy);
       }
     } catch (err) {
-      console.warn('Capgo Compass native plugin not available, using fallback:', err);
+      console.warn(
+        "Capgo Compass native plugin not available, using fallback:",
+        err,
+      );
       setupWebCompassFallback();
     }
   }, []);
@@ -95,15 +118,19 @@ export default function VastuCompassApp(): ReactElement {
       if (isDraggingRef.current) return;
       const ev = e as unknown as { webkitCompassHeading?: number };
 
-      if (typeof ev.webkitCompassHeading === 'number') {
+      if (typeof ev.webkitCompassHeading === "number") {
         setDegree(Math.round(ev.webkitCompassHeading));
       } else if (e.alpha !== null && e.alpha !== undefined) {
         setDegree(Math.round(360 - e.alpha));
       }
     };
 
-    window.addEventListener('deviceorientationabsolute', handleDeviceOrientation as EventListener, true);
-    window.addEventListener('deviceorientation', handleDeviceOrientation, true);
+    window.addEventListener(
+      "deviceorientationabsolute",
+      handleDeviceOrientation as EventListener,
+      true,
+    );
+    window.addEventListener("deviceorientation", handleDeviceOrientation, true);
   };
 
   useEffect(() => {
@@ -116,11 +143,23 @@ export default function VastuCompassApp(): ReactElement {
   const renderAccuracyBadge = () => {
     switch (accuracy) {
       case CompassAccuracy.HIGH:
-        return <span className="text-green-600 font-semibold">High (&lt;5° error)</span>;
+        return (
+          <span className="text-green-600 font-semibold">
+            High (&lt;5° error)
+          </span>
+        );
       case CompassAccuracy.MEDIUM:
-        return <span className="text-amber-600 font-semibold">Medium (&lt;10° error)</span>;
+        return (
+          <span className="text-amber-600 font-semibold">
+            Medium (&lt;10° error)
+          </span>
+        );
       case CompassAccuracy.LOW:
-        return <span className="text-red-500 font-semibold">Low (Calibrate Device)</span>;
+        return (
+          <span className="text-red-500 font-semibold">
+            Low (Calibrate Device)
+          </span>
+        );
       case CompassAccuracy.UNRELIABLE:
         return <span className="text-red-600 font-semibold">Unreliable</span>;
       default:
@@ -130,11 +169,14 @@ export default function VastuCompassApp(): ReactElement {
 
   return (
     <div className="flex flex-col items-center py-6 font-body text-[#3B1F0A]">
-      <RoomSelector selectedRoom={selectedRoom} onSelectRoom={setSelectedRoom} />
+      <RoomSelector
+        selectedRoom={selectedRoom}
+        onSelectRoom={setSelectedRoom}
+      />
 
       <p className="text-center text-xs font-body text-[#8A6A4B] mb-2">
-        Point towards the direction for your{' '}
-        <span className="font-semibold text-[#663814]">{selectedRoom}</span>
+        {t("vastuCompass.details")}{" "}
+        <span className="font-semibold text-[#663814]">{t(`vastuCompass.${selectedRoom}`)}</span>
       </p>
 
       {error ? (
@@ -159,7 +201,10 @@ export default function VastuCompassApp(): ReactElement {
             Sensor Accuracy: {renderAccuracyBadge()}
           </p>
 
-          <VastuGuidanceCard selectedRoom={selectedRoom} vastuInfo={vastuInfo} />
+          <VastuGuidanceCard
+            selectedRoom={selectedRoom}
+            vastuInfo={vastuInfo}
+          />
         </>
       )}
     </div>

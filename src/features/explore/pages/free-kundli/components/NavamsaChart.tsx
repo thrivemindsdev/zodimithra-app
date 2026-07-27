@@ -1,14 +1,17 @@
 import { useGetChartQuery } from "@/queries/exploreQueries";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const NavamsaChart = ({ userDetails, birthDate }: any) => {
+  
+  const {t} = useTranslation();
   const [selected, setSelected] = useState<"north-indian" | "south-indian">(
     "south-indian",
   );
 
   const tabs = [
-    { id: "north-indian", label: "North Indian" },
-    { id: "south-indian", label: "South Indian" },
+    { id: "north-indian", label: t("freeKundli.northIndian") },
+    { id: "south-indian", label: t("freeKundli.south Indian") },
   ] as const;
 
   const { data: chartData, isLoading } = useGetChartQuery({
@@ -22,7 +25,7 @@ const NavamsaChart = ({ userDetails, birthDate }: any) => {
   return (
     <div className="w-full max-w-md">
       <h2 className="mb-4 text-xl font-bold text-primary font-body tracking-tight">
-        Navamsa Chart
+        {t("freeKundli.navamsaChart")}
       </h2>
 
       <div className="flex rounded-full bg-transparent gap-4 pb-4">

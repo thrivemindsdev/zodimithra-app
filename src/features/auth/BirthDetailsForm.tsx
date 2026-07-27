@@ -118,7 +118,7 @@ export default function BirthDetailsForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen font-body bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-8">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800">
@@ -177,7 +177,7 @@ export default function BirthDetailsForm() {
           <button
             type="submit"
             disabled={isFormIncomplete}
-            className="w-full mt-6 bg-primary text-white font-semibold py-2.5 px-4 rounded-lg transition outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-6 font-body bg-primary text-white font-semibold py-2.5 px-4 rounded-lg transition outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Submit
           </button>

@@ -7,13 +7,13 @@ import Header from "@/components/layout/Header";
 import { KundliMatchApi } from "@/services/explore.api";
 import { timeZone } from "@/utils/timezone-utils";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import KundliMatchForm, {
-    type MatchFormState,
+  type MatchFormState,
 } from "./components/KundliMatchForm";
-import KundliMatchResult from "./components/KundliMatchResult";
 
 const KundliMatch = () => {
-  const [result, setResult] = useState<any>(null);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleMatch = async (formData: MatchFormState) => {
@@ -42,9 +42,12 @@ const KundliMatch = () => {
     try {
       setLoading(true);
       const response = await KundliMatchApi(payload);
-      if (response) {
-        setResult(response);
-      }
+
+      navigate("/kundli-match-result", {
+        state: {
+          result: response,
+        },
+      });
     } catch (error) {
       console.error("Failed to fetch Kundli match results:", error);
     } finally {
@@ -62,6 +65,7 @@ const KundliMatch = () => {
         title="Kundli Matching"
         subtitle="Match your kundlis to see the score"
         showBackButton
+        redirectPath="/explore"
       />
       <BodyLayout>
         <div className="pt-6">
@@ -71,16 +75,7 @@ const KundliMatch = () => {
             rightImage={RightImage}
           />
         </div>
-
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary" />
-          </div>
-        ) : result ? (
-          <KundliMatchResult data={result} />
-        ) : (
-          <KundliMatchForm handleMatch={handleMatch} loading={loading} />
-        )}
+        <KundliMatchForm handleMatch={handleMatch} loading={loading} />
       </BodyLayout>
     </>
   );

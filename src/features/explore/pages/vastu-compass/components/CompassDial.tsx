@@ -135,8 +135,8 @@ export const CompassDial = memo<CompassDialProps>(
                   key={dir.label}
                   className={`absolute transform -translate-x-1/2 -translate-y-1/2 ${
                     dir.cardinal
-                      ? "font-serif font-semibold"
-                      : "font-sans font-normal"
+                      ? "font-body font-semibold"
+                      : "font-body-content font-normal"
                   } ${
                     dir.label === "N"
                       ? "text-[15px] text-[#C0392B]"
@@ -181,10 +181,10 @@ export const CompassDial = memo<CompassDialProps>(
         {/* Readout Display */}
         <div className="mt-6 flex items-center justify-center gap-3 w-32 h-13 bg-[#FFFAF3] border border-[#EF9F27] rounded-[30px] shrink-0">
           <div className="flex items-center gap-2">
-            <span className="font-serif font-medium text-[26.6px] leading-10 text-[#2C1A08]">
+            <span className="font-body font-medium text-[26.6px] leading-10 text-[#2C1A08]">
               {degree}°
             </span>
-            <span className="font-sans font-semibold text-[13px] leading-4 text-[#D1197E] tracking-widest mt-1">
+            <span className="font-body-content font-semibold text-[13px] leading-4 text-[#D1197E] tracking-widest mt-1">
               {getCardinalDirection(degree)}
             </span>
           </div>

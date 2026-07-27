@@ -2,10 +2,10 @@ import { axiosInstance, axiosSubInstance } from "@/lib/axios";
 import type { BirthDetailsParams, LanguageParams } from "@/types/common.types";
 import type { HoroscopeParams } from "@/types/home.types";
 
-export const HoroscopeApi = async ({ sign_key, lang }: HoroscopeParams) => {
+export const HoroscopeApi = async ({ sign, period, lang }: HoroscopeParams) => {
   try {
-    const response = await axiosInstance.get("/customer/horoscope/details", {
-      params: { sign_key, lang },
+    const response = await axiosInstance.get("/horoscope", {
+      params: { sign, period, lang },
     });
 
     return response?.data?.data;
@@ -42,6 +42,62 @@ export const LuckyDetailsApi = async ({
     return response?.data?.data;
   } catch (error) {
     console.error("Error fetching lucky details:", error);
+    throw error;
+  }
+};
+
+export const GetAllTarotCardsApi = async () => {
+  try {
+    const response = await axiosInstance.get("/tarot/cards");
+    return response?.data?.data;
+  } catch (error) {
+    console.error("Error fetching tarot cards :", error);
+    throw error;
+  }
+};
+
+export const GetDailyMantraApi = async () => {
+  try {
+    const response = await axiosInstance.get("/daily-mantra");
+    return response?.data?.data;
+  } catch (error) {
+    console.error("Error fetching daily mantra :", error);
+    throw error;
+  }
+};
+
+export const GetAffirmationApi = async () => {
+  try {
+    const response = await axiosInstance.get("/affirmation/daily");
+    return response?.data?.data;
+  } catch (error) {
+    console.error("Error fetching affirmation daily :", error);
+    throw error;
+  }
+};
+
+export const GetTarotCardResult = async ({ card_name, lang }: any) => {
+  try {
+    const response = await axiosInstance.get("/tarot/card-of-day", {
+      params: { card_name, lang },
+    });
+
+    return response?.data?.response;
+  } catch (error) {
+    console.error("Error fetching tarot card result details:", error);
+    throw error;
+  }
+};
+
+export const GetYesOrNoResult = async ({ card_name, lang }: any) => {
+  try {
+    const response = await axiosInstance.get("/tarot/yes-no", {
+      params: { card_name, lang },
+    });
+
+    return response?.data?.response;
+  } catch (error) {
+    console.error("Error fetching tarot card result details:", error);
     throw error;
   }
 };

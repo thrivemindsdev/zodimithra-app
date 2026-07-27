@@ -19,3 +19,15 @@ export const GetFamilyMembersApi = async () => {
     throw error;
   }
 };
+
+export const AddFamilyMember = async (data: any) => {
+  return await axiosInstance.post("/family-members", data);
+};
+
+export const updateUserDetailsApi = async (data: FormData) => {
+  return await axiosInstance.post("/profile/update", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};

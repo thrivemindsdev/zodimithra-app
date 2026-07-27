@@ -1,5 +1,6 @@
 import {
   GetChartApi,
+  GetGemStoneFinderApi,
   GetPanchangDetailsApi,
   GetPlanetaryPositionApi,
 } from "@/services/explore.api";
@@ -10,6 +11,7 @@ export const HOME_QUERY_KEYS = {
   panchangDetails: "panchang-details",
   planetaryDetails: "planetary-details",
   chartDetails: "chart-details",
+  gemstone: "gem-stone",
 };
 
 export const useGetPanchangDetailsQuery = ({
@@ -71,5 +73,19 @@ export const useGetChartQuery = ({
     enabled: Boolean(
       ayanamsa && coordinates && datetime && chart_type && chart_style,
     ),
+  });
+};
+
+
+export const useGetGemStoneFinderQuery = ({
+  dob,
+  lat,
+  lon,
+  tz,
+}: BirthDetailsParams) => {
+  return useQuery({
+    queryKey: [HOME_QUERY_KEYS.planetaryDetails, dob, lat, lon, tz],
+    queryFn: () => GetGemStoneFinderApi({ dob, lat, lon, tz }),
+    enabled: Boolean(dob && lat && lon && tz),
   });
 };

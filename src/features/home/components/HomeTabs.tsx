@@ -1,6 +1,7 @@
 import { Circle } from "lucide-react";
 import { memo, type Dispatch, type SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const tabs = [
   {
@@ -21,13 +22,21 @@ interface HomeTabsProps {
 
 const HomeTabs = ({ activeTab, setActiveTab }: HomeTabsProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <div className="flex pb-5">
       {tabs.map((tab) => (
         <button
           key={tab.id}
           type="button"
-          onClick={() => setActiveTab(tab.id)}
+          onClick={() => {
+            if (tab.id === "ashrams") {
+              // setActiveTab(tab.id);
+              navigate("/ashrams");
+            } else {
+              setActiveTab(tab.id);
+            }
+          }}
           className={`relative flex flex-1 items-center justify-center gap-2 py-3 text-center font-body-content text-md font-normal transition-all duration-200 ${
             activeTab === tab.id ? "text-text-primary" : "text-text-primary/50"
           }`}

@@ -3,31 +3,48 @@ import TarotIcon from "@/assets/home/tarot.png";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-const HomeServices = () => {
+const HomeServices = ({ isPremium }: { isPremium: boolean }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
-    <section className="flex justify-between items-center gap-4 w-full my-8">
-      <div
-        className="bg-input-bg pt-2 rounded-4xl shadow-sm"
-        onClick={() => navigate("/numerology")}
-      >
-        <img src={NumerologyIcon} alt="Numerology" className="p-3" />
-        <p className="text-center font-header text-sm font-medium rounded-bl-4xl rounded-br-4xl py-4 text-white bg-primary">
-          {t("home.numerology")}
-        </p>
-      </div>
-      <div
-        className="bg-input-bg pt-2 rounded-4xl shadow-sm"
-        onClick={() => navigate("/tarot-reading")}
-      >
-        <img src={TarotIcon} alt="Tarot" className="p-3" />
-        <p className="text-center font-header text-sm font-medium rounded-bl-4xl rounded-br-4xl py-4 text-white bg-primary">
-          {t("home.tarotReading")}
-        </p>
-      </div>
-    </section>
+    <>
+      <h2 className="text-lg font-bold font-body-content button-text-gradient capitalize pb-2">
+        {t("home.discover")}
+      </h2>
+
+      <section className="grid grid-cols-2 gap-4">
+        <div
+          onClick={() => navigate("/numerology")}
+          className="flex items-center gap-3 rounded-2xl p-3 card-shadow cursor-pointer hover:bg-primary/10 transition"
+        >
+          <img
+            src={NumerologyIcon}
+            alt="Numerology"
+            className="w-10 h-10 object-contain"
+          />
+          <p className="text-text-primary text-xs font-bold">
+            {t("home.numerology")}
+          </p>
+        </div>
+
+        <div
+          onClick={() => {
+            isPremium ? navigate("/tarot-reading") : navigate("/premium");
+          }}
+          className="flex items-center gap-3 rounded-2xl p-3 card-shadow cursor-pointer hover:bg-primary/10 transition"
+        >
+          <img
+            src={TarotIcon}
+            alt="Tarot"
+            className="w-10 h-10 object-contain"
+          />
+          <p className="text-text-primary text-xs font-bold">
+            {t("home.tarotReading")}
+          </p>
+        </div>
+      </section>
+    </>
   );
 };
 

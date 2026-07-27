@@ -16,20 +16,21 @@ import vastuImg from "@/assets/explore/vastu.png";
 // import vivahImg from "@/assets/explore/vivah_muhurt_new.png";
 import startImg from "@/assets/explore/staricon.png";
 import GlobalLoader from "@/components/common/GlobalLoader";
+import { useTranslation } from "react-i18next";
 
 const ExploreScreen = () => {
   const navigate = useNavigate();
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("all");
   const { data: userData, isLoading: isUserLoading } = useGetUserDetailsQuery();
   const isPremium = userData?.is_subscribed;
 
   const TABS = [
-    { id: "all", label: "All" },
-    { id: "tools", label: "Tools" },
-    { id: "calculators", label: "Calculators" },
-    { id: "readings", label: "Readings" },
-    { id: "premiumServices", label: "Premium Services" },
+    { id: "all", label: t("explore.all") },
+    { id: "tools", label: t("explore.tools") },
+    { id: "calculators", label: t("explore.calculators") },
+    { id: "readings", label: t("explore.readings") },
+    { id: "premiumServices", label: t("explore.premiumServices") },
   ] as const;
 
   const ALL_TOOLS = [
@@ -45,7 +46,7 @@ const ExploreScreen = () => {
     // },
     {
       id: "gemstone-finder",
-      label: "Gemstone Finder",
+      label: t("explore.gemstoneFinder"),
       category: "tools",
       icon: gemstoneImg,
       path: "/gemstone",
@@ -55,7 +56,7 @@ const ExploreScreen = () => {
     },
     {
       id: "panchang",
-      label: "Panchang",
+      label: t("explore.panchang"),
       category: "readings",
       icon: panchangImg,
       path: "/panchang",
@@ -75,7 +76,7 @@ const ExploreScreen = () => {
     // },
     {
       id: "vastu-compass",
-      label: "Vastu Compass",
+      label: t("explore.vastuCompass"),
       category: "tools",
       icon: vastuImg,
       path: "/vastu-compass",
@@ -85,7 +86,7 @@ const ExploreScreen = () => {
     },
     {
       id: "kundli-match",
-      label: "Kundli Match",
+      label: t("explore.kundliMatch"),
       category: "calculators",
       icon: kundliImg,
       path: "/kundli-match",
@@ -115,7 +116,7 @@ const ExploreScreen = () => {
     // },
     {
       id: "free-kundli",
-      label: "Free Kundli",
+      label: t("explore.freeKundli"),
       category: "readings",
       icon: freeKundliImg,
       path: "/free-kundli",
@@ -135,10 +136,10 @@ const ExploreScreen = () => {
     // },
     {
       id: "mangal-dosh",
-      label: "Mangal Dosh",
+      label: t("explore.mangalDosh"),
       category: "calculators",
       icon: mangalImg,
-      path: "/mangal-dosha",
+      path: "/mangal-dosh",
       bgColor: "bg-[#FEEFE3]",
       borderColor: "border-[#CD2A12]",
       premium: false,
@@ -156,7 +157,7 @@ const ExploreScreen = () => {
 
   return (
     <>
-      <Header title="Explore" subtitle="Explore mystical tools" />
+      <Header title={t("explore.title")} subtitle={t("explore.subTitle")} />
       <BodyLayout>
         {/* Tabs Header */}
         <div className="flex overflow-x-auto hide-scrollbar mb-3 gap-3 bg-white rounded-[14px] py-2">
@@ -185,7 +186,7 @@ const ExploreScreen = () => {
                 className={`${tool.bgColor} ${tool.borderColor} mt-12 border rounded-2xl p-3 flex flex-col justify-between h-22 relative`}
                 onClick={() => {
                   if (isLocked) {
-                    navigate("/home/premium");
+                    navigate("/premium");
                   } else {
                     navigate(tool.path);
                   }

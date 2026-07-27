@@ -13,6 +13,7 @@ import {
   Wallet,
 } from "lucide-react";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 interface MenuItemProps {
@@ -60,6 +61,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
 };
 
 const ProfileScreen = () => {
+  const {t} = useTranslation();
   const navigate = useNavigate();
   const { data: userDetails } = useGetUserDetailsQuery();
   const phoneNumber = useAuthStore((state) => state.phoneNumber);
@@ -85,9 +87,9 @@ const ProfileScreen = () => {
   return (
     <>
       <Header
-        title="Profile"
-        subtitle="Find your perfect Astrologer"
+        title={t("profile.title")}
         showBackButton
+        redirectPath="/home"
       />
       <BodyLayout>
         <div className="max-w-md mx-auto bg-white min-h-screen shadow-md font-sans pb-8">
@@ -98,9 +100,9 @@ const ProfileScreen = () => {
           >
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 sm:w-32 sm:h-32 rounded-full border-2 border-gray-200 overflow-hidden shadow-sm bg-gray-50 flex items-center justify-center">
-                {userDetails.image_url ? (
+                {userDetails?.image_url ? (
                   <img
-                    src={userDetails.image_url}
+                    src={userDetails?.image_url}
                     alt="Profile Avatar"
                     className="w-full h-full object-cover"
                   />
@@ -112,7 +114,7 @@ const ProfileScreen = () => {
               </div>
               <div>
                 <h2 className="text-lg font-body uppercase font-bold text-primary">
-                  {userDetails.name}
+                  {userDetails?.name}
                 </h2>
                 <p className="text-sm font-body text-text-secondary">
                   {phoneNumber}
@@ -126,34 +128,34 @@ const ProfileScreen = () => {
           <div className="px-4">
             <MenuItem
               icon={<Bell className="w-6 h-6" />}
-              label="Notification"
+              label={t("profile.notification")}
             />
-            <MenuItem icon={<Wallet className="w-6 h-6" />} label="Wallet" />
+            <MenuItem icon={<Wallet className="w-6 h-6" />} label={t("profile.wallet")} />
             <MenuItem
               icon={<History className="w-6 h-6" />}
-              label="Order History"
+              label={t("profile.orderHistory")}
             />
             <MenuItem
               icon={<Crown className="w-6 h-6" />}
-              label="Subscriptions"
+              label={t("profile.subscription")}
               badge="Free Plan"
               onClick={() => navigate("/premium")}
             />
             <MenuItem
               icon={<Globe className="w-6 h-6" />}
-              label="Change Language"
+              label={t("profile.changeLanguage")}
               badge="English(US)"
             />
 
             <MenuItem
               icon={<LogOut className="w-6 h-6 text-red-600" />}
-              label="Logout"
+              label={t("profile.logout")}
               danger
               onClick={handleLogout}
             />
             <MenuItem
               icon={<Trash2 className="w-6 h-6 text-red-600" />}
-              label="Delete Account"
+              label={t("profile.deleteAccount")}
               danger
               onClick={handleDeleteAccount}
             />

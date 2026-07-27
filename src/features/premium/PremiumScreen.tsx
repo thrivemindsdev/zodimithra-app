@@ -1,3 +1,5 @@
+import GlobalLoader from "@/components/common/GlobalLoader";
+import PaymentStatusModal from "@/components/common/PaymentStatusModal";
 import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";
 import { useGetPremiumPlansQuery } from "@/queries/premiumQueries";
@@ -20,6 +22,7 @@ import {
   Sun,
   Users,
 } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const features = [
@@ -73,9 +76,16 @@ const benefits = [
 const PremiumScreen = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [paymentModal, setPaymentModal] = useState({
+    open: false,
+    status: "success" as "success" | "failed",
+    redirectTo: "",
+  });
 
-  const { data: userDetails } = useGetUserDetailsQuery();
-  const { data: premiumPlans } = useGetPremiumPlansQuery();
+  const { data: userDetails, isLoading: isUserLoading } =
+    useGetUserDetailsQuery();
+  const { data: premiumPlans, isLoading: isPremiumLoading } =
+    useGetPremiumPlansQuery();
 
   const selectedPlan = premiumPlans?.plans?.[0];
 
@@ -118,6 +128,11 @@ const PremiumScreen = () => {
         modal: {
           ondismiss: () => {
             console.log("Payment popup closed");
+            setPaymentModal({
+              open: true,
+              status: "failed",
+              redirectTo: "/premium",
+            });
           },
         },
 
@@ -134,10 +149,18 @@ const PremiumScreen = () => {
               queryKey: [USER_QUERY_KEYS.userDetails],
             });
 
-            navigate("/home", { replace: true });
+            setPaymentModal({
+              open: true,
+              status: "success",
+              redirectTo: "/home",
+            });
           } catch (error) {
             console.error("Payment verification failed:", error);
-            navigate("/premium", { replace: true });
+            setPaymentModal({
+              open: true,
+              status: "failed",
+              redirectTo: "/premium",
+            });
           }
         },
       };
@@ -146,8 +169,18 @@ const PremiumScreen = () => {
       razorpay.open();
     } catch (error) {
       console.error("Unable to initiate payment:", error);
+
+      setPaymentModal({
+        open: true,
+        status: "failed",
+        redirectTo: "/premium",
+      });
     }
   };
+
+  if (isUserLoading || isPremiumLoading) {
+    return <GlobalLoader />;
+  }
 
   return (
     <>
@@ -318,6 +351,35 @@ const PremiumScreen = () => {
           </button>
         </div>
       </BodyLayout>
+      {paymentModal.open && (
+        <PaymentStatusModal
+          isOpen={paymentModal.open}
+          status={paymentModal.status}
+          title={
+            paymentModal.status === "success"
+              ? "Payment Successful"
+              : "Payment Failed"
+          }
+          description={
+            paymentModal.status === "success"
+              ? "Your premium subscription has been activated successfully."
+              : "Your payment could not be completed. Please try again."
+          }
+          buttonText="Done"
+          onDone={() => {
+            setPaymentModal((prev) => ({
+              ...prev,
+              open: false,
+            }));
+
+            if (paymentModal.redirectTo && paymentModal.status === "success") {
+              navigate("/home");
+            } else {
+              navigate("/premium")
+            }
+          }}
+        />
+      )}
     </>
   );
 };

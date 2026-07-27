@@ -11,11 +11,43 @@ import GlobalLoader from "../common/GlobalLoader";
 import Header from "../layout/Header";
 import BodyLayout from "../layout/BodyLayout";
 import AddFamilyMemberModal from "./AddFamilyMemberModal";
+import PaymentStatusModal from "../common/PaymentStatusModal";
+import AriesImage from "@/assets/signs/ARIES.png";
+import TaurusImage from "@/assets/signs/TAURUS.png";
+import GeminiImage from "@/assets/signs/GEMINI.png";
+import CancerImage from "@/assets/signs/CANCER.png";
+import LeoImage from "@/assets/signs/LEO.png";
+import VirgoImage from "@/assets/signs/VIRGO.png";
+import LibraImage from "@/assets/signs/LIBRA.png";
+import ScorpioImage from "@/assets/signs/SCORPION.png";
+import SagittariusImage from "@/assets/signs/SAGITTARUIS.png";
+import CapricornImage from "@/assets/signs/CAPRICON.png";
+import AquariusImage from "@/assets/signs/AQUARIUS.png";
+import PiscesImage from "@/assets/signs/PISCES.png";
+
+const zodiacSigns: Record<string, string> = {
+  Aries: AriesImage,
+  Taurus: TaurusImage,
+  Gemini: GeminiImage,
+  Cancer: CancerImage,
+  Leo: LeoImage,
+  Virgo: VirgoImage,
+  Libra: LibraImage,
+  Scorpio: ScorpioImage,
+  Sagittarius: SagittariusImage,
+  Capricorn: CapricornImage,
+  Aquarius: AquariusImage,
+  Pisces: PiscesImage,
+};
 
 const FamilyMembers = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState({
+    open: false,
+    status: "failed" as "failed",
+  });
   const { data: familyMembersData, isLoading } = useGetFamilyMembersQuery();
   const { data: userData, isLoading: isUserLoading } = useGetUserDetailsQuery();
   const isPremium = userData?.is_subscribed;
@@ -29,7 +61,24 @@ const FamilyMembers = () => {
     );
 
   const handleAdd = () => {
-    isPremium ? setOpen(true) : navigate("/home/premium");
+    const count = familyMembersData?.length || 0;
+
+    if (!isPremium) {
+      if (count < 2) {
+        setOpen(true);
+      } else {
+        navigate("/premium");
+      }
+    } else {
+      if (count < 4) {
+        setOpen(true);
+      } else {
+        setAlertOpen({
+          open: true,
+          status: "failed",
+        });
+      }
+    }
   };
 
   if (isLoading || isUserLoading) {
@@ -38,9 +87,13 @@ const FamilyMembers = () => {
 
   return (
     <>
-      <Header title="Family Members" showBackButton />
+      <Header title="Family Members" showBackButton redirectPath="/home" />
       <BodyLayout>
-        <HomeGreetings data={userData} moreInfo={false} />
+        <HomeGreetings
+          loading={isUserLoading}
+          data={userData}
+          moreInfo={false}
+        />
         {/* Search */}
         <div className="mb-5 flex items-center gap-3">
           <div className="flex h-12 flex-1 items-center rounded-full border border-gray-300 bg-white px-4 shadow-sm">
@@ -67,13 +120,13 @@ const FamilyMembers = () => {
         <div className="space-y-4">
           {filteredMembers?.map((member: any) => (
             <div
-              key={member.id}
+              key={member.user_id}
               className="flex items-center rounded-3xl border border-gray-200 border-t-0 bg-white p-3 shadow-[0_1px_0_rgba(0,0,0,0.12)] transition-all duration-300 hover:shadow-md"
             >
               {/* Avatar */}
               <div className="mr-4 h-16 w-16 overflow-hidden rounded-2xl bg-gray-100">
                 <img
-                  src={member.image}
+                  src={zodiacSigns[member.zodiac_sign]}
                   alt={member.name}
                   className="h-full w-full object-cover"
                 />
@@ -99,6 +152,23 @@ const FamilyMembers = () => {
         </div>
       </BodyLayout>
       {open && <AddFamilyMemberModal open={open} setOpen={setOpen} />}
+      {alertOpen.open && (
+        <PaymentStatusModal
+          isOpen={alertOpen.open}
+          status={alertOpen.status}
+          title={"Failed"}
+          description={
+            "You have reached the maximum limit of 4 family members."
+          }
+          buttonText="Done"
+          onDone={() => {
+            setAlertOpen((prev) => ({
+              ...prev,
+              open: false,
+            }));
+          }}
+        />
+      )}
     </>
   );
 };

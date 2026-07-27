@@ -129,6 +129,7 @@ const ShubhDinFinder = () => {
         title="Shub din finder"
         subtitle="Select occation to find auspicious dates"
         showBackButton
+        redirectPath="/calendar"
       />
       <BodyLayout>
         {/* Category Chips */}

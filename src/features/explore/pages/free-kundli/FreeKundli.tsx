@@ -1,7 +1,6 @@
 import BannerImage from "@/assets/banner/bg-banner.jpg";
 import RightImage from "@/assets/banner/love-calculator.png";
 import Banner from "@/components/common/Banner";
-import GlobalLoader from "@/components/common/GlobalLoader";
 import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";
 import {
@@ -11,12 +10,14 @@ import {
 import { useGetCurrentLocationQuery } from "@/queries/locationQueries";
 import { useGetUserDetailsQuery } from "@/queries/userQueries";
 import { timeZone } from "@/utils/timezone-utils";
+import { useTranslation } from "react-i18next";
 import BirthDetails from "./components/BirthDetails";
 import NavamsaChart from "./components/NavamsaChart";
 import PanchangDetails from "./components/PanchangDetails";
 import PlanetaryPositionsCard from "./components/PlanetaryPositionsCard";
 
 const FreeKundli = () => {
+  const { t } = useTranslation();
   const { data: userData, isLoading: isUserLoading } = useGetUserDetailsQuery();
   const birthDate = `${userData?.date_of_birth}T${userData?.birth_time}Z`;
 
@@ -40,27 +41,36 @@ const FreeKundli = () => {
       tz: timeZone,
     });
 
-  const isLoading = isPanchangLoading || isUserLoading || isPlanetaryLoading || isLocationLoading;
-
-  if (isLoading) {
-    return <GlobalLoader />;
-  }
-
   return (
     <>
-      <Header title="Free Kundli" showBackButton />
+      <Header
+        title={t("freeKundli.title")}
+        showBackButton
+        redirectPath="/explore"
+      />
       <BodyLayout>
         <div className="pt-6">
           <Banner
-            title="Free Kundli"
+            title={t("freeKundli.title")}
             bgImage={BannerImage}
             rightImage={RightImage}
           />
         </div>
-        <PlanetaryPositionsCard data={planetaryData} />
+        <PlanetaryPositionsCard
+          loading={isPlanetaryLoading || isLocationLoading}
+          data={planetaryData}
+        />
         <NavamsaChart userDetails={userData} birthDate={birthDate} />
-        <BirthDetails data={userData} panchangData={panchangData} />
-        <PanchangDetails data={panchangData} birthDate={birthDate} />
+        <BirthDetails
+          loading={isUserLoading}
+          data={userData}
+          panchangData={panchangData}
+        />
+        <PanchangDetails
+          loading={isPanchangLoading || isLocationLoading}
+          data={panchangData}
+          birthDate={birthDate}
+        />
       </BodyLayout>
     </>
   );
