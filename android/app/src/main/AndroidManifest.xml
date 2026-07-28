@@ -10,6 +10,11 @@
             <data android:scheme="https"/>
         </intent>
 
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="market" />
+        </intent>
+
         <!-- CRITICAL FOR UPI: Allows opening any app that supports upi:// scheme -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -22,6 +27,8 @@
         <package android:name="net.one97.paytm" />                        <!-- Paytm -->
         <package android:name="in.org.npci.upiapp" />                    <!-- BHIM -->
         <package android:name="com.whatsapp" />                           <!-- WhatsApp Pay -->
+        <!-- Explicit permission to target the Play Store package -->
+        <package android:name="com.android.vending" />
     </queries>
 
     <application
