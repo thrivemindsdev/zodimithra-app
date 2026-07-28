@@ -10,6 +10,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Check, X } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Capacitor } from "@capacitor/core";
+import { Checkout } from "capacitor-razorpay";
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -31,9 +33,13 @@ export default function SubscriptionModal({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: userDetails } = useGetUserDetailsQuery();
-  const [paymentModal, setPaymentModal] = useState({
+  const [paymentModal, setPaymentModal] = useState<{
+    open: boolean;
+    status: "success" | "failed";
+    redirectTo: string;
+  }>({
     open: false,
-    status: "success" as "success" | "failed",
+    status: "success",
     redirectTo: "",
   });
 
@@ -59,25 +65,33 @@ export default function SubscriptionModal({
         return;
       }
 
-      if (!(window as any).Razorpay) {
-        console.error("Razorpay SDK not loaded");
-        return;
-      }
+      if (Capacitor.isNativePlatform()) {
+        try {
+          const res = await Checkout.open({
+            key: orderData.key_id,
+            amount: orderData.amount.toString(),
+            currency: orderData.currency,
+            order_id: orderData.order_id,
+            name: "ZodiMithra",
+            description: "Ashram Premium",
+            prefill: {
+              name: userDetails?.name ?? "",
+            },
+            theme: {
+              color: "#2A0B07",
+            },
+          } as any);
 
-      const options = {
-        key: orderData.key_id,
-        amount: orderData.amount,
-        currency: orderData.currency,
-        order_id: orderData.order_id,
-        name: "ZodiMithra",
-        description: "Ashram Premium",
+          const responseData =
+            typeof res.response === "string"
+              ? JSON.parse(res.response)
+              : res.response;
 
-        handler: async (response: any) => {
-          try {
+          if (responseData && responseData.razorpay_payment_id) {
             await verifyAshramSubscriptionPayment(plan_id, {
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
+              razorpay_payment_id: responseData.razorpay_payment_id,
+              razorpay_order_id: responseData.razorpay_order_id,
+              razorpay_signature: responseData.razorpay_signature,
               amount: orderData.amount,
             });
 
@@ -90,54 +104,94 @@ export default function SubscriptionModal({
               status: "success",
               redirectTo: "/ashrams",
             });
-
-          } catch (error) {
-            console.error("Payment verification failed:", error);
-            await queryClient.invalidateQueries({
-              queryKey: [ASHRAMS_QUERY_KEYS.ashrams],
-            });
-
-            setPaymentModal({
-              open: true,
-              status: "failed",
-              redirectTo: "/ashrams",
-            });
+          } else {
+            throw new Error("Invalid payment response structure");
           }
-        },
+        } catch (checkoutError) {
+          console.error("Native Checkout failed:", checkoutError);
+          setPaymentModal({
+            open: true,
+            status: "failed",
+            redirectTo: "",
+          });
+        }
+      } else {
+        // Web flow
+        if (!(window as any).Razorpay) {
+          console.error("Razorpay SDK not loaded");
+          return;
+        }
 
-        prefill: {
-          name: userDetails?.name ?? "",
-        },
+        const options = {
+          key: orderData.key_id,
+          amount: orderData.amount,
+          currency: orderData.currency,
+          order_id: orderData.order_id,
+          name: "ZodiMithra",
+          description: "Ashram Premium",
 
-        theme: {
-          color: "#2A0B07",
-        },
+          handler: async (response: any) => {
+            try {
+              await verifyAshramSubscriptionPayment(plan_id, {
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                amount: orderData.amount,
+              });
 
-        modal: {
-          ondismiss: () => {
-            console.log("Checkout closed");
+              await queryClient.invalidateQueries({
+                queryKey: [ASHRAMS_QUERY_KEYS.ashrams],
+              });
+
+              setPaymentModal({
+                open: true,
+                status: "success",
+                redirectTo: "/ashrams",
+              });
+            } catch (error) {
+              console.error("Payment verification failed:", error);
+              setPaymentModal({
+                open: true,
+                status: "failed",
+                redirectTo: "",
+              });
+            }
           },
-        },
-      };
 
-      const razorpay = new (window as any).Razorpay(options);
+          prefill: {
+            name: userDetails?.name ?? "",
+          },
 
-      razorpay.on("payment.failed", (error: any) => {
-        console.error("Payment Failed:", error);
-        setPaymentModal({
-          open: true,
-          status: "failed",
-          redirectTo: "/ashrams",
+          theme: {
+            color: "#2A0B07",
+          },
+
+          modal: {
+            ondismiss: () => {
+              console.log("Checkout closed");
+            },
+          },
+        };
+
+        const razorpay = new (window as any).Razorpay(options);
+
+        razorpay.on("payment.failed", (error: any) => {
+          console.error("Payment Failed:", error);
+          setPaymentModal({
+            open: true,
+            status: "failed",
+            redirectTo: "",
+          });
         });
-      });
 
-      razorpay.open();
+        razorpay.open();
+      }
     } catch (error) {
       console.error("Create order failed:", error);
       setPaymentModal({
         open: true,
         status: "failed",
-        redirectTo: "/ashrams",
+        redirectTo: "",
       });
     }
   };
@@ -228,7 +282,10 @@ export default function SubscriptionModal({
               billed monthly · cancel anytime
             </p>
 
-            <button className="mt-2 w-full text-center text-sm text-[#B1976D] underline">
+            <button
+              onClick={onClose}
+              className="mt-2 w-full text-center text-sm text-[#B1976D] underline"
+            >
               Continue watching preview
             </button>
           </div>
@@ -245,17 +302,19 @@ export default function SubscriptionModal({
           }
           description={
             paymentModal.status === "success"
-              ? `Your ${details?.name} subscription has been activated successfully.`
+              ? `Your ${details?.name ?? "Ashram"} subscription has been activated successfully.`
               : "Your payment could not be completed. Please try again."
           }
           buttonText="Done"
           onDone={() => {
+            const isSuccess = paymentModal.status === "success";
             setPaymentModal((prev) => ({
               ...prev,
               open: false,
             }));
 
-            if (paymentModal.redirectTo) {
+            if (isSuccess) {
+              onClose();
               navigate("/ashrams");
             }
           }}

@@ -24,6 +24,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Capacitor } from "@capacitor/core";
+import { Checkout } from "capacitor-razorpay";
 
 const features = [
   {
@@ -76,9 +78,13 @@ const benefits = [
 const PremiumScreen = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [paymentModal, setPaymentModal] = useState({
+  const [paymentModal, setPaymentModal] = useState<{
+    open: boolean;
+    status: "success" | "failed";
+    redirectTo: string;
+  }>({
     open: false,
-    status: "success" as "success" | "failed",
+    status: "success",
     redirectTo: "",
   });
 
@@ -89,8 +95,8 @@ const PremiumScreen = () => {
 
   const selectedPlan = premiumPlans?.plans?.[0];
 
-  const planAmount = Number(selectedPlan?.price);
-  const planDuration = selectedPlan?.duration_days;
+  const planAmount = Number(selectedPlan?.price) || 0;
+  const planDuration = selectedPlan?.duration_days || 0;
   const planId = selectedPlan?.id;
 
   const handlePayNow = async () => {
@@ -105,44 +111,34 @@ const PremiumScreen = () => {
         plan_id: planId,
       });
 
-      if (!(window as any).Razorpay) {
-        throw new Error("Razorpay SDK not loaded");
-      }
+      if (Capacitor.isNativePlatform()) {
+        try {
+          const res = await Checkout.open({
+            key: order.key_id,
+            amount: order.amount.toString(),
+            currency: order.currency,
+            order_id: order.order_id,
+            name: "ZodiMithra",
+            description: "Premium Recharge",
+            prefill: {
+              name: userDetails?.name ?? "",
+            },
+            theme: {
+              color: "#2A0B07",
+            },
+          } as any);
 
-      const options = {
-        key: order.key_id,
-        amount: order.amount,
-        currency: order.currency,
-        order_id: order.order_id,
-        name: "ZodiMithra",
-        description: "Premium Recharge",
+          const responseData =
+            typeof res.response === "string"
+              ? JSON.parse(res.response)
+              : res.response;
 
-        prefill: {
-          name: userDetails?.name ?? "",
-        },
-
-        theme: {
-          color: "#2A0B07",
-        },
-
-        modal: {
-          ondismiss: () => {
-            console.log("Payment popup closed");
-            setPaymentModal({
-              open: true,
-              status: "failed",
-              redirectTo: "/premium",
-            });
-          },
-        },
-
-        handler: async (response: any) => {
-          try {
+          if (responseData && responseData.razorpay_payment_id) {
             await verifyRazorpayOrder({
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-              amount: order.amount, // Send the actual order amount
+              razorpay_payment_id: responseData.razorpay_payment_id,
+              razorpay_order_id: responseData.razorpay_order_id,
+              razorpay_signature: responseData.razorpay_signature,
+              amount: order.amount,
             });
 
             await queryClient.invalidateQueries({
@@ -154,19 +150,82 @@ const PremiumScreen = () => {
               status: "success",
               redirectTo: "/home",
             });
-          } catch (error) {
-            console.error("Payment verification failed:", error);
-            setPaymentModal({
-              open: true,
-              status: "failed",
-              redirectTo: "/premium",
-            });
+          } else {
+            throw new Error("Invalid payment response structure");
           }
-        },
-      };
+        } catch (checkoutError) {
+          console.error("Native Checkout failed:", checkoutError);
+          setPaymentModal({
+            open: true,
+            status: "failed",
+            redirectTo: "/premium",
+          });
+        }
+      } else {
+        // Web flow
+        if (!(window as any).Razorpay) {
+          throw new Error("Razorpay SDK not loaded");
+        }
 
-      const razorpay = new (window as any).Razorpay(options);
-      razorpay.open();
+        const options = {
+          key: order.key_id,
+          amount: order.amount,
+          currency: order.currency,
+          order_id: order.order_id,
+          name: "ZodiMithra",
+          description: "Premium Recharge",
+
+          prefill: {
+            name: userDetails?.name ?? "",
+          },
+
+          theme: {
+            color: "#2A0B07",
+          },
+
+          modal: {
+            ondismiss: () => {
+              console.log("Payment popup closed");
+              setPaymentModal({
+                open: true,
+                status: "failed",
+                redirectTo: "/premium",
+              });
+            },
+          },
+
+          handler: async (response: any) => {
+            try {
+              await verifyRazorpayOrder({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                amount: order.amount,
+              });
+
+              await queryClient.invalidateQueries({
+                queryKey: [USER_QUERY_KEYS.userDetails],
+              });
+
+              setPaymentModal({
+                open: true,
+                status: "success",
+                redirectTo: "/home",
+              });
+            } catch (error) {
+              console.error("Payment verification failed:", error);
+              setPaymentModal({
+                open: true,
+                status: "failed",
+                redirectTo: "/premium",
+              });
+            }
+          },
+        };
+
+        const razorpay = new (window as any).Razorpay(options);
+        razorpay.open();
+      }
     } catch (error) {
       console.error("Unable to initiate payment:", error);
 
@@ -271,6 +330,7 @@ const PremiumScreen = () => {
             </div>
           </div>
         </div>
+
         {/* Features */}
         <div className="grid grid-cols-2 gap-3 mt-6">
           {benefits.map((item) => {
@@ -346,11 +406,15 @@ const PremiumScreen = () => {
 
         {/* Bottom Button */}
         <div className="mt-auto pt-6">
-          <button className="w-full rounded-xl bg-[#D7AF3A] py-4 text-sm font-semibold tracking-wide text-black transition hover:brightness-105">
-            UPGRADE TO PREMIUM — ₹249
+          <button
+            onClick={handlePayNow}
+            className="w-full rounded-xl bg-[#D7AF3A] py-4 text-sm font-semibold tracking-wide text-black transition hover:brightness-105"
+          >
+            UPGRADE TO PREMIUM — ₹{planAmount}
           </button>
         </div>
       </BodyLayout>
+
       {paymentModal.open && (
         <PaymentStatusModal
           isOpen={paymentModal.open}
@@ -367,15 +431,14 @@ const PremiumScreen = () => {
           }
           buttonText="Done"
           onDone={() => {
+            const isSuccess = paymentModal.status === "success";
             setPaymentModal((prev) => ({
               ...prev,
               open: false,
             }));
 
-            if (paymentModal.redirectTo && paymentModal.status === "success") {
+            if (isSuccess) {
               navigate("/home");
-            } else {
-              navigate("/premium")
             }
           }}
         />
