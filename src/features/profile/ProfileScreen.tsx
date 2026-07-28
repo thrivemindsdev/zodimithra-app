@@ -145,6 +145,7 @@ const ProfileScreen = () => {
               icon={<Globe className="w-6 h-6" />}
               label={t("profile.changeLanguage")}
               badge="English(US)"
+              onClick={() => navigate("/languages")}
             />
 
             <MenuItem

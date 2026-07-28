@@ -4,6 +4,7 @@ import { UpdateModal } from "./components/common/UpdateModal";
 import { useVersionCheck } from "./hooks/useVersionCheck";
 import { QueryProvider } from "./providers/QueryProvider";
 import { useAuthStore } from "./store/authStore";
+import { Capacitor } from "@capacitor/core";
 
 function App() {
   const { appInfo, isOutdated, isChecking } = useVersionCheck();
@@ -27,7 +28,7 @@ function App() {
   }
 
   // 2. FORCE UPDATE: Unmount entire app tree and show ONLY the modal
-  if (isOutdated) {
+  if (isOutdated && Capacitor.getPlatform() !== "web") {
     return (
       <UpdateModal
         appName={appInfo.name}
