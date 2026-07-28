@@ -3,6 +3,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import GlobalLoader from "@/components/common/GlobalLoader";
 import MainLayout from "@/components/layout/MainLayout";
+// Import SplashScreen statically so it loads immediately without triggering Suspense
+import SplashScreen from "@/features/splash-screen/SplashScreen";
+
 import AuthListener from "./AuthListener";
 import OnboardingRoute from "./OnboardingRoute";
 import PrivateRoute from "./PrivateRoute";
@@ -13,9 +16,6 @@ const BirthDetailsForm = lazy(() => import("@/features/auth/BirthDetailsForm"));
 const LanguageScreen = lazy(() => import("@/features/auth/LanguagesScreen"));
 const LoginScreen = lazy(() => import("@/features/auth/LoginScreen"));
 const OtpScreen = lazy(() => import("@/features/auth/OtpScreen"));
-const SplashScreen = lazy(
-  () => import("@/features/splash-screen/SplashScreen"),
-);
 
 const FamilyMembersScreen = lazy(() => import("@/components/ui/FamilyMembers"));
 const AshramsScreen = lazy(() => import("@/features/ashrams/AshramsScreen"));

@@ -56,9 +56,7 @@ const HomeScreen = () => {
     <>
       <HomeHeader loading={isUserLoading} data={userData} />
       <BodyLayout className="-mx-4 w-screen">
-        <div className="pt-4">
-          <HomeGreetings loading={isUserLoading} data={currentUser} />
-        </div>
+        <HomeGreetings loading={isUserLoading} data={currentUser} />
         <div className="px-4">
           <HoroScope
             activeTab={activeTab}

@@ -16,7 +16,6 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
 
   const [weekOffset, setWeekOffset] = useState(0);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  // const [isExpanded, setIsExpanded] = useState(false);
 
   const previousDate = new Date(selectedDate);
   previousDate.setDate(previousDate.getDate() - 1);
@@ -77,7 +76,7 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
     },
   ];
 
-  const { data } = useGetAffirmationQuery();
+  const { data, isLoading } = useGetAffirmationQuery();
 
   const affirmation = data?.description;
 
@@ -89,46 +88,85 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <section className="relative mt-6 overflow-hidden">
+        {/* Skeleton for Header Background (NO BgImg rendered) */}
+        <section className="h-116 animate-pulse bg-linear-to-b from-slate-400 to-slate-500">
+          <div className="px-4 pt-16">
+            <div className="mx-auto mb-3 h-5 w-36 rounded bg-white/20" />
+            <div className="mx-auto space-y-2">
+              <div className="mx-auto h-4 w-5/6 rounded bg-white/10" />
+              <div className="mx-auto h-4 w-2/3 rounded bg-white/10" />
+            </div>
+          </div>
+        </section>
+
+        <div className="bg-white rounded-full w-full h-90 absolute bottom-15" />
+
+        {/* Moon Animation Viewport Skeleton */}
+        <div className="relative -mt-24 flex h-36 w-full items-center justify-center">
+          <div className="absolute top-10 left-4 h-20 w-20 animate-pulse rounded-full bg-slate-200" />
+          <div className="absolute top-0 left-1/2 h-24 w-24 -translate-x-1/2 animate-pulse rounded-full bg-slate-300" />
+          <div className="absolute top-10 right-4 h-20 w-20 animate-pulse rounded-full bg-slate-200" />
+        </div>
+
+        {/* Phase Details & Calendar Controls Skeleton */}
+        <div className="p-6">
+          <div className="mx-auto mb-2 h-5 w-36 animate-pulse rounded bg-gray-200" />
+          <div className="mx-auto mb-6 h-3.5 w-28 animate-pulse rounded bg-gray-200" />
+
+          {/* Week Switcher Skeleton */}
+          <div className="flex items-center justify-between">
+            <div className="h-9 w-9 animate-pulse rounded-full bg-gray-200" />
+            <div className="h-4 w-32 animate-pulse rounded bg-gray-200" />
+            <div className="h-9 w-9 animate-pulse rounded-full bg-gray-200" />
+          </div>
+
+          {/* 7-Day Calendar Strip Skeleton */}
+          <div className="mt-4 grid grid-cols-7 gap-2">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <div key={i} className="flex flex-col items-center gap-1">
+                <div className="h-3 w-4 animate-pulse rounded bg-gray-200" />
+                <div className="h-12 w-12 animate-pulse rounded-xl bg-gray-200" />
+              </div>
+            ))}
+          </div>
+
+          {/* Action Button Skeleton */}
+          <div className="mt-6 h-11 w-full animate-pulse rounded-3xl bg-gray-200" />
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="mt-6 relative overflow-hidden">
+    <section className="relative mt-6 overflow-hidden">
       <section
-        className="bg-cover h-116"
+        className="h-116 bg-cover"
         style={{
           backgroundImage: `url(${BgImg})`,
         }}
       >
-        <div className="pt-16 px-4">
-          <h2 className="text-center text-xl pb-2 font-body-content font-extrabold uppercase tracking-[1px] text-white">
+        <div className="px-4 pt-16">
+          <h2 className="font-body-content pb-2 text-center text-xl font-extrabold uppercase tracking-[1px] text-white">
             {t("home.affirmation")}
           </h2>
 
           <motion.div
             initial={false}
-            // animate={{ height: isExpanded ? 205 : 150 }}
             transition={{ duration: 0.4 }}
             className="overflow-hidden"
           >
-            <p className="text-sm font-body-content text-center text-white font-bold leading-[1.6]">
+            <p className="font-body-content text-center text-sm font-bold leading-[1.6] text-white">
               &ldquo; {affirmation} &rdquo;
             </p>
           </motion.div>
-          {/* <div
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center justify-center w-full gap-1 my-3 transition-opacity"
-          >
-            <h1 className="text-sm text-white font-semibold font-body">
-              {isExpanded ? t("home.readLess") : t("home.readMore")}
-            </h1>
-            <ArrowRight
-              size={16}
-              color={"#fff"}
-              className={`transition-transform ${isExpanded ? "-rotate-90" : ""}`}
-            />
-          </div> */}
         </div>
       </section>
+
       {/* Moon Animation Viewport */}
-      <div className="relative h-36 w-full -mt-24 flex justify-center items-center">
+      <div className="relative -mt-24 flex h-36 w-full items-center justify-center">
         {visibleMoons.map(({ id, date, positionClass }) => {
           const age = Moon.lunarAgePercent(date);
 
@@ -145,24 +183,25 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
 
       {/* Phase Details & Calendar Controls */}
       <div className="p-6">
-        <h2 className="pb-1 font-body-content font-semibold text-lg text-center text-text-primary">
+        <h2 className="font-body-content pb-1 text-center text-lg font-semibold text-text-primary">
           {t(`calendar.${currentPhase}`)}
         </h2>
-        <p className="pb-6 font-body-content text-xs text-center font-medium text-text-primary opacity-80">
+        <p className="font-body-content text-text-primary pb-6 text-center text-xs font-medium opacity-80">
           {currentIllumination.toFixed(1)}% {t("home.illuminated")}
         </p>
 
         {/* Week Switcher Header */}
         <div className="flex items-center justify-between">
           <button
+            type="button"
             onClick={prevWeek}
             aria-label="Previous week"
-            className="rounded-full p-2 hover:bg-black/5 transition"
+            className="cursor-pointer rounded-full p-2 transition hover:bg-black/5"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="h-5 w-5" />
           </button>
 
-          <h2 className="text-sm font-body-content font-semibold">
+          <h2 className="font-body-content text-sm font-semibold">
             {weekOffset === 0
               ? t("calendar.thisWeek")
               : weekOffset > 0
@@ -172,11 +211,12 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
           </h2>
 
           <button
+            type="button"
             onClick={nextWeek}
             aria-label="Next week"
-            className="rounded-full p-2 hover:bg-black/5 transition"
+            className="cursor-pointer rounded-full p-2 transition hover:bg-black/5"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="h-5 w-5" />
           </button>
         </div>
 
@@ -187,17 +227,17 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
               key={date.toISOString()}
               className="flex flex-col items-center"
             >
-              <span className="text-xs font-semibold font-body-content mb-1 text-slate-500">
+              <span className="font-body-content mb-1 text-xs font-semibold text-slate-500">
                 {format(date, "EEEEE")}
               </span>
 
               <button
+                type="button"
                 onClick={() => handleDateSelect(date)}
-                className={`h-12 w-12 rounded-xl text-xs font-body-content font-semibold transition flex flex-col items-center justify-center gap-0.5
-                ${
+                className={`font-body-content flex h-12 w-12 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl text-xs font-semibold transition ${
                   isSameDay(date, selectedDate)
-                    ? "bg-[#F8D891] text-text-primary shadow-sm"
-                    : "hover:bg-slate-100 text-slate-700"
+                    ? "text-text-primary bg-[#F8D891] shadow-sm"
+                    : "text-slate-700 hover:bg-slate-100"
                 }`}
               >
                 <span>{format(date, "d")}</span>
@@ -212,8 +252,9 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
 
         {/* Route Action Button */}
         <button
+          type="button"
           onClick={handleSubmit}
-          className="bg-linear-to-r from-button-primary to-button-secondary w-full rounded-3xl py-3 mt-6 text-white font-body-content uppercase text-xs font-semibold tracking-wider shadow-md hover:opacity-95 transition"
+          className="font-body-content bg-linear-to-r from-button-primary to-button-secondary mt-6 w-full cursor-pointer rounded-3xl py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md transition hover:opacity-95"
         >
           {t("calendar.showFullMonth")}
         </button>
