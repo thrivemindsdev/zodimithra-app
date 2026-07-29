@@ -44,7 +44,7 @@ export default function OtpScreen() {
         if (onboardingCompleted) {
           navigate("/home");
         } else {
-          navigate("/languages");
+          navigate("/birth-details-form");
         }
       } else {
         await Dialog.alert({

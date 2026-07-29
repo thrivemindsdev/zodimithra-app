@@ -8,7 +8,7 @@ const PublicRoute = () => {
 
   if (token) {
     // If authenticated, send them home if onboarded, or to onboarding if not
-    const redirectPath = hasOnboarded ? "/home" : "/languages";
+    const redirectPath = hasOnboarded ? "/home" : "/birth-details-form";
     return <Navigate to={redirectPath} replace state={{ from: location }} />;
   }
 

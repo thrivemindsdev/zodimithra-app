@@ -92,7 +92,7 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
     return (
       <section className="relative mt-6 overflow-hidden">
         {/* Skeleton for Header Background (NO BgImg rendered) */}
-        <section className="h-85 animate-pulse bg-linear-to-b from-slate-400 to-slate-500">
+        <section className="h-89 animate-pulse bg-linear-to-b from-slate-400 to-slate-500">
           <div className="px-4 pt-16">
             <div className="mx-auto mb-3 h-5 w-36 rounded bg-white/20" />
             <div className="mx-auto space-y-2">
@@ -143,7 +143,7 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
   return (
     <section className="relative mt-6 overflow-hidden">
       <section
-        className="h-85 bg-cover"
+        className="h-89 bg-cover"
         style={{
           backgroundImage: `url(${BgImg})`,
         }}

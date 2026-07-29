@@ -1,3 +1,4 @@
+import CustomAnimatedMoon from "@/components/common/CustomAnimatedMoon";
 import { addDays, addWeeks, format, isSameDay, startOfWeek } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Moon } from "lunarphase-js";
@@ -70,7 +71,10 @@ const WeekCalendar = ({ selectedDate, setSelectedDate }: any) => {
                 }`}
               >
                 <span>{format(date, "d")}</span>
-                <span className="text-base">{Moon.lunarPhaseEmoji(date)}</span>
+                <CustomAnimatedMoon
+                  agePercent={Moon.lunarAgePercent(date)}
+                  size={20}
+                />
               </button>
             </div>
           );

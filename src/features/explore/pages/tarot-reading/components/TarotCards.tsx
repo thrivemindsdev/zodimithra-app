@@ -29,18 +29,29 @@ const TarotCards = () => {
   const [yesOrNoResult, setYesOrNoResult] = useState<any>(null);
   const [isSelecting, setIsSelecting] = useState(false);
 
-  const { data: cards, isLoading } = useGetAllTarotCardsQuery();
+  const { data: rawCards, isLoading } = useGetAllTarotCardsQuery();
 
-  // Generate deterministic/random initial shuffle offsets for each card
+  // 1. Shuffle the cards array completely on load (Fisher-Yates Shuffle)
+  const shuffledCards = useMemo(() => {
+    if (!rawCards) return [];
+    const array = [...rawCards];
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }, [rawCards]);
+
+  // 2. Generate random initial visual offsets for the shuffled items
   const initialOffsets = useMemo(() => {
-    if (!cards) return [];
-    return cards.map(() => ({
-      x: (Math.random() - 0.5) * 200, // Random X offset (-100px to 100px)
-      y: (Math.random() - 0.5) * 300, // Random Y offset (-150px to 150px)
-      rotate: (Math.random() - 0.5) * 60, // Random rotation (-30 deg to 30 deg)
-      scale: 0.6 + Math.random() * 0.4,
+    if (!shuffledCards.length) return [];
+    return shuffledCards.map(() => ({
+      x: (Math.random() - 0.5) * 300, // Random X offset
+      y: (Math.random() - 0.5) * 400, // Random Y offset
+      rotate: (Math.random() - 0.5) * 90, // Random rotation (-45 deg to 45 deg)
+      scale: 0.5 + Math.random() * 0.5,
     }));
-  }, [cards]);
+  }, [shuffledCards]);
 
   const handleSelect = useCallback(
     async (card: TarotCard) => {
@@ -89,7 +100,7 @@ const TarotCards = () => {
         ) : (
           <div className="grid grid-cols-5 gap-3 p-2 overflow-hidden">
             <AnimatePresence>
-              {cards?.map((card: TarotCard, index: number) => {
+              {shuffledCards.map((card: TarotCard, index: number) => {
                 const offset = initialOffsets[index] || {
                   x: 0,
                   y: 0,
@@ -103,7 +114,7 @@ const TarotCards = () => {
                     type="button"
                     onClick={() => handleSelect(card)}
                     className="cursor-pointer focus:outline-none"
-                    /* 1. Start from scattered shuffle position */
+                    /* Start scattered from random offsets */
                     initial={{
                       x: offset.x,
                       y: offset.y,
@@ -111,7 +122,7 @@ const TarotCards = () => {
                       scale: offset.scale,
                       opacity: 0,
                     }}
-                    /* 2. Animate into grid position */
+                    /* Collapse into shuffled grid position */
                     animate={{
                       x: 0,
                       y: 0,
@@ -119,14 +130,13 @@ const TarotCards = () => {
                       scale: 1,
                       opacity: 1,
                     }}
-                    /* 3. Smooth transition settings */
+                    /* Smooth spring physics collapse effect */
                     transition={{
                       type: "spring",
-                      stiffness: 70,
-                      damping: 14,
-                      delay: (index % 5) * 0.03, // Slight ripple delay
+                      stiffness: 80,
+                      damping: 12,
+                      delay: index * 0.015, // Staggered arrival for collapse feel
                     }}
-                    /* 4. Hover effect when user interacts with a card */
                     whileHover={{
                       scale: 1.08,
                       zIndex: 10,

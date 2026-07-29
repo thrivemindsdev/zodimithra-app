@@ -4,9 +4,9 @@ import { useState } from "react";
 
 // Asset Imports
 import CustomAnimatedMoon from "@/components/common/CustomAnimatedMoon";
+import { useTranslation } from "react-i18next";
 import MonthCalendar from "./MonthCalendar";
 import WeekCalendar from "./WeekCalendar";
-import { useTranslation } from "react-i18next";
 
 const CalendarLayout = ({ selectedDate, setSelectedDate }: any) => {
   const { t } = useTranslation();
@@ -14,6 +14,8 @@ const CalendarLayout = ({ selectedDate, setSelectedDate }: any) => {
 
   const phase = Moon.lunarPhase(selectedDate);
   const agePercent = Moon.lunarAgePercent(selectedDate);
+  const currentIllumination =
+    ((1 - Math.cos(2 * Math.PI * agePercent)) / 2) * 100;
 
   return (
     <section className="mt-6 relative">
@@ -35,7 +37,7 @@ const CalendarLayout = ({ selectedDate, setSelectedDate }: any) => {
           {t(`calendar.${phase}`)}
         </h2>
         <p className="pb-6 font-body-content text-xs text-center font-medium text-text-primary">
-          {Number(agePercent.toFixed(2))}% {t("home.illuminated")}
+          {Number(currentIllumination.toFixed(2))}% {t("home.illuminated")}
         </p>
         {showMonthCalendar ? (
           <MonthCalendar
@@ -55,7 +57,9 @@ const CalendarLayout = ({ selectedDate, setSelectedDate }: any) => {
           onClick={() => setShowMonthCalendar((prev) => !prev)}
           className="bg-linear-to-r from-button-primary to-button-secondary w-full rounded-4xl py-3 mx-auto text-white font-body-content uppercase text-xs font-semibold tracking-wider transition-all active:scale-[0.98]"
         >
-          {showMonthCalendar ? t("calendar.showWeek") : t("calendar.showFullMonth")}
+          {showMonthCalendar
+            ? t("calendar.showWeek")
+            : t("calendar.showFullMonth")}
         </button>
       </div>
     </section>

@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import CustomAnimatedMoon from "@/components/common/CustomAnimatedMoon";
 import {
   addDays,
+  addMonths,
   endOfMonth,
   endOfWeek,
   format,
@@ -9,14 +10,14 @@ import {
   startOfMonth,
   startOfWeek,
   subMonths,
-  addMonths,
 } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Moon } from "lunarphase-js";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const MonthCalendar = ({ selectedDate, onSelectDate }: any) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const days = useMemo(() => {
@@ -46,7 +47,8 @@ const MonthCalendar = ({ selectedDate, onSelectDate }: any) => {
           <ChevronLeft />
         </button>
         <h2 className="text-base font-body-content font-semibold">
-          {t(`calendar.${format(currentMonth, "MMMM")}`)} {format(currentMonth, "yyyy")}
+          {t(`calendar.${format(currentMonth, "MMMM")}`)}{" "}
+          {format(currentMonth, "yyyy")}
         </h2>
         <button
           onClick={() => setCurrentMonth((prev) => addMonths(prev, 1))}
@@ -83,7 +85,10 @@ const MonthCalendar = ({ selectedDate, onSelectDate }: any) => {
               } ${isCurrentMonth ? "text-text-primary" : "text-gray-300"}`}
             >
               <span>{format(date, "d")}</span>
-              <span>{Moon.lunarPhaseEmoji(date)}</span>
+              <CustomAnimatedMoon
+                agePercent={Moon.lunarAgePercent(date)}
+                size={20}
+              />
             </button>
           );
         })}
