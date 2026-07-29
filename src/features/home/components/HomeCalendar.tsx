@@ -187,12 +187,12 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
           </div>
 
           {/* Bottom Concave Cutout Arc */}
-          <div className="absolute bottom-0 left-0 w-full h-17 bg-white rounded-t-[50%_40px] z-20" />
+          <div className="absolute bottom-0 left-0 w-full h-17 bg-white rounded-t-[50%_40px] z-10" />
         </div>
       </div>
 
       {/* Moon Animation Viewport */}
-      <div className="relative z-999 -mt-24 flex h-20 w-full items-center justify-center">
+      <div className="relative z-10 -mt-24 flex h-20 w-full items-center justify-center">
         {visibleMoons.map(({ id, date, positionClass }) => {
           const age = Moon.lunarAgePercent(date);
 

@@ -55,7 +55,7 @@ const HomeScreen = () => {
   return (
     <>
       <HomeHeader loading={isUserLoading} data={userData} />
-      <BodyLayout className="-mx-4 w-screen">
+      <BodyLayout className="-mx-4 overflow-x-hidden w-screen">
         <HomeGreetings loading={isUserLoading} data={currentUser} />
         <div className="px-4">
           <HoroScope
