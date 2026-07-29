@@ -1,5 +1,5 @@
 import BannerImage from "@/assets/banner/bg-banner.jpg";
-import RightImage from "@/assets/banner/love-calculator.png";
+import RightImage from "@/assets/banner/kundli-image.png";
 import Banner from "@/components/common/Banner";
 import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";

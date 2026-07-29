@@ -50,15 +50,19 @@ const HomeGreetings = ({
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
 
-    if (hour < 12) {
+    if (hour >= 5 && hour < 12) {
       return t("home.morning");
     }
 
-    if (hour < 18) {
+    if (hour >= 12 && hour < 18) {
       return t("home.afternoon");
     }
 
-    return t("home.evening");
+    if (hour >= 18 && hour < 21) {
+      return t("home.evening");
+    }
+
+    return t("home.night");
   }, [t]);
 
   return (
@@ -68,7 +72,7 @@ const HomeGreetings = ({
         backgroundImage: `url(${GreetingBg})`,
       }}
     >
-      <div>
+      <div className="w-[50%]">
         {loading ? (
           /* Skeleton for Greetings Content */
           <div className="space-y-2 py-1">
@@ -88,9 +92,6 @@ const HomeGreetings = ({
           /* Actual Greetings Content */
           <>
             <h2 className="text-3xl font-header text-white font-light leading-tight">
-              {t("home.good")}
-            </h2>
-            <h2 className="text-3xl font-header text-white font-light leading-tight">
               {greeting},
             </h2>
             <p className="text-xl pt-2 text-white font-semibold capitalize font-body-content tracking-wide">
@@ -103,7 +104,7 @@ const HomeGreetings = ({
       </div>
 
       {/* Right side: Zodiac Character / Skeleton */}
-      <div className="absolute right-2 -bottom-9">
+      <div className="absolute right-0 -bottom-9 w-[50%]">
         {loading ? (
           <div className="h-48 w-32 animate-pulse rounded-xl bg-white/20" />
         ) : (

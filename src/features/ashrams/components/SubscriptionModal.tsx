@@ -12,6 +12,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Capacitor } from "@capacitor/core";
 import { Checkout } from "capacitor-razorpay";
+import { useAuthStore } from "@/store/authStore";
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -32,6 +33,7 @@ export default function SubscriptionModal({
 }: SubscriptionModalProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const phoneNumber = useAuthStore((state) => state.phoneNumber);
   const { data: userDetails } = useGetUserDetailsQuery();
   const [paymentModal, setPaymentModal] = useState<{
     open: boolean;
@@ -76,6 +78,8 @@ export default function SubscriptionModal({
             description: "Ashram Premium",
             prefill: {
               name: userDetails?.name ?? "",
+              email: "zodimithra@gmail.com",
+              contact: phoneNumber,
             },
             theme: {
               color: "#2A0B07",
@@ -160,6 +164,8 @@ export default function SubscriptionModal({
 
           prefill: {
             name: userDetails?.name ?? "",
+            email: "zodimithra@gmail.com",
+            contact: phoneNumber,
           },
 
           theme: {

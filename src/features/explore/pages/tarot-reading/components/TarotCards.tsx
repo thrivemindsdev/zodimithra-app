@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -32,9 +32,14 @@ const TarotCards = () => {
 
   const { data: rawCards, isLoading } = useGetAllTarotCardsQuery();
 
+  useEffect(() => {
+    setCardResult(null);
+    setYesOrNoResult(null);
+  }, [id]);
+
   // 1. Shuffle the cards array completely on load (Fisher-Yates Shuffle)
   const shuffledCards = useMemo(() => {
-    if (!rawCards) return [];
+    if (!rawCards || !Array.isArray(rawCards)) return [];
     const array = [...rawCards];
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -47,38 +52,50 @@ const TarotCards = () => {
   const initialOffsets = useMemo(() => {
     if (!shuffledCards.length) return [];
     return shuffledCards.map(() => ({
-      x: (Math.random() - 0.5) * 300, // Random X offset
-      y: (Math.random() - 0.5) * 400, // Random Y offset
-      rotate: (Math.random() - 0.5) * 90, // Random rotation (-45 deg to 45 deg)
+      x: (Math.random() - 0.5) * 300,
+      y: (Math.random() - 0.5) * 400,
+      rotate: (Math.random() - 0.5) * 90,
       scale: 0.5 + Math.random() * 0.5,
     }));
   }, [shuffledCards]);
 
   const handleSelect = useCallback(
     async (card: TarotCard) => {
+      if (isSelecting) return;
+
+      setIsSelecting(true);
       try {
-        setIsSelecting(true);
         if (id === "1") {
           const response = await GetTarotCardResult({
             card_name: card.name,
             lang: currentLanguage,
           });
-          setCardResult(response);
+
+          if (response) {
+            setCardResult(response);
+          } else {
+            throw new Error("Received empty response from GetTarotCardResult");
+          }
         } else {
           const response = await GetYesOrNoResult({
             card_name: card.name,
             lang: currentLanguage,
           });
-          setYesOrNoResult(response);
+
+          if (response) {
+            setYesOrNoResult(response);
+          } else {
+            throw new Error("Received empty response from GetYesOrNoResult");
+          }
         }
       } catch (error) {
         console.error("Failed to fetch tarot result:", error);
-        navigate("/tarot-reading")
+        navigate("/tarot-reading", { replace: true });
       } finally {
         setIsSelecting(false);
       }
     },
-    [currentLanguage, id]
+    [currentLanguage, id, isSelecting, navigate]
   );
 
   if (isLoading || isSelecting) {
@@ -116,7 +133,6 @@ const TarotCards = () => {
                     type="button"
                     onClick={() => handleSelect(card)}
                     className="cursor-pointer focus:outline-none"
-                    /* Start scattered from random offsets */
                     initial={{
                       x: offset.x,
                       y: offset.y,
@@ -124,7 +140,6 @@ const TarotCards = () => {
                       scale: offset.scale,
                       opacity: 0,
                     }}
-                    /* Collapse into shuffled grid position */
                     animate={{
                       x: 0,
                       y: 0,
@@ -132,12 +147,11 @@ const TarotCards = () => {
                       scale: 1,
                       opacity: 1,
                     }}
-                    /* Smooth spring physics collapse effect */
                     transition={{
                       type: "spring",
                       stiffness: 80,
                       damping: 12,
-                      delay: index * 0.015, // Staggered arrival for collapse feel
+                      delay: index * 0.015,
                     }}
                     whileHover={{
                       scale: 1.08,

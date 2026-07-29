@@ -8,7 +8,7 @@ const HomeTools = () => {
 
   const tools = [
     { image: HealingImg, label: "home.healing" },
-    { image: AffulenceImg, label: "home.affulence" },
+    { image: AffulenceImg, label: "home.affluence" },
     { image: RitualImg, label: "home.ritual" },
   ];
 

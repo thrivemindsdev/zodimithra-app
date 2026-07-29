@@ -71,7 +71,7 @@ const HomeHeader = ({ loading }: HomeHeaderProps) => {
           <button
             type="button"
             aria-label="Notifications"
-            className="rounded-md p-2 transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+            className="rounded-md p-2"
           >
             <Bell className="h-6 w-6 text-black" strokeWidth={1.8} />
           </button>
@@ -81,7 +81,7 @@ const HomeHeader = ({ loading }: HomeHeaderProps) => {
             type="button"
             aria-label="Language"
             onClick={() => navigate("/languages")}
-            className="rounded-md p-2 transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"
+            className="rounded-md p-2"
           >
             <Languages className="h-6 w-6 text-black" strokeWidth={1.8} />
           </button>

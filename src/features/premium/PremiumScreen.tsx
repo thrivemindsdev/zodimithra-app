@@ -26,6 +26,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Capacitor } from "@capacitor/core";
 import { Checkout } from "capacitor-razorpay";
+import { useAuthStore } from "@/store/authStore";
 
 const features = [
   {
@@ -78,6 +79,7 @@ const benefits = [
 const PremiumScreen = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const phoneNumber = useAuthStore((state) => state.phoneNumber);
   const [paymentModal, setPaymentModal] = useState<{
     open: boolean;
     status: "success" | "failed";
@@ -122,6 +124,8 @@ const PremiumScreen = () => {
             description: "Premium Recharge",
             prefill: {
               name: userDetails?.name ?? "",
+              email: "zodimithra@gmail.com",
+              contact: phoneNumber
             },
             theme: {
               color: "#2A0B07",
@@ -177,6 +181,8 @@ const PremiumScreen = () => {
 
           prefill: {
             name: userDetails?.name ?? "",
+            email: "zodimithra@gmail.com",
+            contact: phoneNumber
           },
 
           theme: {

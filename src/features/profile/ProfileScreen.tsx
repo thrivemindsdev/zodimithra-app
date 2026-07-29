@@ -41,7 +41,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
       <div className="flex items-center gap-4">
         <div className={danger ? "text-red-600" : "text-primary"}>{icon}</div>
         <span
-          className={`font-medium font-body ${danger ? "text-red-600" : "text-text-primary"}`}
+          className={`font-medium text-sm font-body ${danger ? "text-red-600" : "text-text-primary"}`}
         >
           {label}
         </span>
