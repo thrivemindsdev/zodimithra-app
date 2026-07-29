@@ -51,7 +51,7 @@ const NumerologyForm = () => {
   );
 
   return (
-    <div className="rounded-2xl shadow-s, border border-gray-200 p-4 mt-4">
+    <div className="rounded-2xl card-shadow p-4 mt-4">
       <h2 className="text-primary font-body font-bold text-xl pb-4">
         Personal Details
       </h2>

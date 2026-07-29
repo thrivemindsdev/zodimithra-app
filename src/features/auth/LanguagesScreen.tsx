@@ -12,32 +12,33 @@ interface Language {
   layout: "full" | "grid";
 }
 
+export const LANGUAGES: Language[] = [
+  {
+    id: "en",
+    nativeChar: "A",
+    name: "English",
+    subtitle: "Global - Universal",
+    layout: "full",
+  },
+  { id: "hi", nativeChar: "अ", name: "हिन्दी", layout: "grid" },
+  { id: "bn", nativeChar: "অ", name: "বাংলা", layout: "grid" },
+  { id: "te", nativeChar: "అ", name: "తెలుగు", layout: "grid" },
+  { id: "ml", nativeChar: "അ", name: "മലയാളം", layout: "grid" },
+  { id: "ta", nativeChar: "அ", name: "தமிழ்", layout: "grid" },
+  { id: "gu", nativeChar: "અ", name: "ગુજરાતી", layout: "grid" },
+];
+
 export default function LanguageScreen() {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const selectedLanguae = i18n.language ?? "en";
   const token = useAuthStore((state) => state.token);
   const hasOnboarded = useAuthStore((state) => state.hasOnboarded);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(selectedLanguae);
+  const [selectedLanguage, setSelectedLanguage] =
+    useState<string>(selectedLanguae);
 
-  const languages: Language[] = [
-    {
-      id: "en",
-      nativeChar: "A",
-      name: "English",
-      subtitle: "Global - Universal",
-      layout: "full",
-    },
-    { id: "hi", nativeChar: "अ", name: "हिन्दी", layout: "grid" },
-    { id: "bn", nativeChar: "অ", name: "বাংলা", layout: "grid" },
-    { id: "te", nativeChar: "అ", name: "తెలుగు", layout: "grid" },
-    { id: "ml", nativeChar: "അ", name: "മലയാളം", layout: "grid" },
-    { id: "ta", nativeChar: "அ", name: "தமிழ்", layout: "grid" },
-    { id: "gu", nativeChar: "અ", name: "ગુજરાતી", layout: "grid" },
-  ];
-
-  const fullWidthLang = languages.find((lang) => lang.layout === "full");
-  const gridLangs = languages.filter((lang) => lang.layout === "grid");
+  const fullWidthLang = LANGUAGES.find((lang) => lang.layout === "full");
+  const gridLangs = LANGUAGES.filter((lang) => lang.layout === "grid");
 
   const handleLanguageSelect = async (id: string) => {
     await i18n.changeLanguage(id);

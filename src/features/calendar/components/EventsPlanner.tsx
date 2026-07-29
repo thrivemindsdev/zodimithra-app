@@ -66,7 +66,7 @@ const EventsPlanner = ({ loading, data }: EventsPlannerProps) => {
 
   if (loading) {
     return (
-      <div className="space-y-4 rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
+      <div className="space-y-4 rounded-2xl card-shadow p-4">
         {/* Header Skeleton */}
         <div className="flex items-center justify-between">
           <div className="space-y-1.5">
@@ -79,11 +79,11 @@ const EventsPlanner = ({ loading, data }: EventsPlannerProps) => {
 
         {/* List Skeleton Items */}
         <div className="space-y-2">
-          <div className="space-y-2 rounded-2xl border border-indigo-100/70 bg-white p-4 shadow-sm">
+          <div className="space-y-2 rounded-2xl card-shadow p-4">
             <div className="h-3 w-20 animate-pulse rounded bg-gray-200" />
             <div className="h-5 w-40 animate-pulse rounded bg-gray-200" />
           </div>
-          <div className="space-y-2 rounded-2xl border border-indigo-100/70 bg-white p-4 shadow-sm">
+          <div className="space-y-2 rounded-2xl card-shadow p-4">
             <div className="h-3 w-24 animate-pulse rounded bg-gray-200" />
             <div className="h-5 w-32 animate-pulse rounded bg-gray-200" />
           </div>
@@ -99,7 +99,7 @@ const EventsPlanner = ({ loading, data }: EventsPlannerProps) => {
   }
 
   return (
-    <div className="space-y-4 rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
+    <div className="space-y-4 rounded-2xl card-shadow p-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -204,7 +204,7 @@ const EventsPlanner = ({ loading, data }: EventsPlannerProps) => {
           {data.map((item) => (
             <div
               key={item.id}
-              className="space-y-1 rounded-2xl border border-indigo-100/70 bg-white p-4 shadow-sm"
+              className="space-y-1 rounded-2xl card-shadow p-4"
             >
               <div className="flex items-center space-x-1.5 text-[10px] font-bold uppercase tracking-wider text-indigo-900">
                 <Sparkles className="h-3 w-3 text-indigo-500" />

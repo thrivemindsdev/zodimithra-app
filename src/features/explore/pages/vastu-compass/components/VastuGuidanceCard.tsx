@@ -10,10 +10,10 @@ interface VastuGuidanceCardProps {
 export const VastuGuidanceCard = memo<VastuGuidanceCardProps>(({ selectedRoom, vastuInfo }) => {
   const {t} = useTranslation();
   return (
-    <div className="w-full max-w-sm bg-white rounded-3xl p-5 border border-[#F2E8DC] shadow-lg flex flex-col gap-4 mt-2">
+    <div className="w-full max-w-sm bg-white rounded-2xl p-4 card-shadow flex flex-col gap-4 mt-2">
       {/* Status Header */}
       <div
-        className={`w-full py-2.5 px-3 rounded-2xl text-center font-sans transition-colors ${
+        className={`w-full py-2.5 px-3 rounded-2xl text-center font-body transition-colors ${
           vastuInfo.statusType === 'auspicious'
             ? 'bg-[#EAF5DF] text-[#2D5A12]'
             : vastuInfo.statusType === 'neutral'
@@ -26,14 +26,14 @@ export const VastuGuidanceCard = memo<VastuGuidanceCardProps>(({ selectedRoom, v
       </div>
 
       {/* Interaction Hint */}
-      <div className="flex items-center justify-center gap-1.5 text-[11px] text-[#A08875] font-sans">
+      <div className="flex items-center justify-center gap-1.5 text-[11px] text-text-primary font-body">
         <span>↺</span> {t("vastuCompass.dragCompass")}
       </div>
 
       {/* Ranges & Badges */}
-      <div className="font-sans space-y-2.5 pt-1">
-        <h3 className="font-serif font-bold text-[#311B0B] text-sm flex items-center gap-1.5">
-          <span className="text-[#6B3BA7]">✦</span> {t("vastuCompass.directionGuide")} — {t(`vastuCompass.${selectedRoom}`)}
+      <div className="font-body space-y-2.5 pt-1">
+        <h3 className="font-serif font-bold text-primary text-sm flex items-center gap-1.5">
+          <span className="text-primary">✦</span> {t("vastuCompass.directionGuide")} — {t(`vastuCompass.${selectedRoom}`)}
         </h3>
 
         <div className="space-y-3 text-xs">
@@ -66,10 +66,10 @@ export const VastuGuidanceCard = memo<VastuGuidanceCardProps>(({ selectedRoom, v
 
       {/* Tip Section */}
       <div className="pt-2 border-t border-[#F5EFE6]">
-        <h4 className="font-serif font-bold text-[#3B1F0A] flex items-center gap-1.5 text-xs mb-1">
+        <h4 className="font-serif font-bold text-primary flex items-center gap-1.5 text-xs mb-1">
           <span className="text-[#D1197E] text-sm">💡</span> {t("vastuCompass.vastuTip")}
         </h4>
-        <p className="text-[11px] text-[#6E5948] leading-relaxed font-sans">{vastuInfo.tip}</p>
+        <p className="text-[11px] text-text-primary leading-relaxed font-body">{vastuInfo.tip}</p>
       </div>
     </div>
   );

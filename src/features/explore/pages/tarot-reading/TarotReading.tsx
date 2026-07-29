@@ -35,7 +35,7 @@ const MenuCard: React.FC<MenuCardProps> = ({ item, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="w-full rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md mb-6"
+      className="w-full rounded-2xl card-shadow bg-white p-8 transition-all duration-200 hover:-translate-y-1 hover:shadow-md mb-6"
     >
       <div className="flex flex-col items-center">
         {/* Icon */}

@@ -117,7 +117,7 @@ const KundliMatchResult = () => {
               return (
                 <div
                   key={koota.id}
-                  className="bg-white rounded-2xl p-4 border border-gray-100/80 shadow-[0_4px_20px_rgba(46,16,101,0.03)] flex flex-col justify-between space-y-2.5 transition-all duration-300 hover:shadow-md"
+                  className="bg-white rounded-2xl p-4 card-shadow flex flex-col justify-between space-y-2.5 transition-all duration-300 hover:shadow-md"
                 >
                   {/* Dynamic Header Row displaying Title Label & Points Ratio */}
                   <div className="flex justify-between items-start">

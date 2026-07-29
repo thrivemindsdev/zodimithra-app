@@ -15,6 +15,7 @@ import {
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { LANGUAGES } from "../auth/LanguagesScreen";
 
 interface MenuItemProps {
   icon: React.ReactNode;
@@ -61,7 +62,13 @@ const MenuItem: React.FC<MenuItemProps> = ({
 };
 
 const ProfileScreen = () => {
-  const {t} = useTranslation();
+  const { t, i18n } = useTranslation();
+  const selectedLanguae = i18n.language ?? "en";
+  // Find the language object matching the active i18n language code
+  const currentLangObj = LANGUAGES.find((lang) => lang.id === selectedLanguae);
+
+  // Get the display name, fallback to "English" if not found
+  const currentLanguageName = currentLangObj ? currentLangObj.name : "English";
   const navigate = useNavigate();
   const { data: userDetails } = useGetUserDetailsQuery();
   const phoneNumber = useAuthStore((state) => state.phoneNumber);
@@ -86,13 +93,9 @@ const ProfileScreen = () => {
 
   return (
     <>
-      <Header
-        title={t("profile.title")}
-        showBackButton
-        redirectPath="/home"
-      />
+      <Header title={t("profile.title")} showBackButton redirectPath="/home" />
       <BodyLayout>
-        <div className="max-w-md mx-auto bg-white min-h-screen shadow-md font-sans pb-8">
+        <>
           {/* Header Profile Section */}
           <div
             onClick={() => navigate("/edit-profile")}
@@ -130,7 +133,10 @@ const ProfileScreen = () => {
               icon={<Bell className="w-6 h-6" />}
               label={t("profile.notification")}
             />
-            <MenuItem icon={<Wallet className="w-6 h-6" />} label={t("profile.wallet")} />
+            <MenuItem
+              icon={<Wallet className="w-6 h-6" />}
+              label={t("profile.wallet")}
+            />
             <MenuItem
               icon={<History className="w-6 h-6" />}
               label={t("profile.orderHistory")}
@@ -144,7 +150,7 @@ const ProfileScreen = () => {
             <MenuItem
               icon={<Globe className="w-6 h-6" />}
               label={t("profile.changeLanguage")}
-              badge="English(US)"
+              badge={currentLanguageName}
               onClick={() => navigate("/languages")}
             />
 
@@ -161,7 +167,7 @@ const ProfileScreen = () => {
               onClick={handleDeleteAccount}
             />
           </div>
-        </div>
+        </>
       </BodyLayout>
     </>
   );

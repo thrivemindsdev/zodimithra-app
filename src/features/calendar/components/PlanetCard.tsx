@@ -14,7 +14,7 @@ const PlanetCard = ({ loading, planetData }: PlanetCardProps) => {
 
   if (loading) {
     return (
-      <div className="my-6 flex items-center justify-between rounded-3xl border border-slate-100 p-4 shadow-sm">
+      <div className="my-6 flex items-center justify-between rounded-2xl p-4 card-shadow">
         {/* Sun Skeleton */}
         <div className="flex flex-1 items-center space-x-3">
           <div className="h-10 w-10 shrink-0 animate-pulse rounded-full bg-gray-200" />
@@ -43,7 +43,7 @@ const PlanetCard = ({ loading, planetData }: PlanetCardProps) => {
   const moonSign = planetData?.moon?.toLowerCase();
 
   return (
-    <div className="my-6 flex items-center justify-between rounded-3xl border border-slate-100 p-4 shadow-sm">
+    <div className="my-6 flex items-center justify-between rounded-2xl p-4 card-shadow">
       {/* Sun */}
       <div className="flex flex-1 items-center space-x-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFDEA9] text-[#915200]">

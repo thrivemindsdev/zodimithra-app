@@ -38,7 +38,7 @@ const Festival = ({
 
   if (loading) {
     return (
-      <div className="space-y-4 rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
+      <div className="space-y-4 rounded-2xl card-shadow p-4">
         {/* Header Skeleton */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -76,7 +76,7 @@ const Festival = ({
   const selectedMonthName = months[selectedMonth] ?? "";
 
   return (
-    <div className="space-y-4 rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
+    <div className="space-y-4 rounded-2xl p-4 card-shadow">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#FFDEA9] text-[#915200]">

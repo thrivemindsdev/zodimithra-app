@@ -79,7 +79,7 @@ const MangalDoshForm = () => {
     !formData.longitude;
 
   return (
-    <div className="rounded-2xl border border-gray-100 p-4 mt-4 shadow-xl">
+    <div className="rounded-2xl card-shadow p-4 mt-4">
       <form onSubmit={handleSubmit} className="space-y-5">
         <DateInput
           label={t("onboard.dateOfBirth")}

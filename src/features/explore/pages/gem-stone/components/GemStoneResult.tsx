@@ -75,7 +75,7 @@ const GemStoneResult = () => {
         </div>
 
         {/* Card Body */}
-        <div className="w-full font-body bg-white rounded-3xl pb-8 px-6 card-shadow flex flex-col items-center text-center">
+        <div className="w-full font-body rounded-2xl pb-8 px-6 card-shadow flex flex-col items-center text-center">
           {/* Header Badge */}
           <span className="text-sm font-bold tracking-[2px] text-secondary uppercase pt-5 pb-2">
             {t("gemstone.recommanded")}
@@ -116,10 +116,10 @@ const GemStoneResult = () => {
 
                   {/* Text Content */}
                   <div>
-                    <h4 className="text-xs font-bold text-slate-800">
+                    <h4 className="text-sm font-bold text-slate-800">
                       {benefit.title}
                     </h4>
-                    <p className="text-xs text-text-secondary">
+                    <p className="text-xs text-text-secondary leading-relaxed">
                       {benefit.description}
                     </p>
                   </div>

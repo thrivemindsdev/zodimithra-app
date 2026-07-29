@@ -174,7 +174,7 @@ export default function VastuCompassApp(): ReactElement {
         onSelectRoom={setSelectedRoom}
       />
 
-      <p className="text-center text-xs font-body text-[#8A6A4B] mb-2">
+      <p className="text-center text-xs font-body text-text-primary mb-2">
         {t("vastuCompass.details")}{" "}
         <span className="font-semibold text-[#663814]">{t(`vastuCompass.${selectedRoom}`)}</span>
       </p>

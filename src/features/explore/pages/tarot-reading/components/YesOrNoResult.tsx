@@ -20,9 +20,9 @@ const YesOrNoResult = ({ data }: any) => {
   };
 
   return (
-    <div className="mx-auto max-w-sm rounded-2xl bg-white p-4 shadow-md font-body">
+    <>
       {/* Perspective Container */}
-      <div className="w-full perspective:1000px">
+      <div className="w-full p-4">
         {/* Flipping Inner Container */}
         <div
           className="relative w-full aspect-2/3 transition-transform"
@@ -64,12 +64,12 @@ const YesOrNoResult = ({ data }: any) => {
       </div>
 
       {/* Card Name */}
-      <h1 className="mt-4 text-center text-2xl font-bold text-text-primary">
+      <h1 className="pt-4 text-center text-2xl font-body font-bold text-text-primary">
         {data.name}
       </h1>
 
       {/* Reading */}
-      <div className="mt-6">
+      <div className="mt-6 font-body">
         <div className="space-y-5">
           <h2 className="font-body font-bold text-text-primary text-xl">
             Result
@@ -94,7 +94,7 @@ const YesOrNoResult = ({ data }: any) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

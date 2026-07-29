@@ -73,7 +73,7 @@ const GemStoneForm = () => {
   );
 
   return (
-    <div className="rounded-2xl shadow-xl border border-gray-100 p-4 mt-4">
+    <div className="rounded-2xl card-shadow p-4 mt-4">
       <h2 className="text-primary font-body font-bold text-xl pb-4">
         {t("freeKundli.birthDetails")}
       </h2>

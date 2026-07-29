@@ -168,7 +168,7 @@ const EditProfile = () => {
         redirectPath="/profile"
       />
       <BodyLayout>
-        <div className="p-4 font-body rounded-2xl border border-gray-200">
+        <div className="p-4 font-body rounded-2xl card-shadow">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Profile Image Section */}
             <div className="flex flex-col items-center justify-center my-4">

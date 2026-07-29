@@ -1,6 +1,6 @@
 import { useCallback, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 import tarotCardImg from "@/assets/tarot/tarotcard.png";
@@ -20,6 +20,7 @@ interface TarotCard {
 }
 
 const TarotCards = () => {
+  const navigate = useNavigate();
   const { i18n } = useTranslation();
   const { id } = useParams();
 
@@ -72,6 +73,7 @@ const TarotCards = () => {
         }
       } catch (error) {
         console.error("Failed to fetch tarot result:", error);
+        navigate("/tarot-reading")
       } finally {
         setIsSelecting(false);
       }

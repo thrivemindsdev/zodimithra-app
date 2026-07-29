@@ -162,9 +162,9 @@ export const PanchangCard: React.FC = () => {
   // Show Skeleton loading when either location or panchang data calculation is pending
   if (isLocationLoading || loading) {
     return (
-      <div className="mx-auto max-w-md space-y-5 bg-gray-50/50 font-body antialiased pt-6">
+      <div className="mx-auto max-w-md space-y-5 font-body antialiased pt-6">
         {/* Header Skeleton */}
-        <div className="mx-auto flex max-w-md items-center justify-between rounded-3xl border border-gray-100 bg-white p-5 shadow-sm">
+        <div className="mx-auto flex max-w-md items-center justify-between rounded-2xl card-shadow p-4">
           <div className="space-y-1.5">
             <div className="h-5 w-20 animate-pulse rounded bg-gray-200" />
             <div className="h-4 w-36 animate-pulse rounded bg-gray-200" />
@@ -173,7 +173,7 @@ export const PanchangCard: React.FC = () => {
         </div>
 
         {/* 1. Sun & Moon Skeleton */}
-        <div className="flex items-center justify-between rounded-3xl border border-gray-100 bg-white p-5 shadow-sm">
+        <div className="flex items-center justify-between rounded-2xl card-shadow p-4">
           {Array.from({ length: 4 }).map((_, index) => (
             <div key={index} className="flex flex-1 flex-col items-center">
               <div className="mb-2 h-6 w-6 animate-pulse rounded-full bg-gray-200" />
@@ -184,7 +184,7 @@ export const PanchangCard: React.FC = () => {
         </div>
 
         {/* 2. Muhurat & Kaal Blocks Skeleton */}
-        <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl card-shadow p-4">
           <div className="mb-4 h-5 w-40 animate-pulse rounded bg-gray-200" />
           <div className="grid grid-cols-2 gap-3">
             {Array.from({ length: 4 }).map((_, index) => (
@@ -200,7 +200,7 @@ export const PanchangCard: React.FC = () => {
         </div>
 
         {/* 3. Five Limbs Panchang List Skeleton */}
-        <div className="space-y-4 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+        <div className="space-y-4 rounded-2xl card-shadow p-4">
           <div className="h-5 w-32 animate-pulse rounded bg-gray-200" />
           {Array.from({ length: 5 }).map((_, index) => (
             <div key={index} className="flex justify-between items-center">
@@ -211,7 +211,7 @@ export const PanchangCard: React.FC = () => {
         </div>
 
         {/* 4. Hindu Calendar Skeleton */}
-        <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl card-shadow p-4">
           <div className="mb-4 h-5 w-36 animate-pulse rounded bg-gray-200" />
           <div className="grid grid-cols-2 gap-3">
             {Array.from({ length: 4 }).map((_, index) => (
@@ -277,8 +277,8 @@ export const PanchangCard: React.FC = () => {
   );
 
   return (
-    <div className="mx-auto max-w-md space-y-5 bg-gray-50/50 font-body antialiased selection:bg-indigo-100 pt-6">
-      <div className="mx-auto flex max-w-md items-center justify-between rounded-3xl border border-gray-100 bg-white p-5 font-body antialiased shadow-sm selection:bg-indigo-100">
+    <div className="mx-auto max-w-md space-y-5 font-body antialiased pt-6">
+      <div className="mx-auto flex max-w-md items-center justify-between rounded-2xl p-4 font-body antialiased card-shadow">
         {/* Date Information */}
         <div className="flex flex-col">
           <h1 className="font-body font-bold text-lg text-primary">
@@ -290,7 +290,7 @@ export const PanchangCard: React.FC = () => {
         </div>
 
         {/* Location Pill */}
-        <div className="flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-white shadow-sm">
+        <div className="flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-white">
           <MapPin className="h-4 w-4 stroke-[2.5] text-white/90" />
           <span className="font-body font-medium tracking-wide text-sm">
             {location?.city}
@@ -299,7 +299,7 @@ export const PanchangCard: React.FC = () => {
       </div>
 
       {/* 1. Dynamic Sun & Moon Elements */}
-      <div className="flex items-center justify-between rounded-3xl border border-gray-100 bg-white p-5 text-center shadow-sm">
+      <div className="flex items-center justify-between rounded-2xl card-shadow p-4 text-center">
         <TimingItem
           icon={<Sunrise className="h-6 w-6" />}
           label={t("panchang.sunRise")}
@@ -323,7 +323,7 @@ export const PanchangCard: React.FC = () => {
       </div>
 
       {/* 2. Muhurat & Kaal Blocks */}
-      <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm">
+      <div className="rounded-2xl card-shadow p-4">
         <h2 className="mb-4 font-body font-bold text-lg text-primary">
           {t("panchang.auspiciousTitle")}
         </h2>
@@ -348,7 +348,7 @@ export const PanchangCard: React.FC = () => {
       </div>
 
       {/* 3. Five Limbs of Panchang List */}
-      <div className="space-y-4 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+      <div className="space-y-4 rounded-2xl card-shadow p-4">
         <h2 className="mb-2 font-body font-bold text-lg text-primary">
           {t("panchang.title")}
         </h2>
@@ -366,7 +366,7 @@ export const PanchangCard: React.FC = () => {
       </div>
 
       {/* 4. Traditional Hindu Calendar Blocks */}
-      <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm">
+      <div className="rounded-2xl card-shadow p-4">
         <h2 className="mb-4 font-body font-bold text-lg text-primary">
           {t("panchang.hinduCalendar")}
         </h2>

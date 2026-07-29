@@ -51,7 +51,7 @@ const NavamsaChart = ({ userDetails, birthDate }: any) => {
           );
         })}
       </div>
-      <div className="rounded-2xl p-4 shadow-sm border border-gray-200 flex flex-col items-center justify-center">
+      <div className="rounded-2xl p-4 card-shadow flex flex-col items-center justify-center">
         {isLoading ? (
           <div className="text-sm text-[#8C7A6B]">Loading...</div>
         ) : chartData ? (

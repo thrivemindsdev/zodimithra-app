@@ -1,3 +1,4 @@
+import { Capacitor } from "@capacitor/core";
 import { Geolocation } from "@capacitor/geolocation";
 
 export interface LocationDetails {
@@ -11,19 +12,21 @@ export interface LocationDetails {
 
 export const getCurrentLocation = async (): Promise<LocationDetails | null> => {
   try {
-    // Check permission
-    let permissions = await Geolocation.checkPermissions();
-
-    if (permissions.location !== "granted") {
-      permissions = await Geolocation.requestPermissions();
+    // Permission checks are native-only; skip them when running on Web
+    if (Capacitor.isNativePlatform()) {
+      let permissions = await Geolocation.checkPermissions();
 
       if (permissions.location !== "granted") {
-        console.warn("Location permission denied.");
-        return null;
+        permissions = await Geolocation.requestPermissions();
+
+        if (permissions.location !== "granted") {
+          console.warn("Location permission denied.");
+          return null;
+        }
       }
     }
 
-    // Get current position
+    // Get current position (works on iOS, Android, and Web)
     const { coords } = await Geolocation.getCurrentPosition({
       enableHighAccuracy: false,
       timeout: 10000,
@@ -34,7 +37,7 @@ export const getCurrentLocation = async (): Promise<LocationDetails | null> => {
 
     // Reverse geocode
     const response = await fetch(
-      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
     );
 
     if (!response.ok) {

@@ -71,8 +71,8 @@ const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Partner 1 Card */}
-        <div className="rounded-2xl shadow-xl border border-gray-100 p-5 bg-white">
-          <h2 className="text-primary font-body font-bold text-xl pb-4 border-b border-gray-50 mb-4">
+        <div className="rounded-2xl card-shadow p-4">
+          <h2 className="text-primary font-body font-bold text-xl pb-4 mb-4">
             Partner 1
           </h2>
           <div className="space-y-5">
@@ -121,8 +121,8 @@ const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
         </div>
 
         {/* Partner 2 Card */}
-        <div className="rounded-2xl shadow-xl border border-gray-100 p-5 bg-white">
-          <h2 className="text-primary font-body font-bold text-xl pb-4 border-b border-gray-50 mb-4">
+        <div className="rounded-2xl card-shadow p-4">
+          <h2 className="text-primary font-body font-bold text-xl pb-4 mb-4">
             Partner 2
           </h2>
           <div className="space-y-5">

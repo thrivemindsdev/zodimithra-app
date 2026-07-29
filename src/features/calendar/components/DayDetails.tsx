@@ -15,7 +15,7 @@ const DayDetails = ({ loading, data }: DayDetailsProps) => {
     return (
       <div className="grid grid-cols-2 gap-3 py-6">
         {/* Challenging Time Skeleton */}
-        <div className="rounded-2xl border border-slate-100 bg-white p-3.5 shadow-sm">
+        <div className="rounded-2xl card-shadow p-3.5">
           <div className="mb-1.5 flex items-center space-x-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-[#9A4729]/40" />
             <div className="h-2.5 w-16 animate-pulse rounded bg-gray-200" />
@@ -24,7 +24,7 @@ const DayDetails = ({ loading, data }: DayDetailsProps) => {
         </div>
 
         {/* Prosperous Time Skeleton */}
-        <div className="rounded-2xl border border-slate-100 bg-white p-3.5 shadow-sm">
+        <div className="rounded-2xl card-shadow p-3.5">
           <div className="mb-1.5 flex items-center space-x-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-[#005E26]/40" />
             <div className="h-2.5 w-16 animate-pulse rounded bg-gray-200" />
@@ -38,7 +38,7 @@ const DayDetails = ({ loading, data }: DayDetailsProps) => {
   return (
     <div className="grid grid-cols-2 gap-3 py-6">
       {/* Challenging Time */}
-      <div className="rounded-2xl border border-slate-100 bg-white p-3.5 shadow-sm">
+      <div className="rounded-2xl card-shadow p-3.5">
         <div className="mb-1 flex items-center space-x-1.5">
           <span className="h-1.5 w-1.5 rounded-full bg-[#9A4729]" />
           <span className="text-[10px] font-bold uppercase tracking-wider text-[#9A4729]">
@@ -51,7 +51,7 @@ const DayDetails = ({ loading, data }: DayDetailsProps) => {
       </div>
 
       {/* Prosperous Time */}
-      <div className="rounded-2xl border border-slate-100 bg-white p-3.5 shadow-sm">
+      <div className="rounded-2xl card-shadow p-3.5">
         <div className="mb-1 flex items-center space-x-1.5">
           <span className="h-1.5 w-1.5 rounded-full bg-[#005E26]" />
           <span className="text-[10px] font-bold uppercase tracking-wider text-[#005E26]">

@@ -49,7 +49,7 @@ const DetailRow = ({
 );
 
 const NumberCardItem = ({ item }: { item: NumberCard }) => (
-  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+  <div className="rounded-2xl card-shadow bg-white p-5">
     <div className="mb-4 flex items-start justify-between">
       <div>
         <h3 className="text-lg font-bold text-text-primary">

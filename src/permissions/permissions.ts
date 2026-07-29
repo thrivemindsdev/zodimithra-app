@@ -1,7 +1,6 @@
-
+import { Camera } from "@capacitor/camera";
 import { Capacitor } from "@capacitor/core";
 import { Geolocation } from "@capacitor/geolocation";
-import { Camera } from "@capacitor/camera";
 
 export const requestCamera = async () => {
   if (Capacitor.getPlatform() === "web") {
@@ -23,18 +22,16 @@ export const requestCamera = async () => {
 
 export const requestLocationPermission = async (): Promise<boolean> => {
   try {
-    // Check current permission status
-    const permissionStatus = await Geolocation.checkPermissions();
+    if (Capacitor.isNativePlatform()) {
+      const permissionStatus = await Geolocation.checkPermissions();
 
-    if (permissionStatus.location === "granted") {
-      return true;
-    }
+      if (permissionStatus.location === "granted") {
+        return true;
+      }
 
-    // Request permission if not already granted
-    const requestStatus = await Geolocation.requestPermissions();
-
-    if (requestStatus.location === "granted") {
-      return true;
+      // Request permission if not already granted
+      const requestStatus = await Geolocation.requestPermissions();
+      return requestStatus.location === "granted";
     }
 
     return false;
@@ -43,4 +40,3 @@ export const requestLocationPermission = async (): Promise<boolean> => {
     return false;
   }
 };
-
