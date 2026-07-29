@@ -18,7 +18,7 @@ const NavamsaChart = ({ userDetails, birthDate }: any) => {
     ayanamsa: 1,
     coordinates: `${userDetails?.latitude}, ${userDetails?.longitude}`,
     datetime: birthDate,
-    chart_type: "navamsa",
+    chart_type: "rasi",
     chart_style: selected,
   });
 

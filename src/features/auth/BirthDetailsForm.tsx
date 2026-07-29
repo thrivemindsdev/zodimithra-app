@@ -55,6 +55,7 @@ export default function BirthDetailsForm() {
   const { phoneNumber, setToken, setOnboarded } = useAuthStore();
   const { data: currentLocation } = useGetCurrentLocationQuery();
   const [formData, setFormData] = useState<FormState>(initialFormState);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Generic handler for standard inputs and custom selectors
   const updateField = (field: keyof FormState, value: string) => {
@@ -85,7 +86,11 @@ export default function BirthDetailsForm() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    // Prevent double submission
+    if (isSubmitting) return;
+
     if (!isFormIncomplete) {
+      setIsSubmitting(true);
       try {
         const formDeatils = new FormData();
 
@@ -113,6 +118,8 @@ export default function BirthDetailsForm() {
         }
       } catch (error) {
         console.error("Registration failed:", error);
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -176,10 +183,10 @@ export default function BirthDetailsForm() {
 
           <button
             type="submit"
-            disabled={isFormIncomplete}
+            disabled={isFormIncomplete || isSubmitting}
             className="w-full mt-6 font-body bg-primary text-white font-semibold py-2.5 px-4 rounded-lg transition outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Submit
+            {isSubmitting ? "Verifying..." : "Submit"}
           </button>
         </form>
       </div>

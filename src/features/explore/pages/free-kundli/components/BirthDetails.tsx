@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, parse, parseISO } from "date-fns";
 import { useTranslation } from "react-i18next";
 
 interface BirthDetailsProps {
@@ -29,8 +29,18 @@ const BirthDetails = ({ loading, data, panchangData }: BirthDetailsProps) => {
 
   const details = [
     { label: t("freeKundli.name"), value: data?.name },
-    { label: t("freeKundli.date"), value: data?.date_of_birth },
-    { label: t("freeKundli.time"), value: data?.birth_time },
+    {
+      label: t("freeKundli.date"),
+      value: data?.date_of_birth
+        ? format(parseISO(data?.date_of_birth), "dd-MM-yyyy")
+        : "",
+    },
+    {
+      label: t("freeKundli.time"),
+      value: data?.birth_time
+        ? format(parse(data.birth_time, "HH:mm:ss", new Date()), "hh:mm a")
+        : "",
+    },
     { label: t("freeKundli.place"), value: data?.birth_place?.split(",")[0] },
     { label: t("freeKundli.latitude"), value: data?.latitude },
     { label: t("freeKundli.longitude"), value: data?.longitude },
@@ -71,7 +81,9 @@ const BirthDetails = ({ loading, data, panchangData }: BirthDetailsProps) => {
               <div
                 key={item.label}
                 className={`flex items-center justify-between px-5 py-4 ${
-                  index !== details.length - 1 ? "border-b border-[#5A3AAE]" : ""
+                  index !== details.length - 1
+                    ? "border-b border-[#5A3AAE]"
+                    : ""
                 }`}
               >
                 <span className="text-sm font-medium text-text-secondary">

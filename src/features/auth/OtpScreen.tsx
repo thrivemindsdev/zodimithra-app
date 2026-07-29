@@ -15,9 +15,13 @@ export default function OtpScreen() {
   const setToken = useAuthStore((state) => state.setToken);
   const setOnboarded = useAuthStore((state) => state.setOnboarded);
   const [otpValue, setOtpValue] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Prevent double submission
+    if (isSubmitting) return;
 
     if (otpValue.length < 4) {
       await Dialog.alert({
@@ -27,6 +31,7 @@ export default function OtpScreen() {
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const response = await VerifyOtpApi({
         phone: phoneNumber,
@@ -58,6 +63,8 @@ export default function OtpScreen() {
         title: "Error",
         message: "Something went wrong. Please check your network connection.",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -141,10 +148,10 @@ export default function OtpScreen() {
           <div className="space-y-4">
             <button
               type="submit"
-              disabled={otpValue.length < 4}
+              disabled={otpValue.length < 4 || isSubmitting}
               className="flex w-full justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Verify & Proceed
+              {isSubmitting ? "Verifying OTP..." : "Verify & Proceed"}
             </button>
 
             <div className="text-center text-sm text-gray-500">

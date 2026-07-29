@@ -56,15 +56,15 @@ const FreeKundli = () => {
             rightImage={RightImage}
           />
         </div>
-        <PlanetaryPositionsCard
-          loading={isPlanetaryLoading || isLocationLoading}
-          data={planetaryData}
-        />
-        <NavamsaChart userDetails={userData} birthDate={birthDate} />
         <BirthDetails
           loading={isUserLoading}
           data={userData}
           panchangData={panchangData}
+        />
+        <NavamsaChart userDetails={userData} birthDate={birthDate} />
+        <PlanetaryPositionsCard
+          loading={isPlanetaryLoading || isLocationLoading}
+          data={planetaryData}
         />
         <PanchangDetails
           loading={isPanchangLoading || isLocationLoading}
