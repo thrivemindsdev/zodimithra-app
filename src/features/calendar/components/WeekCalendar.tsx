@@ -42,7 +42,7 @@ const WeekCalendar = ({ selectedDate, setSelectedDate }: any) => {
           {weekOffset === 0
             ? t("calendar.thisWeek")
             : weekOffset > 0
-              ? t("calenar.nextWeek")
+              ? t("calendar.nextWeek")
               : t("calendar.previousWeek")}{" "}
           · {t(`calendar.${format(startOfCurrentWeek, "MMMM")}`)}
         </h2>

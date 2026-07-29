@@ -1,7 +1,6 @@
 import BgImg from "@/assets/home/affirmation.png";
 import CustomAnimatedMoon from "@/components/common/CustomAnimatedMoon";
 import { useGetAffirmationQuery } from "@/queries/homeQueries";
-import { motion } from "framer-motion";
 
 import { addDays, addWeeks, format, isSameDay, startOfWeek } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -62,17 +61,17 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
     {
       id: "prev-moon",
       date: previousDate,
-      positionClass: "absolute top-10 left-4",
+      positionClass: "absolute -top-2 left-4",
     },
     {
       id: "selected-moon",
       date: selectedDate,
-      positionClass: "absolute top-0 left-1/2 -translate-x-1/2",
+      positionClass: "absolute -top-8 left-1/2 -translate-x-1/2",
     },
     {
       id: "next-moon",
       date: nextDate,
-      positionClass: "absolute top-10 right-4",
+      positionClass: "absolute -top-2 right-4",
     },
   ];
 
@@ -140,33 +139,60 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
     );
   }
 
+  // const BACKGROUND_IMAGE_URL = "https://picsum.photos/600/800";
+
   return (
     <section className="relative mt-6 overflow-hidden">
-      <section
-        className="h-89 bg-cover"
-        style={{
-          backgroundImage: `url(${BgImg})`,
-        }}
-      >
-        <div className="px-4 pt-16">
-          <h2 className="font-body-content pb-2 text-center text-xl font-extrabold uppercase tracking-[1px] text-white">
-            {t("home.affirmation")}
-          </h2>
-
-          <motion.div
-            initial={false}
-            transition={{ duration: 0.4 }}
-            className="overflow-hidden"
+      <div className="w-full flex items-center justify-center bg-white py-5">
+        <div className="relative w-full overflow-hidden">
+          {/* Card Body with Custom Top Convex Arc & Background Image */}
+          <div
+            className="relative w-full bg-cover bg-center text-white pt-15 pb-25 rounded-t-[50%_40px]"
+            style={{ backgroundImage: `url(${data?.image_url ?? BgImg})` }}
           >
-            <p className="font-body-content text-center text-sm font-bold leading-[1.6] text-white">
-              &ldquo; {affirmation} &rdquo;
-            </p>
-          </motion.div>
+            {/* Subtle Dark Overlay for Text Readability */}
+            {/* <div className="absolute inset-0 bg-black/25 rounded-t-[50%_40px] pointer-events-none" /> */}
+
+            {/* Card Content */}
+            <div className="relative z-10 flex flex-col items-center text-center px-6">
+              <h1 className="text-2xl font-extrabold tracking-[2px] uppercase mb-6 drop-shadow">
+                {t("home.affirmation")}
+              </h1>
+
+              <p className="text-[15px] leading-relaxed font-medium text-white pb-4 drop-shadow-md">
+                “ {affirmation} “
+              </p>
+
+              <button
+                // onClick={() => alert("Shared!")}
+                className="flex items-center justify-center mb-8 bg-white/20 backdrop-blur-md text-white border border-white/40 px-7 py-2.5 rounded-full text-[15px] font-semibold cursor-pointer shadow-lg hover:bg-white/30 transition-all duration-200"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mr-2"
+                >
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+                <span>Share</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Bottom Concave Cutout Arc */}
+          <div className="absolute bottom-0 left-0 w-full h-17 bg-white rounded-t-[50%_40px] z-20" />
         </div>
-      </section>
+      </div>
 
       {/* Moon Animation Viewport */}
-      <div className="relative -mt-24 flex h-36 w-full items-center justify-center">
+      <div className="relative z-999 -mt-24 flex h-20 w-full items-center justify-center">
         {visibleMoons.map(({ id, date, positionClass }) => {
           const age = Moon.lunarAgePercent(date);
 
@@ -205,7 +231,7 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
             {weekOffset === 0
               ? t("calendar.thisWeek")
               : weekOffset > 0
-                ? t("calenar.nextWeek")
+                ? t("calendar.nextWeek")
                 : t("calendar.previousWeek")}{" "}
             · {t(`calendar.${format(start, "MMMM")}`)}
           </h2>

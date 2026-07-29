@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/store/authStore";
-import axios from "axios";
+import axios, { type AxiosInstance } from "axios";
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -9,34 +9,6 @@ export const axiosInstance = axios.create({
   },
 });
 
-axiosInstance.interceptors.request.use(
-  async (config) => {
-    const token = useAuthStore.getState().token;
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
-
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    if (error.response?.status === 401) {
-      const store = useAuthStore.getState();
-      store.clearToken();
-      store.clearOnboarded();
-      store.clearPhoneNumber();
-      window.dispatchEvent(new Event("app-unauthorized"));
-    }
-
-    return Promise.reject(error);
-  },
-);
-
 export const axiosSubInstance = axios.create({
   baseURL: import.meta.env.VITE_API_SUB_URL,
   timeout: 10000,
@@ -45,31 +17,41 @@ export const axiosSubInstance = axios.create({
   },
 });
 
-axiosSubInstance.interceptors.request.use(
-  async (config) => {
-    const token = useAuthStore.getState().token;
+// Reusable interceptor attacher to keep your code DRY
+const setupInterceptors = (instance: AxiosInstance) => {
+  instance.interceptors.request.use(
+    (config) => {
+      const token = useAuthStore.getState().token;
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
 
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
+      return config;
+    },
+    (error) => Promise.reject(error),
+  );
 
-axiosSubInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    if (error.response?.status === 401) {
-      const store = useAuthStore.getState();
-      store.clearToken();
-      store.clearOnboarded();
-      store.clearPhoneNumber();
+  instance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      if (error.response?.status === 401) {
+        const store = useAuthStore.getState();
 
-      window.dispatchEvent(new Event("app-unauthorized"));
-    }
+        // Reset auth state
+        store.clearToken();
+        store.clearOnboarded();
+        store.clearPhoneNumber();
 
-    return Promise.reject(error);
-  },
-);
+        // Notify the application to trigger navigation
+        window.dispatchEvent(new Event("app-unauthorized"));
+      }
+
+      return Promise.reject(error);
+    },
+  );
+};
+
+// Apply interceptors to both instances
+setupInterceptors(axiosInstance);
+setupInterceptors(axiosSubInstance);
