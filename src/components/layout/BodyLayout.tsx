@@ -9,7 +9,7 @@ const BodyLayout = ({
 }) => {
   return (
     <main
-      className={`pb-25 h-[calc(100vh-100px)] overflow-y-auto ${className}`}
+      className={`pb-25 h-[calc(100vh-100px)] overflow-x-hidden overflow-y-auto ${className}`}
     >
       {children}
     </main>

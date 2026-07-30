@@ -14,7 +14,7 @@ const config: CapacitorConfig = {
       permissions: ["camera", "photos"],
     },
     StatusBar: {
-      overlaysWebView: true,
+      overlaysWebView: false,
     },
   },
 };
