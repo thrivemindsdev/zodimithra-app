@@ -16,6 +16,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LANGUAGES } from "../auth/LanguagesScreen";
+import { Capacitor } from "@capacitor/core";
 
 interface MenuItemProps {
   icon: React.ReactNode;
@@ -141,12 +142,14 @@ const ProfileScreen = () => {
               icon={<History className="w-6 h-6" />}
               label={t("profile.orderHistory")}
             />
-            <MenuItem
-              icon={<Crown className="w-6 h-6" />}
-              label={t("profile.subscription")}
-              badge="Free Plan"
-              onClick={() => navigate("/premium")}
-            />
+            {Capacitor.getPlatform() !== "ios" &&
+              <MenuItem
+                icon={<Crown className="w-6 h-6" />}
+                label={t("profile.subscription")}
+                badge="Free Plan"
+                onClick={() => navigate("/premium")}
+              />
+            }
             <MenuItem
               icon={<Globe className="w-6 h-6" />}
               label={t("profile.changeLanguage")}

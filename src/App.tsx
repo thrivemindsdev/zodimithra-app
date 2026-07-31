@@ -41,7 +41,7 @@ function App() {
   }
 
   // 3. FORCE UPDATE: Unmount entire app tree and show ONLY the modal
-  if (isOutdated && Capacitor.getPlatform() !== "web") {
+  if (isOutdated && Capacitor.getPlatform() == "android") {
     return (
       <UpdateModal
         appName={appInfo.name}
