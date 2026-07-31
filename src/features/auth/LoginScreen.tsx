@@ -1,6 +1,6 @@
 import Logo from "@/assets/splash/zodimithra.gif";
 import ZodiMithra from "@/assets/splash/ZODIMITHRA.png";
-import { SendOtpApi } from "@/services/auth.api";
+import { CheckPhoneApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { Dialog } from "@capacitor/dialog";
 import { useState, type FormEvent } from "react";
@@ -44,11 +44,15 @@ export default function LoginScreen() {
     // 3. Make the API Call with proper loading and error states
     setIsSubmitting(true);
     try {
-      const response = await SendOtpApi({ phone: phoneValue });
+      const response = await CheckPhoneApi({ phone: phoneValue });
 
       if (response?.status === 200) {
         setPhoneNumber(phoneValue);
-        navigate("/otp");
+        if (response?.data?.is_registered) {
+          navigate("/password");
+        } else {
+          navigate("/otp");
+        }
       } else {
         await Dialog.alert({
           title: "Failed to Send OTP",

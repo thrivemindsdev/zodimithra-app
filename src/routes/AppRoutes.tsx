@@ -7,11 +7,14 @@ import MainLayout from "@/components/layout/MainLayout";
 import SplashScreen from "@/features/splash-screen/SplashScreen";
 
 import AuthListener from "./AuthListener";
-import OnboardingRoute from "./OnboardingRoute";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 
 // Lazy-loaded components to improve startup speed and split bundles
+const CreatePasswordScreen = lazy(
+  () => import("@/features/auth/CreatePassword"),
+);
+const PasswordScreen = lazy(() => import("@/features/auth/PasswordScreen"));
 const BirthDetailsForm = lazy(() => import("@/features/auth/BirthDetailsForm"));
 const LanguageScreen = lazy(() => import("@/features/auth/LanguagesScreen"));
 const LoginScreen = lazy(() => import("@/features/auth/LoginScreen"));
@@ -65,9 +68,7 @@ const ProfileScreen = lazy(() => import("@/features/profile/ProfileScreen"));
 const WellBeingScreen = lazy(
   () => import("@/features/well-being/WellBeingScreen"),
 );
-const MantrasScreen = lazy(
-  () => import("@/features/well-being/Mantras"),
-);
+const MantrasScreen = lazy(() => import("@/features/well-being/Mantras"));
 const KundliMatchResult = lazy(
   () =>
     import("@/features/explore/pages/kundli-match/components/KundliMatchResult"),
@@ -109,10 +110,11 @@ export function AppRoutes() {
             <Route element={<PublicRoute />}>
               <Route path="/login" element={<LoginScreen />} />
               <Route path="/otp" element={<OtpScreen />} />
-            </Route>
-
-            {/* Authenticated but Pending Onboarding */}
-            <Route element={<OnboardingRoute />}>
+              <Route
+                path="/create-password"
+                element={<CreatePasswordScreen />}
+              />
+              <Route path="/password" element={<PasswordScreen />} />
               <Route
                 path="/birth-details-form"
                 element={<BirthDetailsForm />}

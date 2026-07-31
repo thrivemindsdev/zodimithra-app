@@ -1,54 +1,7 @@
-// import { create } from "zustand";
-// import { persist } from "zustand/middleware";
-
-// interface AuthStore {
-//   phoneNumber: string | null;
-//   token: string | null;
-//   hasOnboarded: boolean;
-//   setPhoneNumber: (num: string) => void;
-//   clearPhoneNumber: () => void;
-//   setToken: (token: string) => void;
-//   clearToken: () => void;
-//   setOnboarded: (status: boolean) => void;
-//   clearOnboarded: () => void;
-// }
-
-// export const useAuthStore = create<AuthStore>()(
-//   persist(
-//     (set) => ({
-//       // Initial States
-//       phoneNumber: null,
-//       token: null,
-//       hasOnboarded: false,
-
-//       // Phone Actions
-//       setPhoneNumber: (num) => set({ phoneNumber: num }),
-//       clearPhoneNumber: () => set({ phoneNumber: null }),
-
-//       // Token Actions
-//       setToken: (token) => set({ token }),
-//       clearToken: () => set({ token: null }),
-
-//       // Onboarding Actions
-//       setOnboarded: (status) => set({ hasOnboarded: status }),
-//       clearOnboarded: () => set({ hasOnboarded: false }),
-//     }),
-//     {
-//       name: "auth-storage",
-//       // Whitelist only the data properties we want to persist in local storage
-//       partialize: (state) => ({
-//         phoneNumber: state.phoneNumber,
-//         token: state.token,
-//         hasOnboarded: state.hasOnboarded,
-//       }),
-//     },
-//   ),
-// );
-
-import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import type { StateStorage } from "zustand/middleware";
 import { Preferences } from "@capacitor/preferences";
+import { create } from "zustand";
+import type { StateStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 // 1. Create the native Capacitor storage adapter
 const capacitorStorage: StateStorage = {
@@ -67,13 +20,13 @@ const capacitorStorage: StateStorage = {
 interface AuthStore {
   phoneNumber: string | null;
   token: string | null;
-  hasOnboarded: boolean;
+  temporaryToken: string | null;
   setPhoneNumber: (num: string) => void;
   clearPhoneNumber: () => void;
   setToken: (token: string) => void;
   clearToken: () => void;
-  setOnboarded: (status: boolean) => void;
-  clearOnboarded: () => void;
+  setTemporayToken: (temporaryToken: string) => void;
+  clearTemporaryToken: () => void;
   logout: () => void; // Convenient single action to reset auth state
 }
 
@@ -83,7 +36,7 @@ export const useAuthStore = create<AuthStore>()(
       // Initial States
       phoneNumber: null,
       token: null,
-      hasOnboarded: false,
+      temporaryToken: null,
 
       // Phone Actions
       setPhoneNumber: (num) => set({ phoneNumber: num }),
@@ -92,17 +45,15 @@ export const useAuthStore = create<AuthStore>()(
       // Token Actions
       setToken: (token) => set({ token }),
       clearToken: () => set({ token: null }),
-
-      // Onboarding Actions
-      setOnboarded: (status) => set({ hasOnboarded: status }),
-      clearOnboarded: () => set({ hasOnboarded: false }),
+      setTemporayToken: (temporaryToken) => set({ temporaryToken }),
+      clearTemporaryToken: () => set({ temporaryToken: null }),
 
       // Logout Action
       logout: () =>
         set({
           phoneNumber: null,
           token: null,
-          hasOnboarded: false,
+          temporaryToken: null,
         }),
     }),
     {
@@ -111,7 +62,7 @@ export const useAuthStore = create<AuthStore>()(
       partialize: (state) => ({
         phoneNumber: state.phoneNumber,
         token: state.token,
-        hasOnboarded: state.hasOnboarded,
+        temporaryToken: state.temporaryToken,
       }),
     },
   ),

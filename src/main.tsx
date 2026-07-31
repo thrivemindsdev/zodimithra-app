@@ -8,7 +8,7 @@ import { Capacitor } from '@capacitor/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
 
 async function initializeApp() {
-  if (Capacitor.getPlatform() === 'ios') {
+  if (Capacitor.getPlatform() === 'ios' || Capacitor.getPlatform() === 'android') {
     await StatusBar.setOverlaysWebView({
       overlay: false,
     });

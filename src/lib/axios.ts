@@ -40,7 +40,6 @@ const setupInterceptors = (instance: AxiosInstance) => {
 
         // Reset auth state
         store.clearToken();
-        store.clearOnboarded();
         store.clearPhoneNumber();
 
         // Notify the application to trigger navigation

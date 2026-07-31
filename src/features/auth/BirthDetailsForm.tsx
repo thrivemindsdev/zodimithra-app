@@ -52,10 +52,13 @@ export const RELATIONSHIP_OPTIONS = [
 
 export default function BirthDetailsForm() {
   const navigate = useNavigate();
-  const { phoneNumber, setToken, setOnboarded } = useAuthStore();
+  const { phoneNumber, setToken } = useAuthStore();
   const { data: currentLocation } = useGetCurrentLocationQuery();
   const [formData, setFormData] = useState<FormState>(initialFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const clearTemporaryToken = useAuthStore(
+    (state) => state.clearTemporaryToken,
+  );
 
   // Generic handler for standard inputs and custom selectors
   const updateField = (field: keyof FormState, value: string) => {
@@ -112,9 +115,10 @@ export default function BirthDetailsForm() {
         if (response?.status === 200) {
           const token = response.data?.token;
           setToken(token);
-          setOnboarded(true);
-
+          clearTemporaryToken();
           navigate("/home");
+        } else {
+          navigate("/login");
         }
       } catch (error) {
         console.error("Registration failed:", error);

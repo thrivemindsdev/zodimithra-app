@@ -1,4 +1,3 @@
-import { useAuthStore } from "@/store/authStore";
 import { Check, Circle } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -32,8 +31,6 @@ export default function LanguageScreen() {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const selectedLanguae = i18n.language ?? "en";
-  const token = useAuthStore((state) => state.token);
-  const hasOnboarded = useAuthStore((state) => state.hasOnboarded);
   const [selectedLanguage, setSelectedLanguage] =
     useState<string>(selectedLanguae);
 
@@ -45,11 +42,7 @@ export default function LanguageScreen() {
     setSelectedLanguage(id);
 
     setTimeout(() => {
-      if (token && hasOnboarded) {
-        navigate("/home");
-      } else {
-        navigate("/birth-details-form");
-      }
+      navigate("/home");
     }, 150);
   };
 
