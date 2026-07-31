@@ -14,6 +14,7 @@ import Cropper, { type Area } from "react-easy-crop";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { type FormState } from "../auth/BirthDetailsForm";
+import { Capacitor } from "@capacitor/core";
 
 const EditProfile = () => {
   const { t } = useTranslation();
@@ -171,42 +172,44 @@ const EditProfile = () => {
         <div className="p-4 font-body rounded-2xl card-shadow">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Profile Image Section */}
-            <div className="flex flex-col items-center justify-center my-4">
-              <div className="relative">
-                {/* Avatar Display */}
-                <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-gray-200 overflow-hidden shadow-sm bg-gray-50 flex items-center justify-center">
-                  {formData.profileImage ? (
-                    <img
-                      src={formData.profileImage}
-                      alt="Profile Avatar"
-                      className="w-full h-full object-cover"
+            {Capacitor.getPlatform() !== 'ios' &&
+              <div className="flex flex-col items-center justify-center my-4">
+                <div className="relative">
+                  {/* Avatar Display */}
+                  <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-gray-200 overflow-hidden shadow-sm bg-gray-50 flex items-center justify-center">
+                    {formData.profileImage ? (
+                      <img
+                        src={formData.profileImage}
+                        alt="Profile Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <User className="w-12 h-12 text-gray-400" />
+                    )}
+                  </div>
+
+                  {/* Mobile-Friendly Touch Target Camera Badge */}
+                  <label
+                    htmlFor="profile-image-upload"
+                    className="absolute bottom-0 right-0 p-3 bg-primary text-white rounded-full shadow-md active:scale-95 transition-transform cursor-pointer flex items-center justify-center border-2 border-white touch-manipulation"
+                    aria-label="Upload profile picture"
+                  >
+                    <Camera className="w-5 h-5" />
+                    <input
+                      id="profile-image-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageSelect}
+                      className="hidden"
                     />
-                  ) : (
-                    <User className="w-12 h-12 text-gray-400" />
-                  )}
+                  </label>
                 </div>
 
-                {/* Mobile-Friendly Touch Target Camera Badge */}
-                <label
-                  htmlFor="profile-image-upload"
-                  className="absolute bottom-0 right-0 p-3 bg-primary text-white rounded-full shadow-md active:scale-95 transition-transform cursor-pointer flex items-center justify-center border-2 border-white touch-manipulation"
-                  aria-label="Upload profile picture"
-                >
-                  <Camera className="w-5 h-5" />
-                  <input
-                    id="profile-image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageSelect}
-                    className="hidden"
-                  />
-                </label>
+                <span className="text-xs font-body text-gray-500 mt-2.5 font-medium sm:hidden">
+                  Tap camera icon to edit
+                </span>
               </div>
-
-              <span className="text-xs font-body text-gray-500 mt-2.5 font-medium sm:hidden">
-                Tap camera icon to edit
-              </span>
-            </div>
+            }
 
             <Input
               label={t("onboard.fullName")}
