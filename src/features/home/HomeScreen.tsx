@@ -15,6 +15,7 @@ import HomeServices from "./components/HomeServices";
 import HomeTools from "./components/HomeTools";
 import HoroScope from "./components/HoroScope";
 import LuckyInfo from "./components/LuckyInfo";
+import { Capacitor } from "@capacitor/core";
 
 const HomeScreen = () => {
   useHardwareBack({ route: "/home" });
@@ -69,9 +70,13 @@ const HomeScreen = () => {
         <HomeCalendar isPremium={isPremium} />
         <div className="px-4">
           <DailyMantras />
-          <HomeTools />
+          {Capacitor.getPlatform() !== "ios" &&
+            <HomeTools />
+          }
           <LuckyInfo loading={isLuckyLoading} data={luckyData} />
-          <HomeServices isPremium={isPremium} />
+          {Capacitor.getPlatform() !== "ios" &&
+            <HomeServices isPremium={isPremium} />
+          }
         </div>
       </BodyLayout>
     </>

@@ -130,25 +130,27 @@ const ProfileScreen = () => {
 
           {/* Main Options List */}
           <div className="px-4">
-            <MenuItem
-              icon={<Bell className="w-6 h-6" />}
-              label={t("profile.notification")}
-            />
-            <MenuItem
-              icon={<Wallet className="w-6 h-6" />}
-              label={t("profile.wallet")}
-            />
-            <MenuItem
-              icon={<History className="w-6 h-6" />}
-              label={t("profile.orderHistory")}
-            />
             {Capacitor.getPlatform() !== "ios" &&
-              <MenuItem
-                icon={<Crown className="w-6 h-6" />}
-                label={t("profile.subscription")}
-                badge="Free Plan"
-                onClick={() => navigate("/premium")}
-              />
+              <>
+                <MenuItem
+                  icon={<Bell className="w-6 h-6" />}
+                  label={t("profile.notification")}
+                />
+                <MenuItem
+                  icon={<Wallet className="w-6 h-6" />}
+                  label={t("profile.wallet")}
+                />
+                <MenuItem
+                  icon={<History className="w-6 h-6" />}
+                  label={t("profile.orderHistory")}
+                />
+                <MenuItem
+                  icon={<Crown className="w-6 h-6" />}
+                  label={t("profile.subscription")}
+                  badge="Free Plan"
+                  onClick={() => navigate("/premium")}
+                />
+              </>
             }
             <MenuItem
               icon={<Globe className="w-6 h-6" />}
@@ -163,12 +165,14 @@ const ProfileScreen = () => {
               danger
               onClick={handleLogout}
             />
-            <MenuItem
-              icon={<Trash2 className="w-6 h-6 text-red-600" />}
-              label={t("profile.deleteAccount")}
-              danger
-              onClick={handleDeleteAccount}
-            />
+            {Capacitor.getPlatform() !== "ios" &&
+              <MenuItem
+                icon={<Trash2 className="w-6 h-6 text-red-600" />}
+                label={t("profile.deleteAccount")}
+                danger
+                onClick={handleDeleteAccount}
+              />
+            }
           </div>
         </>
       </BodyLayout>
