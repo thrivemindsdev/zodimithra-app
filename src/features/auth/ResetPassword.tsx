@@ -7,9 +7,9 @@ import { Check, Eye, EyeOff, X } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function CreatePassword() {
+export default function ResetPassword() {
   const navigate = useNavigate();
-  const { phoneNumber } = useAuthStore();
+  const { phoneNumber, setToken, setIsLoggedIn } = useAuthStore();
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -46,13 +46,20 @@ export default function CreatePassword() {
         password,
       });
       if (response.status === 200 || response.status === 201) {
-        navigate("/birth-details-form");
+        setToken(response.data.token);
+        if (response?.data?.on_boarding) {
+          setIsLoggedIn(true);
+          navigate("/home");
+        } else {
+          setIsLoggedIn(false);
+          navigate("/birth-details-form");
+        }
       }
     } catch (error) {
-      console.error("Create Password Error:", error);
+      console.error("Reset Password Error:", error);
       await Dialog.alert({
         title: "Error",
-        message: "Unable to update password. Please try again.",
+        message: "Unable to Reset password. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
@@ -76,7 +83,7 @@ export default function CreatePassword() {
             className="mx-auto w-1/2 max-w-xs"
           />
           <h2 className="mt-4 text-xl font-bold text-gray-900">
-            Create Password
+            Reset Password
           </h2>
           <p className="mt-1 font-body text-center text-sm text-text-secondary">
             Set a strong password for your account.

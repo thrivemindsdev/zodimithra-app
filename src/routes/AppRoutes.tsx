@@ -11,6 +11,10 @@ import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 
 // Lazy-loaded components to improve startup speed and split bundles
+const ForgotPasswordScreen = lazy(
+  () => import("@/features/auth/ForgotPassword"),
+);
+const ResetPasswordScreen = lazy(() => import("@/features/auth/ResetPassword"));
 const CreatePasswordScreen = lazy(
   () => import("@/features/auth/CreatePassword"),
 );
@@ -114,6 +118,11 @@ export function AppRoutes() {
                 path="/create-password"
                 element={<CreatePasswordScreen />}
               />
+              <Route
+                path="/forgot-password"
+                element={<ForgotPasswordScreen />}
+              />
+              <Route path="/reset-password" element={<ResetPasswordScreen />} />
               <Route path="/password" element={<PasswordScreen />} />
               <Route
                 path="/birth-details-form"

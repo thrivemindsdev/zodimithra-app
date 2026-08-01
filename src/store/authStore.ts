@@ -20,13 +20,13 @@ const capacitorStorage: StateStorage = {
 interface AuthStore {
   phoneNumber: string | null;
   token: string | null;
-  temporaryToken: string | null;
+  isLoggedIn: boolean;
+  setIsLoggedIn: (status: boolean) => void;
+  clearIsLoggedIn: () => void;
   setPhoneNumber: (num: string) => void;
   clearPhoneNumber: () => void;
   setToken: (token: string) => void;
   clearToken: () => void;
-  setTemporayToken: (temporaryToken: string) => void;
-  clearTemporaryToken: () => void;
   logout: () => void; // Convenient single action to reset auth state
 }
 
@@ -36,7 +36,11 @@ export const useAuthStore = create<AuthStore>()(
       // Initial States
       phoneNumber: null,
       token: null,
-      temporaryToken: null,
+      isLoggedIn: false,
+
+      // Login Status Actions
+      setIsLoggedIn: (status) => set({ isLoggedIn: status }),
+      clearIsLoggedIn: () => set({ isLoggedIn: false }),
 
       // Phone Actions
       setPhoneNumber: (num) => set({ phoneNumber: num }),
@@ -45,15 +49,13 @@ export const useAuthStore = create<AuthStore>()(
       // Token Actions
       setToken: (token) => set({ token }),
       clearToken: () => set({ token: null }),
-      setTemporayToken: (temporaryToken) => set({ temporaryToken }),
-      clearTemporaryToken: () => set({ temporaryToken: null }),
 
       // Logout Action
       logout: () =>
         set({
           phoneNumber: null,
           token: null,
-          temporaryToken: null,
+          isLoggedIn: false,
         }),
     }),
     {
@@ -62,7 +64,7 @@ export const useAuthStore = create<AuthStore>()(
       partialize: (state) => ({
         phoneNumber: state.phoneNumber,
         token: state.token,
-        temporaryToken: state.temporaryToken,
+        isLoggedIn: state.isLoggedIn,
       }),
     },
   ),

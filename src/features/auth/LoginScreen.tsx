@@ -12,7 +12,7 @@ export default function LoginScreen() {
   const navigate = useNavigate();
   const [phoneValue, setPhoneValue] = useState<string | undefined>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const setPhoneNumber = useAuthStore((state) => state.setPhoneNumber);
+  const { setPhoneNumber } = useAuthStore();
 
   // Helper boolean to cleanly check valid phone status
   const isPhoneValid = Boolean(phoneValue && isValidPhoneNumber(phoneValue));
@@ -127,7 +127,7 @@ export default function LoginScreen() {
               disabled={!isPhoneValid || isSubmitting}
               className="flex w-full justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold leading-6 text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors"
             >
-              {isSubmitting ? "Sending OTP..." : "Continue"}
+              {isSubmitting ? "Continuing..." : "Continue"}
             </button>
           </div>
         </form>

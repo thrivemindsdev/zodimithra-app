@@ -52,13 +52,10 @@ export const RELATIONSHIP_OPTIONS = [
 
 export default function BirthDetailsForm() {
   const navigate = useNavigate();
-  const { phoneNumber, setToken } = useAuthStore();
+  const { phoneNumber, setToken, setIsLoggedIn } = useAuthStore();
   const { data: currentLocation } = useGetCurrentLocationQuery();
   const [formData, setFormData] = useState<FormState>(initialFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const clearTemporaryToken = useAuthStore(
-    (state) => state.clearTemporaryToken,
-  );
 
   // Generic handler for standard inputs and custom selectors
   const updateField = (field: keyof FormState, value: string) => {
@@ -113,11 +110,11 @@ export default function BirthDetailsForm() {
 
         const response = await RegistrationApi(formDeatils);
         if (response?.status === 200) {
-          const token = response.data?.token;
-          setToken(token);
-          clearTemporaryToken();
+          setIsLoggedIn(true);
+          setToken(response.data?.token);
           navigate("/home");
         } else {
+          setIsLoggedIn(false);
           navigate("/login");
         }
       } catch (error) {

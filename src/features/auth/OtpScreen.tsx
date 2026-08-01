@@ -11,8 +11,7 @@ import { useNavigate } from "react-router-dom";
 export default function OtpScreen() {
   const navigate = useNavigate();
   useHardwareBack({ route: "/login" });
-  const phoneNumber = useAuthStore((state) => state.phoneNumber);
-  const setTemporayToken = useAuthStore((state) => state.setTemporayToken);
+  const { phoneNumber, setToken } = useAuthStore();
   const [otpValue, setOtpValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -38,8 +37,12 @@ export default function OtpScreen() {
       });
 
       if (response?.status === 201 || response?.status === 200) {
-        setTemporayToken(response.data?.token);
-        navigate("/create-password");
+        setToken(response.data?.token);
+        if (response?.data?.is_registered) {
+          navigate("/reset-password");
+        } else {
+          navigate("/create-password");
+        }
       } else {
         await Dialog.alert({
           title: "Verification Failed",

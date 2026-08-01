@@ -23,14 +23,14 @@ export const CreatePasswordApi = async (data: any) => {
 };
 
 export const RegistrationApi = async (data: FormData) => {
-  const { temporaryToken } = useAuthStore.getState();
+  const { token } = useAuthStore.getState();
 
   return axios.post(
     `${import.meta.env.VITE_API_URL}/complete-registration`,
     data,
     {
       headers: {
-        Authorization: `Bearer ${temporaryToken}`,
+        Authorization: `Bearer ${token}`,
       },
     },
   );

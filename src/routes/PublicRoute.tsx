@@ -4,8 +4,9 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 const PublicRoute = () => {
   const location = useLocation();
   const token = useAuthStore((state) => state.token);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
-  if (token) {
+  if (token && isLoggedIn) {
     return <Navigate to={"/home"} replace state={{ from: location }} />;
   }
 

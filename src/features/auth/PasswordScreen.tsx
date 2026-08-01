@@ -10,10 +10,7 @@ import { useNavigate } from "react-router-dom";
 export default function PasswordScreen() {
   const navigate = useNavigate();
 
-  // Retrieve stored phone number from Auth store (if applicable)
-  const phoneNumber = useAuthStore((state) => state.phoneNumber);
-  const setToken = useAuthStore((state) => state.setToken); // Adjust store action as needed
-  const setTemporayToken = useAuthStore((state) => state.setTemporayToken);
+  const { phoneNumber, setToken, setIsLoggedIn } = useAuthStore();
 
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -42,11 +39,11 @@ export default function PasswordScreen() {
       });
 
       if (response?.status === 200) {
+        setToken(response.data.token);
         if (response?.data?.on_boarding) {
-          setToken(response.data.token);
+          setIsLoggedIn(true);
           navigate("/home");
         } else {
-          setTemporayToken(response.data.token);
           navigate("/birth-details-form");
         }
       } else {
@@ -132,7 +129,7 @@ export default function PasswordScreen() {
           <div className="flex items-center justify-end">
             <button
               type="button"
-              // onClick={() => navigate("/forgot-password")}
+              onClick={() => navigate("/forgot-password")}
               className="text-xs font-semibold text-primary hover:underline focus:outline-none"
             >
               Forgot Password?
