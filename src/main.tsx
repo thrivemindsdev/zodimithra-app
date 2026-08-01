@@ -8,13 +8,17 @@ import { Capacitor } from '@capacitor/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
 
 async function initializeApp() {
-  if (Capacitor.getPlatform() === 'ios' || Capacitor.getPlatform() === 'android') {
+  if (Capacitor.isNativePlatform()) {
     await StatusBar.setOverlaysWebView({
       overlay: false,
     });
 
+    await StatusBar.setBackgroundColor({
+      color: '#FFFFFF',
+    });
+
     await StatusBar.setStyle({
-      style: Style.Dark,
+      style: Style.Light,
     });
   }
 
