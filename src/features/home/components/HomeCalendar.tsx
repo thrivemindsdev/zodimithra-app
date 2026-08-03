@@ -42,7 +42,7 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
 
   const nextWeek = () => {
     if (weekOffset >= 1) {
-      navigate("/calendar");
+      navigate(isPremium ? "/calendar" : "/premium");
       return;
     }
     setWeekOffset((prev) => prev + 1);
@@ -50,7 +50,7 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
 
   const prevWeek = () => {
     if (weekOffset <= -1) {
-      navigate("/calendar");
+      navigate(isPremium ? "/calendar" : "/premium");
       return;
     }
     setWeekOffset((prev) => prev - 1);

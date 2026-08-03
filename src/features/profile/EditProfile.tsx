@@ -15,8 +15,10 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { type FormState } from "../auth/BirthDetailsForm";
 import { Capacitor } from "@capacitor/core";
+import { useHardwareBack } from "@/hooks/useHardwareBack";
 
 const EditProfile = () => {
+  useHardwareBack({ route: "/profile" });
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();

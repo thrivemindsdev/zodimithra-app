@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LANGUAGES } from "../auth/LanguagesScreen";
 import { Capacitor } from "@capacitor/core";
+import { useHardwareBack } from "@/hooks/useHardwareBack";
 
 interface MenuItemProps {
   icon: React.ReactNode;
@@ -63,6 +64,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
 };
 
 const ProfileScreen = () => {
+  useHardwareBack({ route: "/home" });
   const { t, i18n } = useTranslation();
   const selectedLanguae = i18n.language ?? "en";
   // Find the language object matching the active i18n language code
