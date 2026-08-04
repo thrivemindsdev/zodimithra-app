@@ -32,7 +32,7 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
     weekStartsOn: 0,
   });
 
-  const currentPhaseName = Moon.lunarPhase(selectedDate);
+  // const currentPhaseName = Moon.lunarPhase(selectedDate);
   const currentAgePercent = Moon.lunarAgePercent(selectedDate);
   const currentIllumination =
     ((1 - Math.cos(2 * Math.PI * currentAgePercent)) / 2) * 100;
@@ -259,7 +259,8 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
       {/* Phase Details & Calendar Controls */}
       <div className="p-6">
         <h2 className="font-body-content pb-1 text-center text-lg font-semibold text-text-primary">
-          {t(`calendar.${currentPhaseName}`)}
+          {/* {t(`calendar.${currentPhaseName}`)} */}
+          {currentPhase?.description || ""}
         </h2>
         <p className="font-body-content text-text-primary pb-6 text-center text-xs font-medium opacity-80">
           {currentIllumination.toFixed(1)}% {t("home.illuminated")}

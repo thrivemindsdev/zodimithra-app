@@ -147,6 +147,18 @@ export default function SubscriptionModal({
                 queryKey: [ASHRAMS_QUERY_KEYS.ashrams],
               });
 
+              await queryClient.invalidateQueries({
+                queryKey: [ASHRAMS_QUERY_KEYS.liveSessions],
+              });
+
+              await queryClient.invalidateQueries({
+                queryKey: [ASHRAMS_QUERY_KEYS.ashramById, plan_id],
+              });
+
+              await queryClient.invalidateQueries({
+                queryKey: [ASHRAMS_QUERY_KEYS.liveSessionId, plan_id],
+              });
+
               setPaymentModal({
                 open: true,
                 status: "success",
@@ -313,16 +325,12 @@ export default function SubscriptionModal({
           }
           buttonText="Done"
           onDone={() => {
-            const isSuccess = paymentModal.status === "success";
             setPaymentModal((prev) => ({
               ...prev,
               open: false,
             }));
-
-            if (isSuccess) {
-              onClose();
-              navigate("/ashrams");
-            }
+            onClose();
+            navigate("/ashrams");
           }}
         />
       )}
