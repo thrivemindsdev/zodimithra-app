@@ -53,6 +53,8 @@ const CalendarScreen = () => {
         <CalendarLayout
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
+          location={location}
+          loading={isLocationLoading}
         />
         <PlanetCard loading={isPlanetLoading} planetData={planetData} />
         <Festival

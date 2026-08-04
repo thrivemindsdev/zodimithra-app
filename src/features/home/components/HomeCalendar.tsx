@@ -1,17 +1,23 @@
 import BgImg from "@/assets/home/affirmation.png";
-import CustomAnimatedMoon from "@/components/common/CustomAnimatedMoon";
 import { useGetAffirmationQuery } from "@/queries/homeQueries";
+import { useGetCurrentLocationQuery } from "@/queries/locationQueries";
+import { getPhaseForDateSync, type ActivePhase } from "@/utils/getMoonPhase";
 
 import { addDays, addWeeks, format, isSameDay, startOfWeek } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Moon } from "lunarphase-js";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const { data: location, isLoading: isLocationLoading } =
+    useGetCurrentLocationQuery();
+  const lat = location?.latitude;
+  const lng = location?.longitude;
 
   const [weekOffset, setWeekOffset] = useState(0);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -26,11 +32,7 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
     weekStartsOn: 0,
   });
 
-  const week = useMemo(() => {
-    return Array.from({ length: 7 }, (_, i) => addDays(start, i));
-  }, [start]);
-
-  const currentPhase = Moon.lunarPhase(selectedDate);
+  const currentPhaseName = Moon.lunarPhase(selectedDate);
   const currentAgePercent = Moon.lunarAgePercent(selectedDate);
   const currentIllumination =
     ((1 - Math.cos(2 * Math.PI * currentAgePercent)) / 2) * 100;
@@ -56,25 +58,6 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
     setWeekOffset((prev) => prev - 1);
   };
 
-  // Fixed keys for visual stability during transitions
-  const visibleMoons = [
-    {
-      id: "prev-moon",
-      date: previousDate,
-      positionClass: "absolute -top-2 left-4",
-    },
-    {
-      id: "selected-moon",
-      date: selectedDate,
-      positionClass: "absolute -top-8 left-1/2 -translate-x-1/2",
-    },
-    {
-      id: "next-moon",
-      date: nextDate,
-      positionClass: "absolute -top-2 right-4",
-    },
-  ];
-
   const { data, isLoading } = useGetAffirmationQuery();
 
   const affirmation = data?.description;
@@ -87,7 +70,73 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
     }
   };
 
-  if (isLoading) {
+  const [prevPhase, setPrevPhase] = useState<ActivePhase | null>(null);
+  const [currentPhase, setCurrentPhase] = useState<ActivePhase | null>(null);
+  const [nextPhase, setNextPhase] = useState<ActivePhase | null>(null);
+
+  // 3. Update phases for previous, current, and next days when date or location changes
+  useEffect(() => {
+    if (!lat || !lng) {
+      setPrevPhase(null);
+      setCurrentPhase(null);
+      setNextPhase(null);
+      return;
+    }
+
+    try {
+      const current = new Date(selectedDate);
+
+      const previous = new Date(current);
+      previous.setDate(previous.getDate() - 1);
+
+      const next = new Date(current);
+      next.setDate(next.getDate() + 1);
+
+      setPrevPhase(getPhaseForDateSync(previous, lat, lng));
+      setCurrentPhase(getPhaseForDateSync(current, lat, lng));
+      setNextPhase(getPhaseForDateSync(next, lat, lng));
+    } catch (error) {
+      console.error("Error calculating Tithi:", error);
+      setPrevPhase(null);
+      setCurrentPhase(null);
+      setNextPhase(null);
+    }
+  }, [selectedDate, lat, lng]);
+
+  // 4. Memoize weekly grid calculation with correct location dependencies
+  const weekWithPhases = useMemo(() => {
+    if (!lat || !lng) return [];
+
+    return Array.from({ length: 7 }, (_, i) => {
+      const date = addDays(start, i);
+      const phase = getPhaseForDateSync(date, lat, lng);
+      return { date, phase };
+    });
+  }, [start, lat, lng]);
+
+  // Fixed keys for visual stability during transitions
+  const visibleMoons = [
+    {
+      id: "prev-moon",
+      date: previousDate,
+      positionClass: "absolute -top-2 left-4",
+      image: prevPhase ? prevPhase?.image : undefined,
+    },
+    {
+      id: "selected-moon",
+      date: selectedDate,
+      positionClass: "absolute -top-8 left-1/2 -translate-x-1/2",
+      image: currentPhase ? currentPhase?.image : undefined,
+    },
+    {
+      id: "next-moon",
+      date: nextDate,
+      positionClass: "absolute -top-2 right-4",
+      image: nextPhase ? nextPhase?.image : undefined,
+    },
+  ];
+
+  if (isLoading || isLocationLoading) {
     return (
       <section className="relative mt-6 overflow-hidden">
         {/* Skeleton for Header Background (NO BgImg rendered) */}
@@ -140,7 +189,9 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
   }
 
   // const BACKGROUND_IMAGE_URL = "https://picsum.photos/600/800";
-
+  // console.log("Previous Phase:", prevPhase);
+  // console.log("Current Phase:", currentPhase);
+  // console.log("Next Phase:", nextPhase);
   return (
     <section className="relative mt-6 overflow-hidden">
       <div className="w-full flex items-center justify-center bg-white py-5">
@@ -193,15 +244,13 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
 
       {/* Moon Animation Viewport */}
       <div className="relative z-10 -mt-24 flex h-20 w-full items-center justify-center">
-        {visibleMoons.map(({ id, date, positionClass }) => {
-          const age = Moon.lunarAgePercent(date);
-
+        {visibleMoons.map(({ id, positionClass, image }) => {
           return (
             <div
               key={id}
               className={`flex flex-col items-center ${positionClass}`}
             >
-              <CustomAnimatedMoon agePercent={age} size={90} />
+              <img src={image} alt="Moon" className="h-20 w-20 object-cover" />
             </div>
           );
         })}
@@ -210,7 +259,7 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
       {/* Phase Details & Calendar Controls */}
       <div className="p-6">
         <h2 className="font-body-content pb-1 text-center text-lg font-semibold text-text-primary">
-          {t(`calendar.${currentPhase}`)}
+          {t(`calendar.${currentPhaseName}`)}
         </h2>
         <p className="font-body-content text-text-primary pb-6 text-center text-xs font-medium opacity-80">
           {currentIllumination.toFixed(1)}% {t("home.illuminated")}
@@ -248,7 +297,7 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
 
         {/* 7-Day Calendar Strip */}
         <div className="mt-4 grid grid-cols-7 gap-2">
-          {week.map((date) => (
+          {weekWithPhases.map(({ date, phase }) => (
             <div
               key={date.toISOString()}
               className="flex flex-col items-center"
@@ -260,17 +309,24 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
               <button
                 type="button"
                 onClick={() => handleDateSelect(date)}
-                className={`font-body-content flex h-12 w-12 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl text-xs font-semibold transition ${
+                className={`font-body-content flex h-14 w-12 cursor-pointer flex-col items-center justify-center gap-1 rounded-xl text-xs font-semibold transition ${
                   isSameDay(date, selectedDate)
                     ? "text-text-primary bg-[#F8D891] shadow-sm"
                     : "text-slate-700 hover:bg-slate-100"
                 }`}
               >
                 <span>{format(date, "d")}</span>
-                <CustomAnimatedMoon
-                  agePercent={Moon.lunarAgePercent(date)}
-                  size={20}
-                />
+
+                {/* Replaced CustomAnimatedMoon with your custom phase image */}
+                {phase?.image ? (
+                  <img
+                    src={phase.image}
+                    alt={phase.name}
+                    className="h-5 w-5 object-contain"
+                  />
+                ) : (
+                  <div className="h-5 w-5" /> // Fallback placeholder if phase is missing
+                )}
               </button>
             </div>
           ))}
