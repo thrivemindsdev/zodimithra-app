@@ -1,3 +1,5 @@
+import ToastModal from "@/components/common/ToastModal";
+import { useToastModal } from "@/hooks/useToastModal";
 import { Check, Circle } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -33,6 +35,7 @@ export default function LanguageScreen() {
   const activeLanguage = i18n.language ?? "en";
   const [selectedLanguage, setSelectedLanguage] =
     useState<string>(activeLanguage);
+  const { toastState, showSuccess, hideToast } = useToastModal();
 
   const fullWidthLang = LANGUAGES.find((lang) => lang.layout === "full");
   const gridLangs = LANGUAGES.filter((lang) => lang.layout === "grid");
@@ -40,10 +43,14 @@ export default function LanguageScreen() {
   const handleLanguageSelect = async (id: string) => {
     await i18n.changeLanguage(id);
     setSelectedLanguage(id);
-
-    setTimeout(() => {
-      navigate("/home");
-    }, 150);
+    showSuccess(
+      "Language Changed Successfully",
+      "Your language has been changed successfully!",
+      "Continue",
+      () => {
+        navigate("/home");
+      },
+    );
   };
 
   return (
@@ -123,6 +130,14 @@ export default function LanguageScreen() {
           </div>
         </div>
       </div>
+      <ToastModal
+        isOpen={toastState.isOpen}
+        status={toastState.status}
+        title={toastState.title}
+        description={toastState.description}
+        buttonText={toastState.buttonText}
+        onDone={hideToast}
+      />
     </div>
   );
 }

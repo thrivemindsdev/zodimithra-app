@@ -1,30 +1,30 @@
 import { Plus, Search } from "lucide-react";
 import { memo, useState } from "react";
 
+import AquariusImage from "@/assets/signs/AQUARIUS.png";
+import AriesImage from "@/assets/signs/ARIES.png";
+import CancerImage from "@/assets/signs/CANCER.png";
+import CapricornImage from "@/assets/signs/CAPRICON.png";
+import GeminiImage from "@/assets/signs/GEMINI.png";
+import LeoImage from "@/assets/signs/LEO.png";
+import LibraImage from "@/assets/signs/LIBRA.png";
+import PiscesImage from "@/assets/signs/PISCES.png";
+import SagittariusImage from "@/assets/signs/SAGITTARUIS.png";
+import ScorpioImage from "@/assets/signs/SCORPION.png";
+import TaurusImage from "@/assets/signs/TAURUS.png";
+import VirgoImage from "@/assets/signs/VIRGO.png";
 import HomeGreetings from "@/features/home/components/HomeGreetings";
 import {
   useGetFamilyMembersQuery,
   useGetUserDetailsQuery,
 } from "@/queries/userQueries";
+import { useActiveUserStore } from "@/store/useActiveUserStore";
 import { useNavigate } from "react-router-dom";
 import GlobalLoader from "../common/GlobalLoader";
-import Header from "../layout/Header";
-import BodyLayout from "../layout/BodyLayout";
-import AddFamilyMemberModal from "./AddFamilyMemberModal";
 import PaymentStatusModal from "../common/PaymentStatusModal";
-import AriesImage from "@/assets/signs/ARIES.png";
-import TaurusImage from "@/assets/signs/TAURUS.png";
-import GeminiImage from "@/assets/signs/GEMINI.png";
-import CancerImage from "@/assets/signs/CANCER.png";
-import LeoImage from "@/assets/signs/LEO.png";
-import VirgoImage from "@/assets/signs/VIRGO.png";
-import LibraImage from "@/assets/signs/LIBRA.png";
-import ScorpioImage from "@/assets/signs/SCORPION.png";
-import SagittariusImage from "@/assets/signs/SAGITTARUIS.png";
-import CapricornImage from "@/assets/signs/CAPRICON.png";
-import AquariusImage from "@/assets/signs/AQUARIUS.png";
-import PiscesImage from "@/assets/signs/PISCES.png";
-import { useActiveUserStore } from "@/store/useActiveUserStore";
+import BodyLayout from "../layout/BodyLayout";
+import Header from "../layout/Header";
+import AddFamilyMemberModal from "./AddFamilyMemberModal";
 
 const zodiacSigns: Record<string, string> = {
   Aries: AriesImage,
@@ -106,7 +106,7 @@ const FamilyMembers = () => {
               placeholder="Search Members"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="ml-3 w-full bg-transparent text-sm font-medium outline-none placeholder:text-text-secondary"
+              className="ml-3 w-full bg-transparent text-sm font-medium outline-none placeholder:text-text-secondary capitalize"
             />
           </div>
 

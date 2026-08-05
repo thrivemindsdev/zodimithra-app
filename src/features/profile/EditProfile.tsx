@@ -2,11 +2,15 @@ import DateInput from "@/components/common/DateInput";
 import Input from "@/components/common/Input";
 import PlaceInput from "@/components/common/PlaceInput";
 import TimeInput from "@/components/common/TimeInput";
+import ToastModal from "@/components/common/ToastModal";
 import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";
+import { useHardwareBack } from "@/hooks/useHardwareBack";
+import { useToastModal } from "@/hooks/useToastModal";
 import { useGetUserDetailsQuery, USER_QUERY_KEYS } from "@/queries/userQueries";
 import { updateUserDetailsApi } from "@/services/user.api";
 import { getCroppedImg } from "@/utils/cropImage";
+import { Capacitor } from "@capacitor/core";
 import { useQueryClient } from "@tanstack/react-query";
 import { Camera, User, X } from "lucide-react";
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
@@ -14,14 +18,13 @@ import Cropper, { type Area } from "react-easy-crop";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { type FormState } from "../auth/BirthDetailsForm";
-import { Capacitor } from "@capacitor/core";
-import { useHardwareBack } from "@/hooks/useHardwareBack";
 
 const EditProfile = () => {
   useHardwareBack({ route: "/profile" });
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { toastState, showSuccess, hideToast } = useToastModal();
   const { data: userDetails } = useGetUserDetailsQuery();
 
   const [formData, setFormData] = useState<FormState>({
@@ -155,7 +158,14 @@ const EditProfile = () => {
           await queryClient.invalidateQueries({
             queryKey: [USER_QUERY_KEYS.userDetails],
           });
-          navigate("/profile");
+          showSuccess(
+            "Profile Updated Successfully",
+            "Your profile has been updated successfully!",
+            "Continue",
+            () => {
+              navigate("/profile");
+            },
+          );
         }
       } catch (error) {
         console.error("Updating failed:", error);
@@ -174,7 +184,7 @@ const EditProfile = () => {
         <div className="p-4 font-body rounded-2xl card-shadow">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Profile Image Section */}
-            {Capacitor.getPlatform() !== 'ios' &&
+            {Capacitor.getPlatform() !== "ios" && (
               <div className="flex flex-col items-center justify-center my-4">
                 <div className="relative">
                   {/* Avatar Display */}
@@ -211,7 +221,7 @@ const EditProfile = () => {
                   Tap camera icon to edit
                 </span>
               </div>
-            }
+            )}
 
             <Input
               label={t("onboard.fullName")}
@@ -220,6 +230,7 @@ const EditProfile = () => {
               value={formData.fullName}
               onChange={handleInputChange}
               placeholder="e.g. John Doe"
+              className="capitalize"
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -317,6 +328,15 @@ const EditProfile = () => {
           </div>
         </div>
       )}
+
+      <ToastModal
+        isOpen={toastState.isOpen}
+        status={toastState.status}
+        title={toastState.title}
+        description={toastState.description}
+        buttonText={toastState.buttonText}
+        onDone={hideToast}
+      />
     </>
   );
 };

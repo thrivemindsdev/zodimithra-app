@@ -119,7 +119,7 @@ const Mantras: React.FC = () => {
         title="Mantras"
         subtitle="Sacred sounds for your soul"
         showBackButton
-        redirectPath="/wellbeing"
+        redirectPath="/explore"
       />
       <BodyLayout>
         {isLoading ? (

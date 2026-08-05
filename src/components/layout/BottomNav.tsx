@@ -3,7 +3,7 @@ import WaveIcon from "@/assets/bottom-tabs/bend-icon.png";
 import CalendarIcon from "@/assets/bottom-tabs/calendar.png";
 import ExploreIcon from "@/assets/bottom-tabs/explore.png";
 import HomeIcon from "@/assets/bottom-tabs/home.png";
-import WellbeingIcon from "@/assets/bottom-tabs/wellbeing.png";
+import LiveIcon from "@/assets/bottom-tabs/live.png";
 import { useGetUserDetailsQuery } from "@/queries/userQueries";
 import { memo, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -21,6 +21,12 @@ const NAV_ITEMS = [
     icon: CalendarIcon,
     premiumScreen: true,
   },
+  {
+    path: "/ashrams",
+    label: "Live",
+    icon: LiveIcon,
+    premiumScreen: false,
+  },
   // {
   //   path: "/astrology",
   //   label: "Astrology",
@@ -33,12 +39,12 @@ const NAV_ITEMS = [
     icon: ExploreIcon,
     premiumScreen: false,
   },
-  {
-    path: "/wellbeing",
-    label: "WellBeing",
-    icon: WellbeingIcon,
-    premiumScreen: false,
-  },
+  // {
+  //   path: "/wellbeing",
+  //   label: "WellBeing",
+  //   icon: WellbeingIcon,
+  //   premiumScreen: false,
+  // },
 ];
 
 const BottomNav = () => {

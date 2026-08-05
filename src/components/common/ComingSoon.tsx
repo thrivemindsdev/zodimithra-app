@@ -6,7 +6,7 @@ import comingSoonImg from "@/assets/explore/coming_soon.png";
 const ComingSoon = () => {
   return (
     <>
-      <Header title="Coming Soon" showBackButton redirectPath="/wellbeing" />
+      <Header title="Coming Soon" showBackButton redirectPath="/explore" />
       <BodyLayout>
         <div className="relative">
           <img src={shopImg} />
