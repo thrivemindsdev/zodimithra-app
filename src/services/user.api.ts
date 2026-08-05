@@ -31,3 +31,18 @@ export const updateUserDetailsApi = async (data: FormData) => {
     },
   });
 };
+
+export const SaveFcmTokenApi = async (token: string, platform: string) => {
+  console.log("Saving FCM token:", token, "for platform:", platform);
+  try {
+    const response = await axiosInstance.post("/fcm-token", {
+      fcm_token: token,
+    });
+    return response?.data;
+  } catch (error) {
+    console.error("Error saving FCM token:", error);
+    // Don't rethrow to avoid crashing caller
+    return null;
+  }
+};
+

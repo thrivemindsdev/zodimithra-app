@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "163286342772",
+    "project_id": "zodimithra-1c799",
+    "storage_bucket": "zodimithra-1c799.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163286342772:android:660093dfb6c0e5567f4521",
+        "android_client_info": {
+          "package_name": "io.zodimithra.main"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAU2VIPSQ5qHK0Y67f7INsKixf_KngphdM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
