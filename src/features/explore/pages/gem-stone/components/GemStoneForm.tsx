@@ -109,7 +109,7 @@ const GemStoneForm = () => {
             disabled={isFormIncomplete}
             className="w-full bg-primary disabled:opacity-50 text-white font-semibold py-2.5 px-4 rounded-lg transition transform outline-none cursor-pointer disabled:cursor-not-allowed"
           >
-            Find Gemstone
+            {t("gemstone.findButton", "Find Gemstone")}
           </button>
         </div>
       </form>

@@ -7,10 +7,12 @@ import { SendOtpApi, VerifyOtpApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { OTPInput, REGEXP_ONLY_DIGITS } from "input-otp";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export default function OtpScreen() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   useHardwareBack({ route: "/login" });
   const { phoneNumber, setToken } = useAuthStore();
   const [otpValue, setOtpValue] = useState("");
@@ -40,13 +42,19 @@ export default function OtpScreen() {
       const axiosErr = error as { response?: { status?: number } };
       if (axiosErr?.response?.status === 400) {
         showError(
-          "Invalid OTP",
-          "The OTP you entered is incorrect. Please check the code and try again.",
+          t("common.invalidOtp", "Invalid OTP"),
+          t(
+            "common.invalidOtpDesc",
+            "The OTP you entered is incorrect. Please check the code and try again.",
+          ),
         );
       } else {
         showError(
-          "Network Error",
-          "Could not verify OTP. Please check your internet connection and try again.",
+          t("common.networkError", "Network Error"),
+          t(
+            "common.networkErrorDesc",
+            "Could not verify OTP. Please check your internet connection and try again.",
+          ),
         );
       }
     } finally {
@@ -60,13 +68,19 @@ export default function OtpScreen() {
     try {
       const response = await SendOtpApi({ phone: phoneNumber });
       if (response?.status === 200) {
-        showSuccess("Success", "OTP resent successfully!");
+        showSuccess(
+          t("common.success", "Success"),
+          t("auth.otpResent", "OTP resent successfully!"),
+        );
       }
     } catch (error) {
       console.error("Resend OTP Error:", error);
       showError(
-        "Network Error",
-        "Unable to resend OTP. Please check your internet connection.",
+        t("common.networkError", "Network Error"),
+        t(
+          "common.networkErrorDesc",
+          "Unable to resend OTP. Please check your internet connection.",
+        ),
       );
     }
   };
@@ -87,7 +101,7 @@ export default function OtpScreen() {
             className="mx-auto w-1/2 max-w-xs"
           />
           <p className="mt-3 font-body text-center text-sm text-text-secondary">
-            We sent a 4-digit code to{" "}
+            {t("auth.sentOtpTo", "We sent a 4-digit code to")}{" "}
             <span className="font-semibold text-gray-900">{phoneNumber}</span>
           </p>
         </div>
@@ -128,17 +142,19 @@ export default function OtpScreen() {
               disabled={otpValue.length < 4 || isSubmitting}
               className="flex w-full justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {isSubmitting ? "Verifying OTP..." : "Verify & Proceed"}
+              {isSubmitting
+                ? t("auth.verifyingOtp", "Verifying OTP...")
+                : t("auth.verifyProceed", "Verify & Proceed")}
             </button>
 
             <div className="text-center text-sm text-gray-500">
-              Didn't receive code?{" "}
+              {t("auth.didntReceiveOtp", "Didn't receive code?")}{" "}
               <button
                 type="button"
                 onClick={handleResendOtp}
                 className="font-semibold text-primary hover:text-indigo-500 underline transition-colors"
               >
-                Resend OTP
+                {t("auth.resendOtp", "Resend OTP")}
               </button>
             </div>
           </div>

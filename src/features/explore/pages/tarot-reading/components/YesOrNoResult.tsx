@@ -1,12 +1,14 @@
 import tarotCardImg from "@/assets/tarot/tarotcard.png";
 import { CheckCircle2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 // 1080 deg = 3 full 360-degree spins, landing perfectly back on the front face (0 deg)
 const SPIN_DEG = 1080;
 const SPIN_DURATION_MS = 3000;
 const SPIN_DELAY_MS = 150;
 
 const YesOrNoResult = ({ data }: any) => {
+  const { t } = useTranslation();
   const [spinning, setSpinning] = useState(false);
 
   useEffect(() => {
@@ -72,7 +74,7 @@ const YesOrNoResult = ({ data }: any) => {
       <div className="mt-6 font-body">
         <div className="space-y-5">
           <h2 className="font-body font-bold text-text-primary text-xl">
-            Result
+            {t("tarotReading.result", "Result")}
           </h2>
           <div className="flex items-start gap-3">
             <div className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-100">

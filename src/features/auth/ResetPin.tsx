@@ -6,10 +6,12 @@ import { CreatePinApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { Check, Eye, EyeOff, X } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export default function ResetPin() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { phoneNumber, setToken, setIsLoggedIn } = useAuthStore();
   const { toastState, showSuccess, showError, hideToast } = useToastModal();
 
@@ -48,9 +50,9 @@ export default function ResetPin() {
         setToken(response.data.token);
         if (response?.data?.on_boarding) {
           showSuccess(
-            "PIN Reset Successfully",
-            "Your PIN has been reset successfully!",
-            "Continue",
+            t("auth.pinResetSuccess", "PIN Reset Successfully"),
+            t("auth.pinResetDesc", "Your PIN has been reset successfully!"),
+            t("common.continue", "Continue"),
             () => {
               setIsLoggedIn(true);
               navigate("/home");
@@ -63,7 +65,10 @@ export default function ResetPin() {
       }
     } catch (error) {
       console.error("Reset PIN Error:", error);
-      showError("Error", "Failed to reset PIN. Please try again.");
+      showError(
+        t("common.error", "Error"),
+        t("auth.resetPinError", "Failed to reset PIN. Please try again."),
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -86,10 +91,13 @@ export default function ResetPin() {
             className="mx-auto w-1/2 max-w-xs"
           />
           <h2 className="mt-4 text-xl font-bold text-gray-900">
-            Reset 4-Digit PIN
+            {t("auth.resetPin", "Reset 4-Digit PIN")}
           </h2>
           <p className="mt-1 font-body text-center text-sm text-text-secondary">
-            Set a 4-digit PIN for quick access to your account.
+            {t(
+              "auth.resetPinDesc",
+              "Set a 4-digit PIN for quick access to your account.",
+            )}
           </p>
         </div>
 
@@ -101,7 +109,7 @@ export default function ResetPin() {
               htmlFor="new-pin"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Enter 4-Digit PIN
+              {t("auth.enterPin", "Enter 4-Digit PIN")}
             </label>
             <div className="relative rounded-lg border border-input-border px-4 py-3 bg-input-bg flex items-center transition-all">
               <input
@@ -109,7 +117,7 @@ export default function ResetPin() {
                 type={showPin ? "text" : "password"}
                 inputMode="numeric"
                 maxLength={4}
-                placeholder="Enter 4-digit PIN"
+                placeholder={t("auth.enterPin", "Enter 4-digit PIN")}
                 value={pin}
                 onChange={(e) => handlePinChange(e.target.value, setPin)}
                 required
@@ -135,7 +143,7 @@ export default function ResetPin() {
               htmlFor="confirm-pin"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Confirm 4-Digit PIN
+              {t("auth.confirmPin", "Confirm 4-Digit PIN")}
             </label>
             <div className="relative rounded-lg border border-input-border px-4 py-3 bg-input-bg flex items-center transition-all">
               <input
@@ -143,7 +151,7 @@ export default function ResetPin() {
                 type={showConfirmPin ? "text" : "password"}
                 inputMode="numeric"
                 maxLength={4}
-                placeholder="Confirm 4-digit PIN"
+                placeholder={t("auth.confirmPin", "Confirm 4-digit PIN")}
                 value={confirmPin}
                 onChange={(e) => handlePinChange(e.target.value, setConfirmPin)}
                 required
@@ -166,13 +174,16 @@ export default function ResetPin() {
           {/* Real-time Validation Checklist */}
           <div className="rounded-lg bg-white p-4 border border-gray-100 space-y-2">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-              PIN Requirements
+              {t("auth.pinRequirements", "PIN Requirements")}
             </p>
             <ValidationRule
-              label="Exactly 4 numeric digits"
+              label={t("auth.reqDigits", "Exactly 4 numeric digits")}
               isValid={isFourDigits}
             />
-            <ValidationRule label="PINs match" isValid={pinsMatch} />
+            <ValidationRule
+              label={t("auth.reqMatch", "PINs match")}
+              isValid={pinsMatch}
+            />
           </div>
 
           {/* Submit Button */}
@@ -182,7 +193,9 @@ export default function ResetPin() {
               disabled={!isFormValid || isSubmitting}
               className="flex w-full justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold leading-6 text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors"
             >
-              {isSubmitting ? "Submitting..." : "Submit"}
+              {isSubmitting
+                ? t("auth.submitting", "Submitting...")
+                : t("auth.submit", "Submit")}
             </button>
           </div>
         </form>

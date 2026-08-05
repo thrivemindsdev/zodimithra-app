@@ -1,4 +1,3 @@
-// import AstrologyIcon from "@/assets/bottom-tabs/astrology.png";
 import WaveIcon from "@/assets/bottom-tabs/bend-icon.png";
 import CalendarIcon from "@/assets/bottom-tabs/calendar.png";
 import ExploreIcon from "@/assets/bottom-tabs/explore.png";
@@ -6,48 +5,42 @@ import HomeIcon from "@/assets/bottom-tabs/home.png";
 import LiveIcon from "@/assets/bottom-tabs/live.png";
 import { useGetUserDetailsQuery } from "@/queries/userQueries";
 import { memo, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 const NAV_ITEMS = [
   {
     path: "/home",
-    label: "Home",
+    key: "nav.home",
+    defaultLabel: "Home",
     icon: HomeIcon,
     premiumScreen: false,
   },
   {
     path: "/calendar",
-    label: "Calendar",
+    key: "nav.calendar",
+    defaultLabel: "Calendar",
     icon: CalendarIcon,
     premiumScreen: true,
   },
   {
     path: "/ashrams",
-    label: "Live",
+    key: "nav.live",
+    defaultLabel: "Live",
     icon: LiveIcon,
     premiumScreen: false,
   },
-  // {
-  //   path: "/astrology",
-  //   label: "Astrology",
-  //   icon: AstrologyIcon,
-  //   premiumScreen: false,
-  // },
   {
     path: "/explore",
-    label: "Explore",
+    key: "nav.explore",
+    defaultLabel: "Explore",
     icon: ExploreIcon,
     premiumScreen: false,
   },
-  // {
-  //   path: "/wellbeing",
-  //   label: "WellBeing",
-  //   icon: WellbeingIcon,
-  //   premiumScreen: false,
-  // },
 ];
 
 const BottomNav = () => {
+  const { t } = useTranslation();
   const { pathname } = useLocation();
   const { data: userDetails } = useGetUserDetailsQuery();
   const isPremium = userDetails?.is_subscribed;
@@ -76,6 +69,7 @@ const BottomNav = () => {
         {NAV_ITEMS.map((item) => {
           const isActive = location.pathname === item.path;
           const isLocked = item.premiumScreen && !isPremium;
+          const label = t(item.key, item.defaultLabel);
 
           return (
             <li key={item.path} className="flex-1">
@@ -92,7 +86,7 @@ const BottomNav = () => {
                 >
                   <img
                     src={item.icon}
-                    alt={item.label}
+                    alt={label}
                     className="h-6 w-6"
                     style={{
                       filter: isLocked
@@ -109,7 +103,7 @@ const BottomNav = () => {
                       : "translate-y-0 opacity-100"
                   } ${isLocked ? "text-gray-400" : "text-white"}`}
                 >
-                  {item.label}
+                  {label}
                 </span>
               </Link>
             </li>

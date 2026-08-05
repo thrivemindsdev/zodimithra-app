@@ -1,5 +1,6 @@
+import { AlertCircle, RefreshCw, WifiOff } from "lucide-react";
 import React from "react";
-import { WifiOff, RefreshCw, AlertCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface OfflineScreenProps {
   onRetry?: () => void;
@@ -10,6 +11,8 @@ export const OfflineScreen: React.FC<OfflineScreenProps> = ({
   onRetry,
   isRetrying = false,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md animate-in fade-in duration-300">
       <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
@@ -27,12 +30,15 @@ export const OfflineScreen: React.FC<OfflineScreenProps> = ({
 
         {/* Title */}
         <h2 className="text-xl font-bold text-white tracking-tight">
-          No Internet Connection
+          {t("common.offlineTitle", "No Internet Connection")}
         </h2>
 
         {/* Message */}
         <p className="text-sm text-slate-400 mt-2.5 leading-relaxed">
-          Please check your Wi-Fi or mobile data network and try again to continue using ZodiMithra.
+          {t(
+            "common.offlineDesc",
+            "Please check your Wi-Fi or mobile data network and try again to continue using ZodiMithra.",
+          )}
         </p>
 
         {/* Status Indicator */}
@@ -41,7 +47,12 @@ export const OfflineScreen: React.FC<OfflineScreenProps> = ({
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
           </span>
-          <span>Waiting for network connectivity...</span>
+          <span>
+            {t(
+              "common.waitingConnectivity",
+              "Waiting for network connectivity...",
+            )}
+          </span>
         </div>
 
         {/* Action Button */}
@@ -51,8 +62,12 @@ export const OfflineScreen: React.FC<OfflineScreenProps> = ({
             disabled={isRetrying}
             className="w-full py-3.5 px-6 rounded-2xl bg-linear-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 active:scale-[0.98] text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
           >
-            <RefreshCw className={`w-4 h-4 ${isRetrying ? "animate-spin" : ""}`} />
-            {isRetrying ? "Checking Connection..." : "Retry Connection"}
+            <RefreshCw
+              className={`w-4 h-4 ${isRetrying ? "animate-spin" : ""}`}
+            />
+            {isRetrying
+              ? t("common.checkingConnection", "Checking Connection...")
+              : t("common.retry", "Retry Connection")}
           </button>
         )}
       </div>

@@ -1,6 +1,7 @@
 import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
 interface GunaKoota {
@@ -14,6 +15,7 @@ interface GunaKoota {
 }
 
 const KundliMatchResult = () => {
+  const { t } = useTranslation();
   const { state } = useLocation();
   const navigate = useNavigate();
 
@@ -45,7 +47,7 @@ const KundliMatchResult = () => {
   return (
     <>
       <Header
-        title="Kundli Match Result"
+        title={t("kundliMacth.resultTitle", "Kundli Match Result")}
         showBackButton
         redirectPath="/kundli-match"
       />
@@ -88,21 +90,23 @@ const KundliMatchResult = () => {
                   {total_points}/{maximum_points}
                 </span>
                 <span className="text-[10px] font-medium text-text-secondary mt-0.5 uppercase tracking-wider">
-                  Guna Milan
+                  {t("kundliMacth.gunaMilan", "Guna Milan")}
                 </span>
               </div>
             </div>
 
             {/* Dynamic Match Result Badge Callout */}
             <div className="mt-4 flex items-center gap-1.5 font-bold text-sm text-primary">
-              <span>{match_result} Match</span>
+              <span>
+                {match_result} {t("kundliMacth.match", "Match")}
+              </span>
               <span className="text-amber-400 text-base">✨</span>
             </div>
           </div>
 
           {/* 2. Heading Section */}
           <h2 className="text-base font-bold mb-4 tracking-wide text-primary">
-            Guna Breakdown
+            {t("kundliMacth.gunaBreakdown", "Guna Breakdown")}
           </h2>
 
           {/* 3. Dynamic Star Breakdown Cards Mapping */}

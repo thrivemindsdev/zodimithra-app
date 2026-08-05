@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { useGetAshramamLiveQuery } from "@/queries/ashramsQueries";
-import SubscriptionModal from "./SubscriptionModal";
 import SessionCarousel from "./SessionCarousel";
+import SubscriptionModal from "./SubscriptionModal";
 
 interface SelectedSession {
   id: number;
@@ -12,6 +13,7 @@ interface SelectedSession {
 }
 
 const AshramsBanner = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -43,14 +45,14 @@ const AshramsBanner = () => {
   return (
     <>
       <SessionCarousel
-        title="Live"
+        title={t("nav.live", "Live")}
         sessions={data?.livesessions ?? []}
         loading={isLoading}
         onSessionClick={handleSessionClick}
       />
 
       <SessionCarousel
-        title="Upcoming"
+        title={t("ashrams.upcoming", "Upcoming")}
         sessions={data?.upcomingsessios ?? []}
         loading={isLoading}
         onSessionClick={handleSessionClick}

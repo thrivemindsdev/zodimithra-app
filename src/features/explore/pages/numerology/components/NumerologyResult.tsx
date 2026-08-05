@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
-import { CalendarDays, Clock3, User } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Header from "@/components/layout/Header";
 import BodyLayout from "@/components/layout/BodyLayout";
+import Header from "@/components/layout/Header";
+import { CalendarDays, Clock3, User } from "lucide-react";
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type PersonalDetail = {
   name: string;
@@ -52,9 +53,7 @@ const NumberCardItem = ({ item }: { item: NumberCard }) => (
   <div className="rounded-2xl card-shadow bg-white p-5">
     <div className="mb-4 flex items-start justify-between">
       <div>
-        <h3 className="text-lg font-bold text-text-primary">
-          {item.title}
-        </h3>
+        <h3 className="text-lg font-bold text-text-primary">{item.title}</h3>
 
         {item.subtitle && (
           <p className="mt-1 text-sm font-semibold text-[#DDAB2C]">
@@ -63,18 +62,15 @@ const NumberCardItem = ({ item }: { item: NumberCard }) => (
         )}
       </div>
 
-      <span className="text-4xl font-bold text-[#DDAB2C]">
-        {item.number}
-      </span>
+      <span className="text-4xl font-bold text-[#DDAB2C]">{item.number}</span>
     </div>
 
-    <p className="text-sm leading-7 text-text-secondary">
-      {item.description}
-    </p>
+    <p className="text-sm leading-7 text-text-secondary">{item.description}</p>
   </div>
 );
 
 const NumerologyResult = () => {
+  const { t } = useTranslation();
   const { state } = useLocation();
   const navigate = useNavigate();
 
@@ -92,19 +88,19 @@ const NumerologyResult = () => {
 
   const numerologyCards: NumberCard[] = [
     {
-      title: "Life Path Number",
+      title: t("numerologyCalculator.lifePathNumber", "Life Path Number"),
       subtitle: result.life_path.title,
       number: result.life_path.number,
       description: result.life_path.description,
     },
     {
-      title: "Birthday Number",
+      title: t("numerologyCalculator.birthdayNumber", "Birthday Number"),
       subtitle: result.birthday.title,
       number: result.birthday.number,
       description: result.birthday.description,
     },
     {
-      title: "Personality Number",
+      title: t("numerologyCalculator.personalityNumber", "Personality Number"),
       subtitle: result.personality.title,
       number: result.personality.number,
       description: result.personality.description,
@@ -114,7 +110,7 @@ const NumerologyResult = () => {
   return (
     <>
       <Header
-        title="Numerology Result"
+        title={t("numerologyCalculator.resultTitle", "Numerology Result")}
         showBackButton
         redirectPath="/numerology"
       />
@@ -124,7 +120,7 @@ const NumerologyResult = () => {
           {/* Personal Details */}
           <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
             <h2 className="mb-5 text-xl font-bold text-primary">
-              Personal Details
+              {t("numerologyCalculator.personalDetails", "Personal Details")}
             </h2>
 
             <div className="space-y-3">

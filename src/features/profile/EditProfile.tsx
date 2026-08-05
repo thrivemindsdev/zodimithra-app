@@ -159,9 +159,12 @@ const EditProfile = () => {
             queryKey: [USER_QUERY_KEYS.userDetails],
           });
           showSuccess(
-            "Profile Updated Successfully",
-            "Your profile has been updated successfully!",
-            "Continue",
+            t("profile.updatedSuccess", "Profile Updated Successfully"),
+            t(
+              "profile.updatedSuccessDesc",
+              "Your profile has been updated successfully!",
+            ),
+            t("common.continue", "Continue"),
             () => {
               navigate("/profile");
             },
@@ -176,7 +179,7 @@ const EditProfile = () => {
   return (
     <>
       <Header
-        title={t("profile.editProfile")}
+        title={t("profile.editProfile", "Edit Profile")}
         showBackButton
         redirectPath="/profile"
       />
@@ -218,30 +221,30 @@ const EditProfile = () => {
                 </div>
 
                 <span className="text-xs font-body text-gray-500 mt-2.5 font-medium sm:hidden">
-                  Tap camera icon to edit
+                  {t("profile.tapCameraEdit", "Tap camera icon to edit")}
                 </span>
               </div>
             )}
 
             <Input
-              label={t("onboard.fullName")}
+              label={t("onboard.fullName", "Full Name")}
               name="fullName"
               icon={User}
               value={formData.fullName}
               onChange={handleInputChange}
-              placeholder="e.g. John Doe"
+              placeholder={t("onboard.fullNamePlaceholder", "e.g. John Doe")}
               className="capitalize"
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <DateInput
-                label={t("onboard.dateOfBirth")}
+                label={t("onboard.dateOfBirth", "Date of Birth")}
                 name="dob"
                 value={formData.dob}
                 onChange={handleInputChange}
               />
               <TimeInput
-                label={t("onboard.timeofBirth")}
+                label={t("onboard.timeofBirth", "Time of Birth")}
                 name="tob"
                 value={formData.tob}
                 onChange={handleInputChange}
@@ -249,7 +252,7 @@ const EditProfile = () => {
             </div>
 
             <PlaceInput
-              label={t("onboard.placeOfBirth")}
+              label={t("onboard.placeOfBirth", "Place of Birth")}
               value={formData.pob}
               onChange={handlePlaceChange}
             />
@@ -259,7 +262,7 @@ const EditProfile = () => {
               disabled={isFormIncomplete}
               className="w-full mt-6 font-body bg-primary text-white font-semibold py-2.5 px-4 rounded-lg transition outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {t("profile.saveChanges")}
+              {t("profile.saveChanges", "Save Changes")}
             </button>
           </form>
         </div>
@@ -277,7 +280,7 @@ const EditProfile = () => {
             </button>
 
             <h3 className="text-lg font-semibold mb-4 text-gray-800">
-              Crop Profile Picture
+              {t("profile.cropPicture", "Crop Profile Picture")}
             </h3>
 
             <div className="relative w-full h-64 bg-gray-900 rounded-xl overflow-hidden">
@@ -315,14 +318,14 @@ const EditProfile = () => {
                 onClick={() => setIsCroppingModalOpen(false)}
                 className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50"
               >
-                Cancel
+                {t("common.cancel", "Cancel")}
               </button>
               <button
                 type="button"
                 onClick={handleCropSave}
                 className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90"
               >
-                Apply Crop
+                {t("profile.applyCrop", "Apply Crop")}
               </button>
             </div>
           </div>

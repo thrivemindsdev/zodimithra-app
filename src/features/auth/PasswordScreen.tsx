@@ -6,10 +6,12 @@ import { VerifyPasswordApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { Eye, EyeOff, Lock } from "lucide-react";
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export default function PasswordScreen() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { phoneNumber, setToken, setIsLoggedIn } = useAuthStore();
   const { toastState, showSuccess, showError, hideToast } = useToastModal();
 
@@ -39,9 +41,9 @@ export default function PasswordScreen() {
         setToken(response.data.token);
         if (response?.data?.on_boarding) {
           showSuccess(
-            "Login Successful",
-            "You have been logged in successfully!",
-            "Continue",
+            t("auth.loginSuccess", "Login Successful"),
+            t("auth.loginSuccessDesc", "You have been logged in successfully!"),
+            t("common.continue", "Continue"),
             () => {
               setIsLoggedIn(true);
               navigate("/home");
@@ -53,7 +55,13 @@ export default function PasswordScreen() {
       }
     } catch (error) {
       console.error("PIN Verification Error:", error);
-      showError("Error", "Unable to verify PIN. Please try again later.");
+      showError(
+        t("common.error", "Error"),
+        t(
+          "auth.verifyPinError",
+          "Unable to verify PIN. Please try again later.",
+        ),
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -75,11 +83,13 @@ export default function PasswordScreen() {
             alt="Zodimithra"
             className="mx-auto w-1/2 max-w-xs"
           />
-          <h2 className="mt-4 text-xl font-bold text-gray-900">Welcome Back</h2>
+          <h2 className="mt-4 text-xl font-bold text-gray-900">
+            {t("auth.welcomeBack", "Welcome Back")}
+          </h2>
           <p className="mt-1 font-body text-center text-sm text-text-secondary">
             {phoneNumber
-              ? `Enter 4-digit PIN for ${phoneNumber}`
-              : "Enter your 4-digit PIN to sign in."}
+              ? `${t("auth.enterPinFor", "Enter 4-digit PIN for")} ${phoneNumber}`
+              : t("auth.enterPinPrompt", "Enter your 4-digit PIN to sign in.")}
           </p>
         </div>
 
@@ -91,7 +101,7 @@ export default function PasswordScreen() {
               htmlFor="login-pin"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              4-Digit PIN
+              {t("auth.fourDigitPin", "4-Digit PIN")}
             </label>
             <div className="relative rounded-lg border border-input-border px-4 py-3 bg-input-bg flex items-center transition-all focus-within:ring-2 focus-within:ring-primary/20">
               <Lock className="h-4 w-4 text-gray-400 mr-2.5 shrink-0" />
@@ -101,7 +111,7 @@ export default function PasswordScreen() {
                 inputMode="numeric"
                 pattern="[0-9]*"
                 maxLength={4}
-                placeholder="Enter 4-digit PIN"
+                placeholder={t("auth.enterPin", "Enter 4-digit PIN")}
                 value={pin}
                 onChange={handlePinChange}
                 autoComplete="current-password"
@@ -130,7 +140,7 @@ export default function PasswordScreen() {
               onClick={() => navigate("/forgot-pin")}
               className="text-xs font-semibold text-primary hover:underline focus:outline-none"
             >
-              Forgot PIN?
+              {t("auth.forgotPin", "Forgot PIN?")}
             </button>
           </div>
 
@@ -141,7 +151,9 @@ export default function PasswordScreen() {
               disabled={pin.length !== 4 || isSubmitting}
               className="flex w-full justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold leading-6 text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors"
             >
-              {isSubmitting ? "Signing in..." : "Login"}
+              {isSubmitting
+                ? t("auth.signingIn", "Signing in...")
+                : t("auth.login", "Login")}
             </button>
           </div>
         </form>

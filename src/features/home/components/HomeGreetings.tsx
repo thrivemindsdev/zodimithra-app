@@ -110,7 +110,10 @@ const HomeGreetings = ({
             />
             {data?.zodiac_sign && (
               <span className="mt-1 text-lg font-semibold capitalize tracking-wide text-white font-body-content drop-shadow">
-                {data.zodiac_sign}
+                {t(
+                  `freeKundli.${data.zodiac_sign.toLowerCase()}`,
+                  data.zodiac_sign,
+                )}
               </span>
             )}
           </>

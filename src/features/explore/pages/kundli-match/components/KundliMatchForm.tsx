@@ -5,6 +5,7 @@ import PlaceInput from "@/components/common/PlaceInput";
 import TimeInput from "@/components/common/TimeInput";
 import { User } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 interface PartnerData {
   fullName: string;
@@ -37,6 +38,7 @@ interface KundliMatchFormProps {
 }
 
 const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<MatchFormState>({
     partner1: { ...initialPartnerState },
     partner2: { ...initialPartnerState, gender: "female" },
@@ -73,21 +75,21 @@ const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
         {/* Partner 1 Card */}
         <div className="rounded-2xl card-shadow p-4">
           <h2 className="text-primary font-body font-bold text-xl pb-4 mb-4">
-            Partner 1
+            {t("kundliMacth.partner1", "Partner 1")}
           </h2>
           <div className="space-y-5">
             <Input
-              label="Full Name"
+              label={t("onboard.fullName", "Full Name")}
               name="p1-fullName"
               icon={User}
               value={formData.partner1.fullName}
               onChange={(e) =>
                 updateFields("partner1", { fullName: e.target.value })
               }
-              placeholder="e.g. John Doe"
+              placeholder={t("onboard.fullNamePlaceholder", "e.g. John Doe")}
             />
             <DateInput
-              label="Date of Birth"
+              label={t("onboard.dateOfBirth", "Date of Birth")}
               name="p1-dob"
               value={formData.partner1.dob}
               onChange={(e) =>
@@ -95,7 +97,7 @@ const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
               }
             />
             <TimeInput
-              label="Time of Birth"
+              label={t("onboard.timeofBirth", "Time of Birth")}
               name="p1-tob"
               value={formData.partner1.tob}
               onChange={(e) =>
@@ -103,7 +105,7 @@ const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
               }
             />
             <PlaceInput
-              label="Place of Birth"
+              label={t("onboard.placeOfBirth", "Place of Birth")}
               value={formData.partner1.pob}
               onChange={(placeName, lat, lng) =>
                 updateFields("partner1", {
@@ -123,21 +125,21 @@ const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
         {/* Partner 2 Card */}
         <div className="rounded-2xl card-shadow p-4">
           <h2 className="text-primary font-body font-bold text-xl pb-4 mb-4">
-            Partner 2
+            {t("kundliMacth.partner2", "Partner 2")}
           </h2>
           <div className="space-y-5">
             <Input
-              label="Full Name"
+              label={t("onboard.fullName", "Full Name")}
               name="p2-fullName"
               icon={User}
               value={formData.partner2.fullName}
               onChange={(e) =>
                 updateFields("partner2", { fullName: e.target.value })
               }
-              placeholder="e.g. Jane Doe"
+              placeholder={t("onboard.fullNamePlaceholder", "e.g. Jane Doe")}
             />
             <DateInput
-              label="Date of Birth"
+              label={t("onboard.dateOfBirth", "Date of Birth")}
               name="p2-dob"
               value={formData.partner2.dob}
               onChange={(e) =>
@@ -145,7 +147,7 @@ const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
               }
             />
             <TimeInput
-              label="Time of Birth"
+              label={t("onboard.timeofBirth", "Time of Birth")}
               name="p2-tob"
               value={formData.partner2.tob}
               onChange={(e) =>
@@ -153,7 +155,7 @@ const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
               }
             />
             <PlaceInput
-              label="Place of Birth"
+              label={t("onboard.placeOfBirth", "Place of Birth")}
               value={formData.partner2.pob}
               onChange={(placeName, lat, lng) =>
                 updateFields("partner2", {
@@ -178,7 +180,7 @@ const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
           disabled={isFormIncomplete || loading}
           className="w-full bg-primary disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-xl transition transform outline-none cursor-pointer disabled:cursor-not-allowed shadow-md hover:opacity-90"
         >
-          Match Kundli
+          {t("kundliMacth.matchButton", "Match Kundli")}
         </button>
       </div>
     </form>

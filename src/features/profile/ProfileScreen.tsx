@@ -1,7 +1,9 @@
 import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";
+import { useHardwareBack } from "@/hooks/useHardwareBack";
 import { useGetUserDetailsQuery } from "@/queries/userQueries";
 import { useAuthStore } from "@/store/authStore";
+import { Capacitor } from "@capacitor/core";
 import {
   Bell,
   ChevronRight,
@@ -16,8 +18,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { LANGUAGES } from "../auth/LanguagesScreen";
-import { Capacitor } from "@capacitor/core";
-import { useHardwareBack } from "@/hooks/useHardwareBack";
 
 interface MenuItemProps {
   icon: React.ReactNode;
@@ -78,7 +78,12 @@ const ProfileScreen = () => {
   const logout = useAuthStore((state) => state.logout);
 
   const handleLogout = async () => {
-    if (!window.confirm("Are you sure you want to log out?")) return;
+    if (
+      !window.confirm(
+        t("profile.logoutConfirm", "Are you sure you want to log out?"),
+      )
+    )
+      return;
 
     await logout();
     navigate("/login", { replace: true });
@@ -87,7 +92,10 @@ const ProfileScreen = () => {
   const handleDeleteAccount = () => {
     if (
       confirm(
-        "WARNING: Are you sure you want to delete your account? This action cannot be undone.",
+        t(
+          "profile.deleteConfirm",
+          "WARNING: Are you sure you want to delete your account? This action cannot be undone.",
+        ),
       )
     ) {
       console.log("Account deleted");
@@ -96,7 +104,11 @@ const ProfileScreen = () => {
 
   return (
     <>
-      <Header title={t("profile.title")} showBackButton redirectPath="/home" />
+      <Header
+        title={t("profile.title", "Profile")}
+        showBackButton
+        redirectPath="/home"
+      />
       <BodyLayout>
         <>
           {/* Header Profile Section */}
@@ -132,49 +144,49 @@ const ProfileScreen = () => {
 
           {/* Main Options List */}
           <div className="px-4">
-            {Capacitor.getPlatform() !== "ios" &&
+            {Capacitor.getPlatform() !== "ios" && (
               <>
                 <MenuItem
                   icon={<Bell className="w-6 h-6" />}
-                  label={t("profile.notification")}
+                  label={t("profile.notification", "Notification")}
                 />
                 <MenuItem
                   icon={<Wallet className="w-6 h-6" />}
-                  label={t("profile.wallet")}
+                  label={t("profile.wallet", "Wallet")}
                 />
                 <MenuItem
                   icon={<History className="w-6 h-6" />}
-                  label={t("profile.orderHistory")}
+                  label={t("profile.orderHistory", "Order History")}
                 />
                 <MenuItem
                   icon={<Crown className="w-6 h-6" />}
-                  label={t("profile.subscription")}
-                  badge="Free Plan"
+                  label={t("profile.subscription", "Subscriptions")}
+                  badge={t("profile.freePlan", "Free Plan")}
                   onClick={() => navigate("/premium")}
                 />
               </>
-            }
+            )}
             <MenuItem
               icon={<Globe className="w-6 h-6" />}
-              label={t("profile.changeLanguage")}
+              label={t("profile.changeLanguage", "Change Language")}
               badge={currentLanguageName}
               onClick={() => navigate("/languages")}
             />
 
             <MenuItem
               icon={<LogOut className="w-6 h-6 text-red-600" />}
-              label={t("profile.logout")}
+              label={t("profile.logout", "Logout")}
               danger
               onClick={handleLogout}
             />
-            {Capacitor.getPlatform() !== "ios" &&
+            {Capacitor.getPlatform() !== "ios" && (
               <MenuItem
                 icon={<Trash2 className="w-6 h-6 text-red-600" />}
-                label={t("profile.deleteAccount")}
+                label={t("profile.deleteAccount", "Delete Account")}
                 danger
                 onClick={handleDeleteAccount}
               />
-            }
+            )}
           </div>
         </>
       </BodyLayout>

@@ -7,12 +7,14 @@ import Header from "@/components/layout/Header";
 import { KundliMatchApi } from "@/services/explore.api";
 import { timeZone } from "@/utils/timezone-utils";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import KundliMatchForm, {
   type MatchFormState,
 } from "./components/KundliMatchForm";
 
 const KundliMatch = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -62,15 +64,18 @@ const KundliMatch = () => {
   return (
     <>
       <Header
-        title="Kundli Matching"
-        subtitle="Match your kundlis to see the score"
+        title={t("kundliMacth.title", "Kundli Matching")}
+        subtitle={t(
+          "kundliMacth.subTitle",
+          "Match your kundlis to see the score",
+        )}
         showBackButton
         redirectPath="/explore"
       />
       <BodyLayout>
         <div className="pt-6">
           <Banner
-            title="Kundli Matching"
+            title={t("kundliMacth.title", "Kundli Matching")}
             bgImage={BannerImage}
             rightImage={RightImage}
           />

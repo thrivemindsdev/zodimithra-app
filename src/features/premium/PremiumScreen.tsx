@@ -23,6 +23,7 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Capacitor } from "@capacitor/core";
 import { Checkout } from "capacitor-razorpay";
@@ -77,6 +78,7 @@ const benefits = [
 ];
 
 const PremiumScreen = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const phoneNumber = useAuthStore((state) => state.phoneNumber);
@@ -125,7 +127,7 @@ const PremiumScreen = () => {
             prefill: {
               name: userDetails?.name ?? "",
               email: "zodimithra@gmail.com",
-              contact: phoneNumber
+              contact: phoneNumber,
             },
             theme: {
               color: "#2A0B07",
@@ -182,7 +184,7 @@ const PremiumScreen = () => {
           prefill: {
             name: userDetails?.name ?? "",
             email: "zodimithra@gmail.com",
-            contact: phoneNumber
+            contact: phoneNumber,
           },
 
           theme: {
@@ -368,7 +370,7 @@ const PremiumScreen = () => {
         {/* Review */}
         <div className="mt-6">
           <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8F887F]">
-            What Members Say
+            {t("premium.whatMembersSay", "What Members Say")}
           </p>
 
           <div className="rounded-2xl border border-[#E5D8C5] bg-[#FAF8F5] p-4">
@@ -394,7 +396,7 @@ const PremiumScreen = () => {
         {/* Coming Soon */}
         <div className="mt-6">
           <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8F887F]">
-            Well-being · Coming Soon
+            {t("premium.comingSoonSection", "Well-being · Coming Soon")}
           </p>
 
           <div className="rounded-2xl border border-[#E5D8C5] bg-[#FAF8F5] p-4 opacity-60">
@@ -402,10 +404,15 @@ const PremiumScreen = () => {
               <Heart size={18} />
             </div>
 
-            <h3 className="mt-4 text-lg font-medium text-[#444]">Healing</h3>
+            <h3 className="mt-4 text-lg font-medium text-[#444]">
+              {t("wellbeing.healing", "Healing")}
+            </h3>
 
             <p className="mt-1 text-sm text-gray-500">
-              This section is not part of the current plan
+              {t(
+                "premium.notPartOfPlan",
+                "This section is not part of the current plan",
+              )}
             </p>
           </div>
         </div>
@@ -414,9 +421,9 @@ const PremiumScreen = () => {
         <div className="mt-auto pt-6">
           <button
             onClick={handlePayNow}
-            className="w-full rounded-xl bg-[#D7AF3A] py-4 text-sm font-semibold tracking-wide text-black transition hover:brightness-105"
+            className="w-full rounded-xl bg-[#D7AF3A] py-4 text-sm font-semibold tracking-wide text-black transition hover:brightness-105 cursor-pointer"
           >
-            UPGRADE TO PREMIUM — ₹{planAmount}
+            {t("premium.upgrade", "UPGRADE TO PREMIUM")} — ₹{planAmount}
           </button>
         </div>
       </BodyLayout>

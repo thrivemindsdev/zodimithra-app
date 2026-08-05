@@ -3,8 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const NavamsaChart = ({ userDetails, birthDate }: any) => {
-  
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [selected, setSelected] = useState<"north-indian" | "south-indian">(
     "south-indian",
   );
@@ -53,14 +52,18 @@ const NavamsaChart = ({ userDetails, birthDate }: any) => {
       </div>
       <div className="rounded-2xl p-4 card-shadow flex flex-col items-center justify-center">
         {isLoading ? (
-          <div className="text-sm text-[#8C7A6B]">Loading...</div>
+          <div className="text-sm text-[#8C7A6B]">
+            {t("common.loading", "Loading...")}
+          </div>
         ) : chartData ? (
           <div
-            className="w-full flex items-center  justify-center [&>svg]:w-full [&>svg]:h-auto [&>svg]:max-w-100"
+            className="w-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-auto [&>svg]:max-w-100"
             dangerouslySetInnerHTML={{ __html: chartData }}
           />
         ) : (
-          <div className="text-sm text-[#8C7A6B]">No Charts Found</div>
+          <div className="text-sm text-[#8C7A6B]">
+            {t("common.noData", "No Charts Found")}
+          </div>
         )}
       </div>
     </div>

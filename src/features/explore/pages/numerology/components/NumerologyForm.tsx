@@ -4,6 +4,7 @@ import TimeInput from "@/components/common/TimeInput";
 import { NumerologyCalculatorApi } from "@/services/explore.api";
 import { User } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 interface FormState {
@@ -19,6 +20,7 @@ const initialFormState: FormState = {
 };
 
 const NumerologyForm = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormState>(initialFormState);
 
@@ -53,27 +55,27 @@ const NumerologyForm = () => {
   return (
     <div className="rounded-2xl card-shadow p-4 mt-4">
       <h2 className="text-primary font-body font-bold text-xl pb-4">
-        Personal Details
+        {t("numerologyCalculator.personalDetails", "Personal Details")}
       </h2>
       <form onSubmit={handleSubmit} className="space-y-5">
         <Input
-          label="Full Name"
+          label={t("onboard.fullName", "Full Name")}
           name="fullName"
           icon={User}
           value={formData.fullName}
           onChange={(e) => updateField("fullName", e.target.value)}
-          placeholder="e.g. John Doe"
+          placeholder={t("onboard.fullNamePlaceholder", "e.g. John Doe")}
         />
 
         <DateInput
-          label="Date of Birth"
+          label={t("onboard.dateOfBirth", "Date of Birth")}
           name="dob"
           value={formData.dob}
           onChange={(e) => updateField("dob", e.target.value)}
         />
 
         <TimeInput
-          label="Time of Birth"
+          label={t("onboard.timeofBirth", "Time of Birth")}
           name="tob"
           value={formData.tob}
           onChange={(e) => updateField("tob", e.target.value)}
@@ -85,7 +87,7 @@ const NumerologyForm = () => {
             disabled={isFormIncomplete}
             className="w-full bg-primary disabled:opacity-50 text-white font-semibold py-2.5 px-4 rounded-lg transition transform outline-none cursor-pointer disabled:cursor-not-allowed"
           >
-            Calculate
+            {t("numerologyCalculator.calculate", "Calculate")}
           </button>
         </div>
       </form>

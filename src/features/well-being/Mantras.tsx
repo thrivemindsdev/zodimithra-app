@@ -10,6 +10,7 @@ import {
   Play,
 } from "lucide-react";
 import React, { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // --- TypeScript Interfaces matching API Response ---
 interface Pivot {
@@ -76,6 +77,7 @@ export interface MantraItem {
 const STORAGE_BASE_URL = "https://backend.zodimithra.com/storage";
 
 const Mantras: React.FC = () => {
+  const { t } = useTranslation();
   const { data = [], isLoading } = useGetMantrasQuery();
   const [playingId, setPlayingId] = useState<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -116,8 +118,8 @@ const Mantras: React.FC = () => {
   return (
     <>
       <Header
-        title="Mantras"
-        subtitle="Sacred sounds for your soul"
+        title={t("wellbeing.mantras", "Mantras")}
+        subtitle={t("wellbeing.sacredSounds", "Sacred sounds for your soul")}
         showBackButton
         redirectPath="/explore"
       />

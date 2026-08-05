@@ -5,12 +5,14 @@ import { useToastModal } from "@/hooks/useToastModal";
 import { CheckPhoneApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginScreen() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [phoneValue, setPhoneValue] = useState<string | undefined>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const setPhoneNumber = useAuthStore((state) => state.setPhoneNumber);
@@ -39,8 +41,11 @@ export default function LoginScreen() {
     } catch (error) {
       console.error("Check Phone Error:", error);
       showError(
-        "Network Error",
-        "Unable to reach the server. Please check your internet connection and try again.",
+        t("common.networkError", "Network Error"),
+        t(
+          "common.networkErrorDesc",
+          "Unable to reach the server. Please check your internet connection and try again.",
+        ),
       );
     } finally {
       setIsSubmitting(false);
@@ -63,7 +68,7 @@ export default function LoginScreen() {
             className="mx-auto w-1/2 max-w-xs"
           />
           <p className="mt-3 font-body text-center text-sm text-text-secondary">
-            Sign in safely with your phone number.
+            {t("auth.signInText", "Sign in safely with your phone number.")}
           </p>
         </div>
 
@@ -73,14 +78,14 @@ export default function LoginScreen() {
               htmlFor="phone-input"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Phone Number
+              {t("auth.phoneNumber", "Phone Number")}
             </label>
 
             <div className="phone-input-wrapper rounded-lg border border-input-border transition-all px-4 py-3 bg-input-bg">
               <PhoneInput
                 international={false}
                 defaultCountry="IN"
-                placeholder="Enter phone number"
+                placeholder={t("auth.enterPhone", "Enter phone number")}
                 value={phoneValue}
                 onChange={setPhoneValue}
                 countryCallingCodeEditable={false}
@@ -101,7 +106,9 @@ export default function LoginScreen() {
               disabled={!isPhoneValid || isSubmitting}
               className="flex w-full justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold leading-6 text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors"
             >
-              {isSubmitting ? "Submitting..." : "Submit"}
+              {isSubmitting
+                ? t("auth.submitting", "Submitting...")
+                : t("auth.submit", "Submit")}
             </button>
           </div>
         </form>

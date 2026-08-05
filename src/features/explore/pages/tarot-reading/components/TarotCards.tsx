@@ -1,12 +1,12 @@
-import { useCallback, useState, useMemo, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
 
 import tarotCardImg from "@/assets/tarot/tarotcard.png";
+import GlobalLoader from "@/components/common/GlobalLoader";
 import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";
-import GlobalLoader from "@/components/common/GlobalLoader";
 
 import { useGetAllTarotCardsQuery } from "@/queries/homeQueries";
 import { GetTarotCardResult, GetYesOrNoResult } from "@/services/home.api";
@@ -21,7 +21,7 @@ interface TarotCard {
 
 const TarotCards = () => {
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { id } = useParams();
 
   const currentLanguage = i18n.language || "en";
@@ -95,7 +95,7 @@ const TarotCards = () => {
         setIsSelecting(false);
       }
     },
-    [currentLanguage, id, isSelecting, navigate]
+    [currentLanguage, id, isSelecting, navigate],
   );
 
   if (isLoading || isSelecting) {
@@ -105,8 +105,11 @@ const TarotCards = () => {
   return (
     <>
       <Header
-        title="Tarot Reading"
-        subtitle="Tarot gives you ideas for the life"
+        title={t("tarotReading.title", "Tarot Reading")}
+        subtitle={t(
+          "tarotReading.subTitle",
+          "Tarot gives you ideas for the life",
+        )}
         showBackButton
         redirectPath="/tarot-reading"
       />

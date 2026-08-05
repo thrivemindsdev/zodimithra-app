@@ -5,12 +5,14 @@ import { useToastModal } from "@/hooks/useToastModal";
 import { SendOtpApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { useNavigate } from "react-router-dom";
 
 export default function ForgotPin() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [phoneValue, setPhoneValue] = useState<string | undefined>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const setPhoneNumber = useAuthStore((state) => state.setPhoneNumber);
@@ -35,8 +37,11 @@ export default function ForgotPin() {
     } catch (error) {
       console.error("Send OTP Error:", error);
       showError(
-        "Failed to Send OTP",
-        "Something went wrong while sending the OTP code. Please try again.",
+        t("common.error", "Failed to Send OTP"),
+        t(
+          "auth.sendOtpError",
+          "Something went wrong while sending the OTP code. Please try again.",
+        ),
       );
     } finally {
       setIsSubmitting(false);
@@ -59,7 +64,10 @@ export default function ForgotPin() {
             className="mx-auto w-1/2 max-w-xs"
           />
           <p className="mt-3 font-body text-center text-sm text-text-secondary">
-            Enter your phone number to reset your pin.
+            {t(
+              "auth.forgotPinPrompt",
+              "Enter your phone number to reset your pin.",
+            )}
           </p>
         </div>
 
@@ -69,14 +77,14 @@ export default function ForgotPin() {
               htmlFor="phone-input"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Phone Number
+              {t("auth.phoneNumber", "Phone Number")}
             </label>
 
             <div className="phone-input-wrapper rounded-lg border border-input-border transition-all px-4 py-3 bg-input-bg">
               <PhoneInput
                 international={false}
                 defaultCountry="IN"
-                placeholder="Enter phone number"
+                placeholder={t("auth.enterPhone", "Enter phone number")}
                 value={phoneValue}
                 onChange={setPhoneValue}
                 countryCallingCodeEditable={false}
@@ -97,7 +105,9 @@ export default function ForgotPin() {
               disabled={!isPhoneValid || isSubmitting}
               className="flex w-full justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold leading-6 text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors"
             >
-              {isSubmitting ? "Sending OTP..." : "Submit"}
+              {isSubmitting
+                ? t("auth.sendingOtp", "Sending OTP...")
+                : t("auth.submit", "Submit")}
             </button>
           </div>
         </form>

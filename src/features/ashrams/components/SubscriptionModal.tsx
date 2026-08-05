@@ -6,13 +6,14 @@ import {
   createRazorpayOrderAshramaPremium,
   verifyAshramSubscriptionPayment,
 } from "@/services/ashrams.api";
+import { useAuthStore } from "@/store/authStore";
+import { Capacitor } from "@capacitor/core";
 import { useQueryClient } from "@tanstack/react-query";
+import { Checkout } from "capacitor-razorpay";
 import { Check, X } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Capacitor } from "@capacitor/core";
-import { Checkout } from "capacitor-razorpay";
-import { useAuthStore } from "@/store/authStore";
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -31,6 +32,7 @@ export default function SubscriptionModal({
   onClose,
   details,
 }: SubscriptionModalProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const phoneNumber = useAuthStore((state) => state.phoneNumber);
@@ -251,12 +253,14 @@ export default function SubscriptionModal({
             </div>
 
             <h2 className="mt-4 text-center text-xl font-light text-text-primary">
-              Your spiritual journey awaits
+              {t("ashrams.journeyAwaits", "Your spiritual journey awaits")}
             </h2>
 
             <p className="mt-3 text-center text-sm font-body-content text-text-secondary">
-              Continue learning and elevate your spiritual experience with a
-              premium membership.
+              {t(
+                "ashrams.membershipDesc",
+                "Continue learning and elevate your spiritual experience with a premium membership.",
+              )}
             </p>
 
             <div className="mt-6 space-y-4">
@@ -291,20 +295,21 @@ export default function SubscriptionModal({
                   amount: subscriptionAmount,
                 })
               }
-              className="mt-6 w-full rounded-full bg-primary py-4 text-white"
+              className="mt-6 w-full rounded-full bg-primary py-4 text-white font-semibold cursor-pointer"
             >
-              Subscribe for ₹{subscriptionAmount.toFixed(0)}
+              {t("ashrams.subscribeFor", "Subscribe for")} ₹
+              {subscriptionAmount.toFixed(0)}
             </button>
 
             <p className="mt-3 text-center text-xs font-body-content text-text-secondary">
-              billed monthly · cancel anytime
+              {t("ashrams.monthlyBilled", "billed monthly · cancel anytime")}
             </p>
 
             <button
               onClick={onClose}
-              className="mt-2 w-full text-center text-sm text-[#B1976D] underline"
+              className="mt-2 w-full text-center text-sm text-[#B1976D] underline cursor-pointer"
             >
-              Continue watching preview
+              {t("ashrams.continuePreview", "Continue watching preview")}
             </button>
           </div>
         </div>

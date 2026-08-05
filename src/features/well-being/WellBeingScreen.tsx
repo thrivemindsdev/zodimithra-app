@@ -4,59 +4,82 @@ import poojaBookingImg from "@/assets/well-being/pooja.jpg";
 import vastuSastraImg from "@/assets/well-being/vastusastra.jpg";
 import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 interface CardData {
   id: string;
-  category: string;
-  title: string;
-  description: string;
+  categoryKey: string;
+  defaultCategory: string;
+  titleKey: string;
+  defaultTitle: string;
+  descriptionKey: string;
+  defaultDescription: string;
   imageUrl: string;
 }
 
 const cardsData: CardData[] = [
   {
     id: "1",
-    category: "MINDFUL JOURNEYS",
-    title: "Mantras",
-    description: "Guided sessions for inner peace",
+    categoryKey: "wellbeing.mindfulJourneys",
+    defaultCategory: "MINDFUL JOURNEYS",
+    titleKey: "wellbeing.mantras",
+    defaultTitle: "Mantras",
+    descriptionKey: "wellbeing.mantrasDesc",
+    defaultDescription: "Guided sessions for inner peace",
     imageUrl: mantrasImg,
   },
   {
     id: "2",
-    category: "SACRED WELLNESS",
-    title: "Healing",
-    description: "Theta, Reiki, Pranic & more",
+    categoryKey: "wellbeing.sacredWellness",
+    defaultCategory: "SACRED WELLNESS",
+    titleKey: "wellbeing.healing",
+    defaultTitle: "Healing",
+    descriptionKey: "wellbeing.healingDesc",
+    defaultDescription: "Theta, Reiki, Pranic & more",
     imageUrl: healingImg,
   },
   {
     id: "3",
-    category: "SACRED RITUALS",
-    title: "E-Pooja",
-    description: "Vedic rituals at sacred temples",
+    categoryKey: "wellbeing.sacredRituals",
+    defaultCategory: "SACRED RITUALS",
+    titleKey: "wellbeing.ePooja",
+    defaultTitle: "E-Pooja",
+    descriptionKey: "wellbeing.poojaDesc",
+    defaultDescription: "Vedic rituals at sacred temples",
     imageUrl: poojaBookingImg,
   },
   {
     id: "4",
-    category: "ANCIENT SCIENCE",
-    title: "Vastu Shastra",
-    description: "Transform your space & future",
+    categoryKey: "wellbeing.ancientScience",
+    defaultCategory: "ANCIENT SCIENCE",
+    titleKey: "wellbeing.vastuShastra",
+    defaultTitle: "Vastu Shastra",
+    descriptionKey: "wellbeing.vastuDesc",
+    defaultDescription: "Transform your space & future",
     imageUrl: vastuSastraImg,
   },
   {
     id: "5",
-    category: "COSMIC ALIGNMENTS",
-    title: "Dyaan",
-    description: "Personalized dyaans for you",
+    categoryKey: "wellbeing.cosmicAlignments",
+    defaultCategory: "COSMIC ALIGNMENTS",
+    titleKey: "wellbeing.dyaan",
+    defaultTitle: "Dyaan",
+    descriptionKey: "wellbeing.dyaanDesc",
+    defaultDescription: "Personalized dyaans for you",
     imageUrl: vastuSastraImg,
   },
 ];
 
 const WellBeingScreen = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   return (
     <>
-      <Header title="WellBeing" subtitle="Find your perfect Astrologer" />
+      <Header
+        title={t("wellbeing.title", "WellBeing")}
+        subtitle={t("wellbeing.subtitle", "Find your perfect Astrologer")}
+      />
       <BodyLayout>
         <div className="space-y-4 font-body">
           {cardsData.map((card) => (
@@ -72,7 +95,7 @@ const WellBeingScreen = () => {
               {/* Background Image */}
               <img
                 src={card.imageUrl}
-                alt={card.title}
+                alt={t(card.titleKey, card.defaultTitle)}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
 
@@ -82,13 +105,13 @@ const WellBeingScreen = () => {
               {/* Text Content */}
               <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
                 <span className="text-xs uppercase tracking-widest text-gray-200/90 font-medium mb-1">
-                  {card.category}
+                  {t(card.categoryKey, card.defaultCategory)}
                 </span>
                 <h3 className="text-xl font-bold mb-1 tracking-wide">
-                  {card.title}
+                  {t(card.titleKey, card.defaultTitle)}
                 </h3>
                 <p className="text-sm text-gray-200/90 font-light">
-                  {card.description}
+                  {t(card.descriptionKey, card.defaultDescription)}
                 </p>
               </div>
             </div>

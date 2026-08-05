@@ -11,6 +11,7 @@ import { RegistrationApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { Mars, User, Venus, VenusAndMars } from "lucide-react";
 import React, { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export interface FormState {
@@ -37,28 +38,29 @@ export const initialFormState: FormState = {
   relationshipStatus: "",
 };
 
-export const GENDER_OPTIONS = [
-  { value: "male", label: "Male", icon: Mars },
-  { value: "female", label: "Female", icon: Venus },
-  { value: "other", label: "Other", icon: VenusAndMars },
-];
-
-export const RELATIONSHIP_OPTIONS = [
-  { value: "unmarried", label: "Unmarried" },
-  { value: "married", label: "Married" },
-  { value: "divorced", label: "Divorced" },
-  { value: "widowed", label: "Widowed" },
-  { value: "others", label: "Others" },
-];
-
 export default function BirthDetailsForm() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { phoneNumber, setToken, setIsLoggedIn } = useAuthStore();
   const { data: currentLocation } = useGetCurrentLocationQuery();
   const { toastState, showSuccess, showError, hideToast } = useToastModal();
 
   const [formData, setFormData] = useState<FormState>(initialFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const genderOptions = [
+    { value: "male", label: t("onboard.male", "Male"), icon: Mars },
+    { value: "female", label: t("onboard.female", "Female"), icon: Venus },
+    { value: "other", label: t("onboard.other", "Other"), icon: VenusAndMars },
+  ];
+
+  const relationshipOptions = [
+    { value: "unmarried", label: t("onboard.unmarried", "Unmarried") },
+    { value: "married", label: t("onboard.married", "Married") },
+    { value: "divorced", label: t("onboard.divorced", "Divorced") },
+    { value: "widowed", label: t("onboard.widowed", "Widowed") },
+    { value: "others", label: t("onboard.others", "Others") },
+  ];
 
   // Generic handler for standard inputs and custom selectors
   const updateField = (field: keyof FormState, value: string) => {
@@ -117,9 +119,12 @@ export default function BirthDetailsForm() {
           setToken(response.data.token);
         }
         showSuccess(
-          "Registration Successful",
-          "Your account has been created successfully!",
-          "Continue",
+          t("auth.regSuccess", "Registration Successful"),
+          t(
+            "auth.regSuccessDesc",
+            "Your account has been created successfully!",
+          ),
+          t("common.continue", "Continue"),
           () => {
             setIsLoggedIn(true);
             navigate("/home");
@@ -129,8 +134,11 @@ export default function BirthDetailsForm() {
     } catch (error) {
       console.error("Registration failed:", error);
       showError(
-        "Registration Failed",
-        "An error occurred while creating your account. Please try again.",
+        t("common.error", "Registration Failed"),
+        t(
+          "auth.regFailedDesc",
+          "An error occurred while creating your account. Please try again.",
+        ),
       );
     } finally {
       setIsSubmitting(false);
@@ -142,32 +150,35 @@ export default function BirthDetailsForm() {
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-8">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-gray-800">
-            Personal &amp; Birth Details
+            {t("onboard.title", "Personal & Birth Details")}
           </h2>
           <p className="text-sm text-gray-500 mt-1">
-            Please fill in your exact parameters below
+            {t(
+              "onboard.subTitle",
+              "Please fill in your exact parameters below",
+            )}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <Input
-            label="Full Name"
+            label={t("onboard.fullName", "Full Name")}
             name="fullName"
             icon={User}
             value={formData.fullName}
             onChange={handleInputChange}
-            placeholder="e.g. John Doe"
+            placeholder={t("onboard.fullNamePlaceholder", "e.g. John Doe")}
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <DateInput
-              label="Date of Birth"
+              label={t("onboard.dateOfBirth", "Date of Birth")}
               name="dob"
               value={formData.dob}
               onChange={handleInputChange}
             />
             <TimeInput
-              label="Time of Birth"
+              label={t("onboard.timeofBirth", "Time of Birth")}
               name="tob"
               value={formData.tob}
               onChange={handleInputChange}
@@ -175,21 +186,21 @@ export default function BirthDetailsForm() {
           </div>
 
           <PlaceInput
-            label="Place of Birth"
+            label={t("onboard.placeOfBirth", "Place of Birth")}
             value={formData.pob}
             onChange={handlePlaceChange}
           />
 
           <GenderButtonGroup
-            label="Gender"
-            options={GENDER_OPTIONS}
+            label={t("onboard.gender", "Gender")}
+            options={genderOptions}
             selectedValue={formData.gender}
             onChange={(val) => updateField("gender", val)}
           />
 
           <RadioGroup
-            label="Relationship Status"
-            options={RELATIONSHIP_OPTIONS}
+            label={t("onboard.relationship", "Relationship Status")}
+            options={relationshipOptions}
             selectedValue={formData.relationshipStatus}
             onChange={(val) => updateField("relationshipStatus", val)}
           />
@@ -199,7 +210,9 @@ export default function BirthDetailsForm() {
             disabled={isFormIncomplete || isSubmitting}
             className="w-full mt-6 font-body bg-primary text-white font-semibold py-2.5 px-4 rounded-lg transition outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-500 active:scale-98"
           >
-            {isSubmitting ? "Verifying..." : "Submit"}
+            {isSubmitting
+              ? t("auth.verifying", "Verifying...")
+              : t("onboard.submit", "Submit")}
           </button>
         </form>
       </div>

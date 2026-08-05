@@ -1,6 +1,7 @@
 import tarotCardImg from "@/assets/tarot/tarotcard.png";
 import { CheckCircle2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface TarotResultData {
   id: string;
@@ -27,6 +28,7 @@ const SPIN_DURATION_MS = 3000;
 const SPIN_DELAY_MS = 150;
 
 const TarotResult = ({ data }: TarotResultProps) => {
+  const { t } = useTranslation();
   const [spinning, setSpinning] = useState(false);
 
   useEffect(() => {
@@ -35,10 +37,13 @@ const TarotResult = ({ data }: TarotResultProps) => {
   }, []);
 
   const sections = [
-    { title: "Health", description: data.health },
-    { title: "Relationship", description: data.relationship },
-    { title: "Career", description: data.career },
-    { title: "Finance", description: data.finance },
+    { title: t("tarotReading.health", "Health"), description: data.health },
+    {
+      title: t("tarotReading.relationship", "Relationship"),
+      description: data.relationship,
+    },
+    { title: t("tarotReading.career", "Career"), description: data.career },
+    { title: t("tarotReading.finance", "Finance"), description: data.finance },
   ];
 
   const bfv: React.CSSProperties = {
