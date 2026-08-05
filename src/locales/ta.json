@@ -146,7 +146,8 @@
     "Vikram Samvat": "விக்ரம் சம்வத்",
     "month": "மாதம்",
     "Shaka Samvat": "சக சம்வத்",
-    "paksha": "பட்சம்"
+    "paksha": "பட்சம்",
+    "today": "இன்று"
   },
   "freeKundli": {
     "title": "இலவச ஜாதகம்",
@@ -271,7 +272,12 @@
   "numerologyCalculator": {
     "title": "எண் கணித கணிப்பான்",
     "subTitle": "எண்கள் மூலம் அதிர்ஷ்டத்தை கண்டறியவும்",
-    "personalDetails": "தனிப்பட்ட விவரங்கள்"
+    "personalDetails": "தனிப்பட்ட விவரங்கள்",
+    "resultTitle": "எண் கணித முடிவு",
+    "lifePathNumber": "வாழ்க்கை பாதை எண்",
+    "birthdayNumber": "பிறந்த நாள் எண்",
+    "personalityNumber": "ஆளுமை எண்",
+    "calculate": "கணக்கிடுங்கள்"
   },
   "language": {
     "title": "உங்கள் மொழி",
@@ -411,5 +417,20 @@
     "ePooja": "ஈ-பூஜை",
     "vastuShastra": "வாஸ்து சாஸ்திரம்",
     "dyaan": "தியானம்"
+  },
+  "tarotReading": {
+    "title": "டாரோட் வாசிப்பு",
+    "subTitle": "டாரோட் உங்கள் வாழ்க்கைக்கு வழிகாட்டுகிறது",
+    "cardOfTheDay": "இன்றைய கார்டு",
+    "cardOfTheDayDesc": "உங்களுக்காக தேர்ந்தெடுக்கப்பட்ட இன்றைய கார்டைப் பார்க்கவும்",
+    "yesOrNo": "ஆம் அல்லது இல்லை",
+    "yesOrNoDesc": "உங்களை குழப்பும் கேள்வியைக் கேளுங்கள்",
+    "askQuestion": "உங்கள் கேள்வியை இங்கே கேளுங்கள்!",
+    "typeHere": "இங்கே தட்டச்சு செய்யவும்",
+    "result": "முடிவு",
+    "health": "ஆரோக்கியம்",
+    "relationship": "உறவு",
+    "career": "தொழில்",
+    "finance": "நிதி"
   }
 }

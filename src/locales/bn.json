@@ -52,7 +52,8 @@
     "general": "সাধারণ",
     "love": "প্রেম",
     "affirmation": "ইতিবাচক অঙ্গীকার",
-    "illuminated": "আলোকিত"
+    "illuminated": "আলোকিত",
+    "good": "ভালো"
   },
   "calendar": {
     "monday": "সোমবার",
@@ -145,7 +146,8 @@
     "Vikram Samvat": "বিক্রম সংবৎ",
     "month": "মাস",
     "Shaka Samvat": "শক সংবৎ",
-    "paksha": "পক্ষ"
+    "paksha": "পক্ষ",
+    "today": "আজ"
   },
   "freeKundli": {
     "title": "বিনামূল্যে জন্মকোষ্ঠী",
@@ -270,7 +272,12 @@
   "numerologyCalculator": {
     "title": "সংখ্যা জ্যোতিষ ক্যালকুলেটর",
     "subTitle": "সংখ্যার মাধ্যমে ভাগ্য জানুন",
-    "personalDetails": "ব্যক্তিগত তথ্য"
+    "personalDetails": "ব্যক্তিগত তথ্য",
+    "resultTitle": "সংখ্যাবিজ্ঞান ফলাফল",
+    "lifePathNumber": "লাইফ পাথ নম্বর",
+    "birthdayNumber": "জন্ম তারিখ নম্বর",
+    "personalityNumber": "ব্যক্তিত্ব নম্বর",
+    "calculate": "গণনা করুন"
   },
   "language": {
     "title": "আপনার ভাষা",
@@ -410,5 +417,20 @@
     "ePooja": "ই-পূজা",
     "vastuShastra": "বাস্তুশাস্ত্র",
     "dyaan": "ধ্যান"
+  },
+  "tarotReading": {
+    "title": "ট্যারোট রিডিং",
+    "subTitle": "ট্যারোট আপনাকে জীবনের জন্য নতুন বার্তা দেয়",
+    "cardOfTheDay": "দিনের কার্ড",
+    "cardOfTheDayDesc": "আপনার জন্য নির্বাচিত দিনের কার্ডটি দেখুন",
+    "yesOrNo": "হ্যাঁ বা না",
+    "yesOrNoDesc": "আপনাকে বিভ্রান্ত করছে এমন একটি প্রশ্ন জিজ্ঞাসা করুন",
+    "askQuestion": "এখানে আপনার প্রশ্ন জিজ্ঞাসা করুন!",
+    "typeHere": "এখানে লিখুন",
+    "result": "ফলাফল",
+    "health": "স্বাস্থ্য",
+    "relationship": "সম্পর্ক",
+    "career": "ক্যারিয়ার",
+    "finance": "অর্থসংস্থান"
   }
 }

@@ -146,7 +146,8 @@
     "Vikram Samvat": "വിക്രം സംവത്",
     "month": "മാസം",
     "Shaka Samvat": "ശക സംവത്",
-    "paksha": "പക്ഷം"
+    "paksha": "പക്ഷം",
+    "today": "ഇന്ന്"
   },
   "freeKundli": {
     "title": "സൗജന്യ കുണ്ഡലി",
@@ -271,7 +272,12 @@
   "numerologyCalculator": {
     "title": "സംഖ്യാശാസ്ത്ര കാൽക്കുലേറ്റർ",
     "subTitle": "അക്കങ്ങളിലൂടെ ഭാഗ്യം കണ്ടെത്തുക",
-    "personalDetails": "വ്യക്തിഗത വിവരങ്ങൾ"
+    "personalDetails": "വ്യക്തിഗത വിവരങ്ങൾ",
+    "resultTitle": "സംഖ്യാശാസ്ത്ര ഫലം",
+    "lifePathNumber": "ലൈഫ് പാത്ത് നമ്പർ",
+    "birthdayNumber": "പിറന്നാൾ നമ്പർ",
+    "personalityNumber": "വ്യക്തിത്വ നമ്പർ",
+    "calculate": "കണക്കാക്കുക"
   },
   "language": {
     "title": "നിങ്ങളുടെ ഭാഷ",
@@ -411,5 +417,20 @@
     "ePooja": "ഈ-പൂജ",
     "vastuShastra": "വാസ്തു ശാസ്ത്രം",
     "dyaan": "ധ്യാനം"
+  },
+  "tarotReading": {
+    "title": "ടാരറ്റ് റീഡിംഗ്",
+    "subTitle": "ടാരറ്റ് നിങ്ങളുടെ ജീവിതത്തിന് മാർഗ്ഗനിർദ്ദേശം നൽകുന്നു",
+    "cardOfTheDay": "ഇന്നത്തെ കാർഡ്",
+    "cardOfTheDayDesc": "നിങ്ങൾക്കായി തിരഞ്ഞെടുത്ത ഇന്നത്തെ കാർഡ് കാണുക",
+    "yesOrNo": "അതെ അല്ലെങ്കിൽ അല്ല",
+    "yesOrNoDesc": "നിങ്ങളെ അലട്ടുന്ന ഒരു ചോദ്യം ചോദിക്കുക",
+    "askQuestion": "നിങ്ങളുടെ ചോദ്യം ഇവിടെ ചോദിക്കുക!",
+    "typeHere": "ഇവിടെ ടൈപ്പ് ചെയ്യുക",
+    "result": "ഫലം",
+    "health": "ആരോഗ്യം",
+    "relationship": "ബന്ധം",
+    "career": "കരിയർ",
+    "finance": "സാമ്പത്തികം"
   }
 }

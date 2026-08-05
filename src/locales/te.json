@@ -146,7 +146,8 @@
     "Vikram Samvat": "વિક્રમ સંવત",
     "month": "માસ",
     "Shaka Samvat": "શક સંવત",
-    "paksha": "પક્ષ"
+    "paksha": "પક્ષ",
+    "today": "ఈరోజు"
   },
   "freeKundli": {
     "title": "મફત કુંડળી",
@@ -271,7 +272,12 @@
   "numerologyCalculator": {
     "title": "అంకగణిత క్యాలిక్యులేటర్",
     "subTitle": "సంఖ్యలతో మీ అదృష్టాన్ని తెలుసుకోండి",
-    "personalDetails": "వ్యక్తిగత వివరాలు"
+    "personalDetails": "వ్యక్తిగత వివరాలు",
+    "resultTitle": "సంఖ్యాశాస్త్ర ఫలితం",
+    "lifePathNumber": "లైఫ్ పాత్ నంబర్",
+    "birthdayNumber": "పుట్టినరోజు నంబర్",
+    "personalityNumber": "వ్యక్తిత్వ సంఖ్య",
+    "calculate": "లెక్కించండి"
   },
   "language": {
     "title": "మీ భాష",
@@ -411,5 +417,20 @@
     "ePooja": "ఈ-పూజ",
     "vastuShastra": "వాస్తు శాస్త్రం",
     "dyaan": "ధ్యానం"
+  },
+  "tarotReading": {
+    "title": "టారో రీడింగ్",
+    "subTitle": "టారో మీ జీవితానికి మార్గదర్శకత్వం ఇస్తుంది",
+    "cardOfTheDay": "ఈ రోజు కార్డ్",
+    "cardOfTheDayDesc": "మీ కోసం ఎంచుకున్న ఈ రోజు కార్డ్‌ని చూడండి",
+    "yesOrNo": "అవును లేదా కాదు",
+    "yesOrNoDesc": "మిమ్మల్ని అయోమయానికి గురిచేసే ప్రశ్నను అడగండి",
+    "askQuestion": "మీ ప్రశ్నను ఇక్కడ అడగండి!",
+    "typeHere": "ఇక్కడ టైప్ చేయండి",
+    "result": "ఫలితం",
+    "health": "ఆరోగ్యం",
+    "relationship": "సంబంధం",
+    "career": "కెరీర్",
+    "finance": "ఆర్థికం"
   }
 }
