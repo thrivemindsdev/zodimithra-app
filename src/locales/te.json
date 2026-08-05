@@ -105,7 +105,20 @@
     "tapToPlan": "કંઈક અર્થપૂર્ણ આયોજન કરવા માટે.",
     "title": "કેલેન્ડર",
     "subTitle": "તમારી તારીખો શોધો",
-    "loading": "క్యాలెండర్ లోడ్ అవుతోంది..."
+    "loading": "క్యాలెండర్ లోడ్ అవుతోంది...",
+    "newEvent": "కొత్త ఈవెంట్",
+    "eventTitle": "ఈవెంట్ శీర్షిక",
+    "eventTitlePlaceholder": "ఈవెంట్ శీర్షిక",
+    "eventDate": "ఈవెంట్ తేదీ",
+    "eventTime": "ఈవెంట్ సమయం",
+    "notesOptional": "గమనికలు (ఐచ్ఛికం)",
+    "saving": "సేవ్ అవుతోంది...",
+    "saveEvent": "ఈవెంట్ సేవ్ చేయండి",
+    "eventCreatedSuccessTitle": "ఈవెంట్ విజయవంతంగా సృష్టించబడింది",
+    "eventCreatedSuccessDesc": "మీ ఈవెంట్ విజయవంతంగా సేవ్ చేయబడింది.",
+    "eventCreateErrorTitle": "ఎర్రర్",
+    "eventCreateErrorDesc": "ఈవెంట్ సృష్టించడం విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి.",
+    "ok": "సరే"
   },
   "explore": {
     "title": "એક્સપ્લોર કરો",

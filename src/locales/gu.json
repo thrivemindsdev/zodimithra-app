@@ -105,7 +105,20 @@
     "tapToPlan": "કંઈક અર્થપૂર્ણ આયોજન કરવા માટે.",
     "title": "કેલેન્ડર",
     "subTitle": "તમારી તારીખો શોધો",
-    "loading": "કેલેન્ડર લોડ થઈ રહ્યું છે..."
+    "loading": "કેલેન્ડર લોડ થઈ રહ્યું છે...",
+    "newEvent": "નવો ઇવેન્ટ",
+    "eventTitle": "ઇવેન્ટનું શીર્ષક",
+    "eventTitlePlaceholder": "ઇવેન્ટનું શીર્ષક",
+    "eventDate": "ઇવેન્ટની તારીખ",
+    "eventTime": "ઇવેન્ટનો સમય",
+    "notesOptional": "નોંધો (વૈકલ્પિક)",
+    "saving": "સાચવી રહ્યું છે...",
+    "saveEvent": "ઇવેન્ટ સાચવો",
+    "eventCreatedSuccessTitle": "ઇવેન્ટ સફળતાપૂર્વક બનાવવામાં આવી",
+    "eventCreatedSuccessDesc": "તમારી ઇવેન્ટ સફળતાપૂર્વક પ્લાનરમાં સાચવવામાં આવી છે.",
+    "eventCreateErrorTitle": "ભૂલ",
+    "eventCreateErrorDesc": "ઇવેન્ટ બનાવવામાં નિષ્ફળ. કૃપા કરીને ફરી પ્રયાસ કરો.",
+    "ok": "બરાબર"
   },
   "explore": {
     "title": "એક્સપ્લોર કરો",

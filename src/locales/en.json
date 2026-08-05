@@ -105,7 +105,20 @@
     "tapToPlan": "to plan something meaningful.",
     "title": "Calendar",
     "subTitle": "Find your dates",
-    "loading": "Loading calendar..."
+    "loading": "Loading calendar...",
+    "newEvent": "New Event",
+    "eventTitle": "Event Title",
+    "eventTitlePlaceholder": "Event title",
+    "eventDate": "Event Date",
+    "eventTime": "Event Time",
+    "notesOptional": "Notes (optional)",
+    "saving": "SAVING...",
+    "saveEvent": "SAVE EVENT",
+    "eventCreatedSuccessTitle": "Event Created Successfully",
+    "eventCreatedSuccessDesc": "Your event has been saved to your planner.",
+    "eventCreateErrorTitle": "Error",
+    "eventCreateErrorDesc": "Failed to create event. Please try again.",
+    "ok": "OK"
   },
   "explore": {
     "title": "Explore",

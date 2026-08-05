@@ -105,7 +105,20 @@
     "tapToPlan": "বিশেষ কিছু পরিকল্পনা করতে।",
     "title": "ক্যালেন্ডার",
     "subTitle": "আপনার গুরুত্বপূর্ণ দিনগুলি খুঁজুন",
-    "loading": "ক্যালেন্ডার লোড হচ্ছে..."
+    "loading": "ক্যালেন্ডার লোড হচ্ছে...",
+    "newEvent": "নতুন ইভেন্ট",
+    "eventTitle": "ইভেন্টের শিরোনাম",
+    "eventTitlePlaceholder": "ইভেন্টের শিরোনাম",
+    "eventDate": "ইভেন্টের তারিখ",
+    "eventTime": "ইভেন্টের সময়",
+    "notesOptional": "নোট (ঐচ্ছিক)",
+    "saving": "সংরক্ষণ করা হচ্ছে...",
+    "saveEvent": "ইভেন্ট সংরক্ষণ করুন",
+    "eventCreatedSuccessTitle": "ইভেন্ট সফলভাবে তৈরি হয়েছে",
+    "eventCreatedSuccessDesc": "আপনার ইভেন্টটি সফলভাবে আপনার প্ল্যানারে সংরক্ষিত হয়েছে।",
+    "eventCreateErrorTitle": "ত্রুটি",
+    "eventCreateErrorDesc": "ইভেন্ট তৈরি করতে ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
+    "ok": "ঠিক আছে"
   },
   "explore": {
     "title": "এক্সপ্লোর করুন",

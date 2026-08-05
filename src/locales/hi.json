@@ -105,7 +105,20 @@
     "tapToPlan": "सार्थक योजना बनाने के लिए।",
     "title": "कैलेंडर",
     "subTitle": "अपनी तिथियां खोजें",
-    "loading": "कैलेंडर लोड हो रहा है..."
+    "loading": "कैलेंडर लोड हो रहा है...",
+    "newEvent": "नया कार्यक्रम",
+    "eventTitle": "कार्यक्रम शीर्षक",
+    "eventTitlePlaceholder": "कार्यक्रम शीर्षक",
+    "eventDate": "कार्यक्रम तिथि",
+    "eventTime": "कार्यक्रम समय",
+    "notesOptional": "नोट्स (वैकल्पिक)",
+    "saving": "सहेजा जा रहा है...",
+    "saveEvent": "कार्यक्रम सहेजें",
+    "eventCreatedSuccessTitle": "कार्यक्रम सफलतापूर्वक बनाया गया",
+    "eventCreatedSuccessDesc": "आपका कार्यक्रम सफलतापूर्वक सहेजा गया है।",
+    "eventCreateErrorTitle": "त्रुटि",
+    "eventCreateErrorDesc": "कार्यक्रम बनाने में विफल। कृपया पुनः प्रयास करें।",
+    "ok": "ठीक है"
   },
   "explore": {
     "title": "अन्वेषण करें",
