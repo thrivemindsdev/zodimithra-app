@@ -75,7 +75,7 @@ const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
         {/* Partner 1 Card */}
         <div className="rounded-2xl card-shadow p-4">
           <h2 className="text-primary font-body font-bold text-xl pb-4 mb-4">
-            {t("kundliMacth.partner1", "Partner 1")}
+            {t("kundliMatch.partner1", "Partner 1")}
           </h2>
           <div className="space-y-5">
             <Input
@@ -125,7 +125,7 @@ const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
         {/* Partner 2 Card */}
         <div className="rounded-2xl card-shadow p-4">
           <h2 className="text-primary font-body font-bold text-xl pb-4 mb-4">
-            {t("kundliMacth.partner2", "Partner 2")}
+            {t("kundliMatch.partner2", "Partner 2")}
           </h2>
           <div className="space-y-5">
             <Input
@@ -180,7 +180,7 @@ const KundliMatchForm = ({ handleMatch, loading }: KundliMatchFormProps) => {
           disabled={isFormIncomplete || loading}
           className="w-full bg-primary disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-xl transition transform outline-none cursor-pointer disabled:cursor-not-allowed shadow-md hover:opacity-90"
         >
-          {t("kundliMacth.matchButton", "Match Kundli")}
+          {t("kundliMatch.matchButton", "Match Kundli")}
         </button>
       </div>
     </form>

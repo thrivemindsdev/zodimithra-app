@@ -16,7 +16,8 @@
     "married": "Married",
     "divorced": "Divorced",
     "widowed": "Widowed",
-    "others": "Others"
+    "others": "Others",
+    "fullNamePlaceholder": "Enter full name"
   },
   "home": {
     "you": "You",
@@ -103,7 +104,8 @@
     "tap": "Tap",
     "tapToPlan": "to plan something meaningful.",
     "title": "Calendar",
-    "subTitle": "Find your dates"
+    "subTitle": "Find your dates",
+    "loading": "Loading calendar..."
   },
   "explore": {
     "title": "Explore",
@@ -224,12 +226,8 @@
     "title": "Your Birthstone",
     "recommanded": "Recommended",
     "about": "About this Gemstone",
-    "benefits": "Benefits for You"
-  },
-  "kundliMacth": {
-    "title": "Kundli Matching",
-    "subTitle": "Match your kundlis to see the score",
-    "submit": "Reveal your compatibility"
+    "benefits": "Benefits for You",
+    "findButton": "Find Gemstone"
   },
   "mangalDosh": {
     "title": "Mangal dosh Check",
@@ -267,7 +265,13 @@
     "wallet": "Wallet",
     "orderHistory": "Order History",
     "saveChanges": "Save Changes",
-    "editProfile": "Edit Profile"
+    "editProfile": "Edit Profile",
+    "updatedSuccess": "Profile updated successfully",
+    "tapCameraEdit": "Tap camera icon to edit profile photo",
+    "cropPicture": "Crop Profile Picture",
+    "applyCrop": "Apply Crop",
+    "logoutConfirm": "Are you sure you want to log out?",
+    "freePlan": "Free Plan"
   },
   "numerologyCalculator": {
     "title": "Numerology Calculator",
@@ -374,7 +378,18 @@
     "enterPinPrompt": "Enter your 4-digit PIN to sign in.",
     "fourDigitPin": "4-Digit PIN",
     "signingIn": "Signing in...",
-    "login": "Login"
+    "login": "Login",
+    "regSuccess": "Registration Successful",
+    "verifying": "Verifying...",
+    "pinCreatedSuccess": "PIN Created Successfully",
+    "createPinError": "Failed to create PIN. Please try again.",
+    "pinRequirements": "PIN Requirements",
+    "reqDigits": "Must be 4 digits",
+    "reqMatch": "PINs must match",
+    "sendingOtp": "Sending OTP...",
+    "pinResetSuccess": "PIN Reset Successful",
+    "pinResetDesc": "Your 4-digit PIN has been reset successfully.",
+    "resetPinError": "Failed to reset PIN. Please try again."
   },
   "nav": {
     "home": "Home",
@@ -402,7 +417,10 @@
     "comingSoonDesc": "This feature is currently under development and will be available soon.",
     "success": "Success",
     "error": "Error",
-    "share": "Share"
+    "share": "Share",
+    "checkingConnection": "Checking connection...",
+    "loading": "Loading...",
+    "noData": "No data available"
   },
   "payment": {
     "successTitle": "Payment Successful",
@@ -432,5 +450,22 @@
     "sibling": "Sibling",
     "relative": "Relative",
     "friend": "Friend"
+  },
+  "kundliMatch": {
+    "title": "Kundli Matching",
+    "subTitle": "Match your kundlis to see the score",
+    "submit": "Reveal your compatibility",
+    "partner1": "Partner 1 (Boy)",
+    "partner2": "Partner 2 (Girl)",
+    "matchButton": "Match Kundlis",
+    "resultTitle": "Kundli Match Result",
+    "gunaMilan": "Guna Milan",
+    "match": "Match",
+    "gunaBreakdown": "Guna Breakdown"
+  },
+  "premium": {
+    "whatMembersSay": "What Our Members Say",
+    "comingSoonSection": "More Features Coming Soon",
+    "upgrade": "Upgrade to Premium"
   }
 }

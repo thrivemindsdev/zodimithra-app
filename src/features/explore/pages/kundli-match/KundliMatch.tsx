@@ -64,9 +64,9 @@ const KundliMatch = () => {
   return (
     <>
       <Header
-        title={t("kundliMacth.title", "Kundli Matching")}
+        title={t("kundliMatch.title", "Kundli Matching")}
         subtitle={t(
-          "kundliMacth.subTitle",
+          "kundliMatch.subTitle",
           "Match your kundlis to see the score",
         )}
         showBackButton
@@ -75,7 +75,7 @@ const KundliMatch = () => {
       <BodyLayout>
         <div className="pt-6">
           <Banner
-            title={t("kundliMacth.title", "Kundli Matching")}
+            title={t("kundliMatch.title", "Kundli Matching")}
             bgImage={BannerImage}
             rightImage={RightImage}
           />
