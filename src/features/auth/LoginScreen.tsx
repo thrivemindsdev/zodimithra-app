@@ -1,8 +1,8 @@
 import Logo from "@/assets/splash/zodimithra.gif";
 import ZodiMithra from "@/assets/splash/ZODIMITHRA.png";
+import ToastModal from "@/components/common/ToastModal";
 import { CheckPhoneApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
-import { Dialog } from "@capacitor/dialog";
 import { useState, type FormEvent } from "react";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -13,6 +13,17 @@ export default function LoginScreen() {
   const [phoneValue, setPhoneValue] = useState<string | undefined>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { setPhoneNumber } = useAuthStore();
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    status: boolean;
+    title: string;
+    description: string;
+  }>({
+    isOpen: false,
+    status: true,
+    title: "",
+    description: "",
+  });
 
   // Helper boolean to cleanly check valid phone status
   const isPhoneValid = Boolean(phoneValue && isValidPhoneNumber(phoneValue));
@@ -20,28 +31,8 @@ export default function LoginScreen() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Prevent double submission
-    if (isSubmitting) return;
+    if (isSubmitting || !isPhoneValid || !phoneValue) return;
 
-    // 1. Check for empty input
-    if (!phoneValue) {
-      await Dialog.alert({
-        title: "Missing Information",
-        message: "Please enter a phone number.",
-      });
-      return;
-    }
-
-    // 2. Validate format
-    if (!isPhoneValid) {
-      await Dialog.alert({
-        title: "Invalid Phone Number",
-        message: "Please enter a valid phone number for the selected country.",
-      });
-      return;
-    }
-
-    // 3. Make the API Call with proper loading and error states
     setIsSubmitting(true);
     try {
       const response = await CheckPhoneApi({ phone: phoneValue });
@@ -53,24 +44,23 @@ export default function LoginScreen() {
         } else {
           navigate("/otp");
         }
-      } else {
-        await Dialog.alert({
-          title: "Failed to Send OTP",
-          message:
-            response?.data?.message ||
-            "Something went wrong. Please try again.",
-        });
       }
     } catch (error) {
       console.error("Send OTP Error:", error);
-      await Dialog.alert({
+      setModalState({
+        isOpen: true,
+        status: false,
         title: "Network Error",
-        message:
+        description:
           "Unable to reach the server. Please check your internet connection.",
       });
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleDone = () => {
+    setModalState((prev) => ({ ...prev, isOpen: false }));
   };
 
   return (
@@ -132,6 +122,14 @@ export default function LoginScreen() {
           </div>
         </form>
       </div>
+      <ToastModal
+        isOpen={modalState.isOpen}
+        status={modalState.status}
+        title={modalState.title}
+        description={modalState.description}
+        buttonText="Close"
+        onDone={handleDone}
+      />
     </div>
   );
 }

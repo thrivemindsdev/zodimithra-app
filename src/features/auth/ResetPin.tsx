@@ -1,68 +1,89 @@
 import Logo from "@/assets/splash/zodimithra.gif";
 import ZodiMithra from "@/assets/splash/ZODIMITHRA.png";
-import { CreatePasswordApi } from "@/services/auth.api";
+import ToastModal from "@/components/common/ToastModal";
+import { CreatePinApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
-import { Dialog } from "@capacitor/dialog";
 import { Check, Eye, EyeOff, X } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function ResetPassword() {
+export default function ResetPin() {
   const navigate = useNavigate();
   const { phoneNumber, setToken, setIsLoggedIn } = useAuthStore();
 
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [pin, setPin] = useState("");
+  const [confirmPin, setConfirmPin] = useState("");
+  const [showPin, setShowPin] = useState(false);
+  const [showConfirmPin, setShowConfirmPin] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    status: boolean;
+    title: string;
+    description: string;
+  }>({
+    isOpen: false,
+    status: true,
+    title: "",
+    description: "",
+  });
 
   // Validation Rules
-  const hasMinLength = password.length >= 8;
-  const hasNumber = /\d/.test(password);
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-  const passwordsMatch = password.length > 0 && password === confirmPassword;
+  const isFourDigits = /^\d{4}$/.test(pin);
+  const pinsMatch = pin.length === 4 && pin === confirmPin;
 
-  const isFormValid =
-    hasMinLength && hasNumber && hasSpecialChar && passwordsMatch;
+  const isFormValid = isFourDigits && pinsMatch;
+
+  // Input Sanitizer: Allows only numeric input up to 4 digits
+  const handlePinChange = (
+    value: string,
+    setter: React.Dispatch<React.SetStateAction<string>>,
+  ) => {
+    const numericValue = value.replace(/\D/g, "").slice(0, 4);
+    setter(numericValue);
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (isSubmitting) return;
-
-    if (!isFormValid) {
-      await Dialog.alert({
-        title: "Validation Error",
-        message: "Please fulfill all password requirements before continuing.",
-      });
-      return;
-    }
-
+    
     setIsSubmitting(true);
     try {
-      const response = await CreatePasswordApi({
+      const response = await CreatePinApi({
         phone: phoneNumber,
-        password,
+        password: pin, // Passing PIN as the credential parameter
       });
       if (response.status === 200 || response.status === 201) {
         setToken(response.data.token);
         if (response?.data?.on_boarding) {
-          setIsLoggedIn(true);
-          navigate("/home");
+          setModalState({
+            isOpen: true,
+            status: true,
+            title: "PIN Reset Successfully",
+            description: "Your PIN has been reset successfully!",
+          });
         } else {
           setIsLoggedIn(false);
           navigate("/birth-details-form");
         }
       }
     } catch (error) {
-      console.error("Reset Password Error:", error);
-      await Dialog.alert({
+      console.error("Reset PIN Error:", error);
+      setModalState({
+        isOpen: true,
+        status: false,
         title: "Error",
-        message: "Unable to Reset password. Please try again.",
+        description: "Failed to reset PIN. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDone = () => {
+    setModalState((prev) => ({ ...prev, isOpen: false }));
+    if (modalState.status) {
+      setIsLoggedIn(true);
+      navigate("/home");
     }
   };
 
@@ -83,39 +104,41 @@ export default function ResetPassword() {
             className="mx-auto w-1/2 max-w-xs"
           />
           <h2 className="mt-4 text-xl font-bold text-gray-900">
-            Reset Password
+            Reset 4-Digit PIN
           </h2>
           <p className="mt-1 font-body text-center text-sm text-text-secondary">
-            Set a strong password for your account.
+            Set a 4-digit PIN for quick access to your account.
           </p>
         </div>
 
         {/* Form Section */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {/* New Password Input */}
+          {/* New PIN Input */}
           <div>
             <label
-              htmlFor="new-password"
+              htmlFor="new-pin"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              New Password
+              Enter 4-Digit PIN
             </label>
             <div className="relative rounded-lg border border-input-border px-4 py-3 bg-input-bg flex items-center transition-all">
               <input
-                id="new-password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter new password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                id="new-pin"
+                type={showPin ? "text" : "password"}
+                inputMode="numeric"
+                maxLength={4}
+                placeholder="Enter 4-digit PIN"
+                value={pin}
+                onChange={(e) => handlePinChange(e.target.value, setPin)}
                 required
-                className="w-full bg-transparent border-0 p-0 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:ring-0"
+                className="w-full bg-transparent border-0 p-0 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:ring-0 tracking-widest"
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowPin(!showPin)}
                 className="ml-2 text-gray-400 hover:text-gray-600 focus:outline-none"
               >
-                {showPassword ? (
+                {showPin ? (
                   <EyeOff className="h-5 w-5" />
                 ) : (
                   <Eye className="h-5 w-5" />
@@ -124,30 +147,32 @@ export default function ResetPassword() {
             </div>
           </div>
 
-          {/* Confirm Password Input */}
+          {/* Confirm PIN Input */}
           <div>
             <label
-              htmlFor="confirm-password"
+              htmlFor="confirm-pin"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Confirm Password
+              Confirm 4-Digit PIN
             </label>
             <div className="relative rounded-lg border border-input-border px-4 py-3 bg-input-bg flex items-center transition-all">
               <input
-                id="confirm-password"
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                id="confirm-pin"
+                type={showConfirmPin ? "text" : "password"}
+                inputMode="numeric"
+                maxLength={4}
+                placeholder="Confirm 4-digit PIN"
+                value={confirmPin}
+                onChange={(e) => handlePinChange(e.target.value, setConfirmPin)}
                 required
-                className="w-full bg-transparent border-0 p-0 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:ring-0"
+                className="w-full bg-transparent border-0 p-0 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:ring-0 tracking-widest"
               />
               <button
                 type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onClick={() => setShowConfirmPin(!showConfirmPin)}
                 className="ml-2 text-gray-400 hover:text-gray-600 focus:outline-none"
               >
-                {showConfirmPassword ? (
+                {showConfirmPin ? (
                   <EyeOff className="h-5 w-5" />
                 ) : (
                   <Eye className="h-5 w-5" />
@@ -159,21 +184,13 @@ export default function ResetPassword() {
           {/* Real-time Validation Checklist */}
           <div className="rounded-lg bg-white p-4 border border-gray-100 space-y-2">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-              Password Requirements
+              PIN Requirements
             </p>
             <ValidationRule
-              label="At least 8 characters"
-              isValid={hasMinLength}
+              label="Exactly 4 numeric digits"
+              isValid={isFourDigits}
             />
-            <ValidationRule
-              label="Contains at least one number"
-              isValid={hasNumber}
-            />
-            <ValidationRule
-              label="Contains a special character (!@#$%^&*)"
-              isValid={hasSpecialChar}
-            />
-            <ValidationRule label="Passwords match" isValid={passwordsMatch} />
+            <ValidationRule label="PINs match" isValid={pinsMatch} />
           </div>
 
           {/* Submit Button */}
@@ -188,11 +205,19 @@ export default function ResetPassword() {
           </div>
         </form>
       </div>
+      <ToastModal
+        isOpen={modalState.isOpen}
+        status={modalState.status}
+        title={modalState.title}
+        description={modalState.description}
+        buttonText="Continue"
+        onDone={handleDone}
+      />
     </div>
   );
 }
 
-// Sub-component for checklist rules using Lucide React icons
+// Sub-component for checklist rules
 interface ValidationRuleProps {
   label: string;
   isValid: boolean;

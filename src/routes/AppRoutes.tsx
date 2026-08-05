@@ -11,13 +11,9 @@ import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 
 // Lazy-loaded components to improve startup speed and split bundles
-const ForgotPasswordScreen = lazy(
-  () => import("@/features/auth/ForgotPassword"),
-);
-const ResetPasswordScreen = lazy(() => import("@/features/auth/ResetPassword"));
-const CreatePasswordScreen = lazy(
-  () => import("@/features/auth/CreatePassword"),
-);
+const ForgotPinScreen = lazy(() => import("@/features/auth/ForgotPin"));
+const ResetPinScreen = lazy(() => import("@/features/auth/ResetPin"));
+const CreatePinScreen = lazy(() => import("@/features/auth/CreatePin"));
 const PasswordScreen = lazy(() => import("@/features/auth/PasswordScreen"));
 const BirthDetailsForm = lazy(() => import("@/features/auth/BirthDetailsForm"));
 const LanguageScreen = lazy(() => import("@/features/auth/LanguagesScreen"));
@@ -114,15 +110,9 @@ export function AppRoutes() {
             <Route element={<PublicRoute />}>
               <Route path="/login" element={<LoginScreen />} />
               <Route path="/otp" element={<OtpScreen />} />
-              <Route
-                path="/create-password"
-                element={<CreatePasswordScreen />}
-              />
-              <Route
-                path="/forgot-password"
-                element={<ForgotPasswordScreen />}
-              />
-              <Route path="/reset-password" element={<ResetPasswordScreen />} />
+              <Route path="/create-pin" element={<CreatePinScreen />} />
+              <Route path="/forgot-pin" element={<ForgotPinScreen />} />
+              <Route path="/reset-pin" element={<ResetPinScreen />} />
               <Route path="/password" element={<PasswordScreen />} />
               <Route
                 path="/birth-details-form"

@@ -31,7 +31,7 @@ const Input: React.FC<InputProps> = ({
         <input
           id={inputId}
           {...props}
-          className={`w-full ${Icon ? "pl-10" : "px-4"} pr-4 py-1.75 bg-input-bg border border-input-border rounded-lg outline-none transition text-text-primary font-body text-xs md:text-base placeholder:text-xs placeholder:text-placeholder/80`}
+          className={`w-full ${Icon ? "pl-10" : "px-4"} pr-4 py-1.75 bg-input-bg border border-input-border rounded-lg outline-none transition capitalize text-text-primary font-body text-xs md:text-base placeholder:text-xs placeholder:text-placeholder/80`}
         />
       </div>
     </div>

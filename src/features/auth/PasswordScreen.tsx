@@ -1,10 +1,10 @@
 import Logo from "@/assets/splash/zodimithra.gif";
 import ZodiMithra from "@/assets/splash/ZODIMITHRA.png";
+import ToastModal from "@/components/common/ToastModal";
 import { VerifyPasswordApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
-import { Dialog } from "@capacitor/dialog";
 import { Eye, EyeOff, Lock } from "lucide-react";
-import { useState, type FormEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function PasswordScreen() {
@@ -12,57 +12,68 @@ export default function PasswordScreen() {
 
   const { phoneNumber, setToken, setIsLoggedIn } = useAuthStore();
 
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [pin, setPin] = useState("");
+  const [showPin, setShowPin] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    status: boolean;
+    title: string;
+    description: string;
+  }>({
+    isOpen: false,
+    status: true,
+    title: "",
+    description: "",
+  });
+
+  const handlePinChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, ""); // Allow digits only
+    if (value.length <= 4) {
+      setPin(value);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (isSubmitting) return;
-
-    // 1. Validation check
-    if (!password.trim()) {
-      await Dialog.alert({
-        title: "Missing Information",
-        message: "Please enter your password.",
-      });
-      return;
-    }
-
-    // 2. API Submission
     setIsSubmitting(true);
     try {
       const response = await VerifyPasswordApi({
         phone: phoneNumber,
-        password: password,
+        password: pin,
       });
 
       if (response?.status === 200) {
         setToken(response.data.token);
         if (response?.data?.on_boarding) {
-          setIsLoggedIn(true);
-          navigate("/home");
+          setModalState({
+            isOpen: true,
+            status: true,
+            title: "Login Successful",
+            description: "You have been logged in successfully!",
+          });
         } else {
           navigate("/birth-details-form");
         }
-      } else {
-        await Dialog.alert({
-          title: "Login Failed",
-          message:
-            response?.data?.message ||
-            "Incorrect password. Please try again or reset your password.",
-        });
       }
     } catch (error) {
-      console.error("Password Login Error:", error);
-      await Dialog.alert({
-        title: "Network Error",
-        message:
-          "Unable to reach the server. Please check your internet connection.",
+      console.error("PIN Verification Error:", error);
+      setModalState({
+        isOpen: true,
+        status: false,
+        title: "Error",
+        description: "Unable to verify PIN. Please try again later.",
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDone = () => {
+    setModalState((prev) => ({ ...prev, isOpen: false }));
+    if (modalState.status) {
+      setIsLoggedIn(true);
+      navigate("/home");
     }
   };
 
@@ -85,38 +96,43 @@ export default function PasswordScreen() {
           <h2 className="mt-4 text-xl font-bold text-gray-900">Welcome Back</h2>
           <p className="mt-1 font-body text-center text-sm text-text-secondary">
             {phoneNumber
-              ? `Enter password for ${phoneNumber}`
-              : "Enter your password to sign in."}
+              ? `Enter 4-digit PIN for ${phoneNumber}`
+              : "Enter your 4-digit PIN to sign in."}
           </p>
         </div>
 
         {/* Form Section */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {/* Password Input Field */}
+          {/* PIN Input Field */}
           <div>
             <label
-              htmlFor="login-password"
+              htmlFor="login-pin"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Password
+              4-Digit PIN
             </label>
             <div className="relative rounded-lg border border-input-border px-4 py-3 bg-input-bg flex items-center transition-all focus-within:ring-2 focus-within:ring-primary/20">
               <Lock className="h-4 w-4 text-gray-400 mr-2.5 shrink-0" />
               <input
-                id="login-password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                id="login-pin"
+                type={showPin ? "text" : "password"}
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={4}
+                placeholder="Enter 4-digit PIN"
+                value={pin}
+                onChange={handlePinChange}
+                autoComplete="current-password"
                 required
-                className="w-full bg-transparent border-0 p-0 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:ring-0"
+                className="w-full bg-transparent border-0 p-0 text-sm tracking-widest text-gray-900 outline-none placeholder:text-gray-400 focus:ring-0 placeholder:tracking-normal"
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowPin(!showPin)}
+                aria-label={showPin ? "Hide PIN" : "Show PIN"}
                 className="ml-2 text-gray-400 hover:text-gray-600 focus:outline-none"
               >
-                {showPassword ? (
+                {showPin ? (
                   <EyeOff className="h-5 w-5" />
                 ) : (
                   <Eye className="h-5 w-5" />
@@ -125,14 +141,14 @@ export default function PasswordScreen() {
             </div>
           </div>
 
-          {/* Forgot Password Link */}
+          {/* Forgot PIN Link */}
           <div className="flex items-center justify-end">
             <button
               type="button"
-              onClick={() => navigate("/forgot-password")}
+              onClick={() => navigate("/forgot-pin")}
               className="text-xs font-semibold text-primary hover:underline focus:outline-none"
             >
-              Forgot Password?
+              Forgot PIN?
             </button>
           </div>
 
@@ -140,7 +156,7 @@ export default function PasswordScreen() {
           <div>
             <button
               type="submit"
-              disabled={!password.trim() || isSubmitting}
+              disabled={pin.length !== 4 || isSubmitting}
               className="flex w-full justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold leading-6 text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors"
             >
               {isSubmitting ? "Signing in..." : "Login"}
@@ -148,6 +164,14 @@ export default function PasswordScreen() {
           </div>
         </form>
       </div>
+      <ToastModal
+        isOpen={modalState.isOpen}
+        status={modalState.status}
+        title={modalState.title}
+        description={modalState.description}
+        buttonText="Close"
+        onDone={handleDone}
+      />
     </div>
   );
 }

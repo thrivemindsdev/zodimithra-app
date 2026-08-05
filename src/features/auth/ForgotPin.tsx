@@ -1,18 +1,29 @@
 import Logo from "@/assets/splash/zodimithra.gif";
 import ZodiMithra from "@/assets/splash/ZODIMITHRA.png";
+import ToastModal from "@/components/common/ToastModal";
 import { SendOtpApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
-import { Dialog } from "@capacitor/dialog";
 import { useState, type FormEvent } from "react";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { useNavigate } from "react-router-dom";
 
-export default function ForgotPassword() {
+export default function ForgotPin() {
   const navigate = useNavigate();
   const [phoneValue, setPhoneValue] = useState<string | undefined>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const setPhoneNumber = useAuthStore((state) => state.setPhoneNumber);
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    status: boolean;
+    title: string;
+    description: string;
+  }>({
+    isOpen: false,
+    status: true,
+    title: "",
+    description: "",
+  });
 
   // Helper boolean to cleanly check valid phone status
   const isPhoneValid = Boolean(phoneValue && isValidPhoneNumber(phoneValue));
@@ -20,28 +31,8 @@ export default function ForgotPassword() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Prevent double submission
-    if (isSubmitting) return;
+    if (isSubmitting || !isPhoneValid || !phoneValue) return;
 
-    // 1. Check for empty input
-    if (!phoneValue) {
-      await Dialog.alert({
-        title: "Missing Information",
-        message: "Please enter a phone number.",
-      });
-      return;
-    }
-
-    // 2. Validate format
-    if (!isPhoneValid) {
-      await Dialog.alert({
-        title: "Invalid Phone Number",
-        message: "Please enter a valid phone number for the selected country.",
-      });
-      return;
-    }
-
-    // 3. Make the API Call with proper loading and error states
     setIsSubmitting(true);
     try {
       const response = await SendOtpApi({ phone: phoneValue });
@@ -49,24 +40,22 @@ export default function ForgotPassword() {
       if (response?.status === 200) {
         setPhoneNumber(phoneValue);
         navigate("/otp");
-      } else {
-        await Dialog.alert({
-          title: "Failed to Send OTP",
-          message:
-            response?.data?.message ||
-            "Something went wrong. Please try again.",
-        });
       }
     } catch (error) {
       console.error("Send OTP Error:", error);
-      await Dialog.alert({
-        title: "Network Error",
-        message:
-          "Unable to reach the server. Please check your internet connection.",
+      setModalState({
+        isOpen: true,
+        status: false,
+        title: "Failed to Send OTP",
+        description: "Something went wrong. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleDone = () => {
+    setModalState((prevState) => ({ ...prevState, isOpen: false }));
   };
 
   return (
@@ -85,7 +74,7 @@ export default function ForgotPassword() {
             className="mx-auto w-1/2 max-w-xs"
           />
           <p className="mt-3 font-body text-center text-sm text-text-secondary">
-            Enter your phone number to reset your password.
+            Enter your phone number to reset your pin.
           </p>
         </div>
 
@@ -123,11 +112,19 @@ export default function ForgotPassword() {
               disabled={!isPhoneValid || isSubmitting}
               className="flex w-full justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold leading-6 text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors"
             >
-              {isSubmitting ? "Sending OTP..." : "Continue"}
+              {isSubmitting ? "Sending OTP..." : "Submit"}
             </button>
           </div>
         </form>
       </div>
+      <ToastModal
+        isOpen={modalState.isOpen}
+        status={modalState.status}
+        title={modalState.title}
+        description={modalState.description}
+        buttonText="Close"
+        onDone={handleDone}
+      />
     </div>
   );
 }

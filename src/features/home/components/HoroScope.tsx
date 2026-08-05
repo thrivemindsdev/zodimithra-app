@@ -102,7 +102,7 @@ const HoroScope = ({
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className="scrollbar-hide flex w-full overflow-x-auto snap-x snap-mandatory scroll-smooth"
+            className="scrollbar-hide flex w-full overflow-x-auto snap-x snap-mandatory snap-always touch-pan-x"
           >
             {data?.details?.map((item, index) => (
               <div

@@ -22,7 +22,7 @@ const CalendarLayout = ({
   loading,
 }: CalendarLayoutProps) => {
   const { t } = useTranslation();
-  const [showMonthCalendar, setShowMonthCalendar] = useState(false);
+  const [showMonthCalendar, setShowMonthCalendar] = useState(true);
   const [currentPhase, setCurrentPhase] = useState<ActivePhase | null>(null);
 
   const lat = location?.latitude;

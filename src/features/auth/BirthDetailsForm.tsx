@@ -8,6 +8,7 @@ import Input from "@/components/common/Input";
 import PlaceInput from "@/components/common/PlaceInput";
 import RadioGroup from "@/components/common/RadioGroup";
 import TimeInput from "@/components/common/TimeInput";
+import ToastModal from "@/components/common/ToastModal";
 import { useGetCurrentLocationQuery } from "@/queries/locationQueries";
 import { RegistrationApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
@@ -56,6 +57,17 @@ export default function BirthDetailsForm() {
   const { data: currentLocation } = useGetCurrentLocationQuery();
   const [formData, setFormData] = useState<FormState>(initialFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    status: boolean;
+    title: string;
+    description: string;
+  }>({
+    isOpen: false,
+    status: true,
+    title: "",
+    description: "",
+  });
 
   // Generic handler for standard inputs and custom selectors
   const updateField = (field: keyof FormState, value: string) => {
@@ -110,18 +122,34 @@ export default function BirthDetailsForm() {
 
         const response = await RegistrationApi(formDeatils);
         if (response?.status === 200) {
-          setIsLoggedIn(true);
           setToken(response.data?.token);
-          navigate("/home");
-        } else {
-          setIsLoggedIn(false);
-          navigate("/login");
+          setModalState({
+            isOpen: true,
+            status: true,
+            title: "Registration Successful",
+            description: "Your account has been created successfully!",
+          });
         }
       } catch (error) {
         console.error("Registration failed:", error);
+        setModalState({
+          isOpen: true,
+          status: false,
+          title: "Registration Failed",
+          description:
+            "An error occurred while creating your account. Please try again.",
+        });
       } finally {
         setIsSubmitting(false);
       }
+    }
+  };
+
+  const handleDone = () => {
+    setModalState((prev) => ({ ...prev, isOpen: false }));
+    if (modalState.status) {
+      setIsLoggedIn(true);
+      navigate("/home");
     }
   };
 
@@ -191,6 +219,14 @@ export default function BirthDetailsForm() {
           </button>
         </form>
       </div>
+      <ToastModal
+        isOpen={modalState.isOpen}
+        status={modalState.status}
+        title={modalState.title}
+        description={modalState.description}
+        buttonText="Continue"
+        onDone={handleDone}
+      />
     </div>
   );
 }

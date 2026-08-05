@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, memo } from "react";
-import { MapPin, Loader2 } from "lucide-react";
+import { Loader2, MapPin, MapPinOff } from "lucide-react";
+import React, { memo, useEffect, useRef, useState } from "react";
 
 interface NominatimResult {
   place_id: number;
@@ -17,6 +17,7 @@ interface PlaceInputProps {
     longitude?: string,
   ) => void;
   placeholder?: string;
+  emptyMessage?: string;
 }
 
 const PlaceInput: React.FC<PlaceInputProps> = ({
@@ -24,15 +25,17 @@ const PlaceInput: React.FC<PlaceInputProps> = ({
   value,
   onChange,
   placeholder = "Search city, region, or country...",
+  emptyMessage = "No location found. Try refining your search.",
 }) => {
   const [inputValue, setInputValue] = useState(value);
   const [results, setResults] = useState<NominatimResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Sync internal state with outer form values (e.g., clearing or seeding data)
+  // Sync internal state with outer form values
   useEffect(() => {
     setInputValue(value);
   }, [value]);
@@ -55,6 +58,8 @@ const PlaceInput: React.FC<PlaceInputProps> = ({
   useEffect(() => {
     if (inputValue.trim().length < 3 || inputValue === value) {
       setResults([]);
+      setIsOpen(false);
+      setHasSearched(false);
       return;
     }
 
@@ -62,13 +67,24 @@ const PlaceInput: React.FC<PlaceInputProps> = ({
       setLoading(true);
       try {
         const res = await fetch(
-          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(inputValue)}&format=json&addressdetails=1&limit=5`,
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+            inputValue,
+          )}&format=json&addressdetails=1&limit=5`,
+          {
+            headers: {
+              // Nominatim Usage Policy requirement
+              "User-Agent": "YourAppName/1.0",
+            },
+          },
         );
-        const data = await res.json();
+        const data: NominatimResult[] = await res.json();
         setResults(data);
+        setHasSearched(true);
         setIsOpen(true);
       } catch (err) {
         console.error("Failed to resolve locations from API:", err);
+        setResults([]);
+        setHasSearched(true);
       } finally {
         setLoading(false);
       }
@@ -79,11 +95,7 @@ const PlaceInput: React.FC<PlaceInputProps> = ({
 
   const handleSelection = (selectedItem: NominatimResult) => {
     setInputValue(selectedItem?.display_name);
-    onChange(
-      selectedItem?.display_name,
-      selectedItem?.lat,
-      selectedItem?.lon,
-    );
+    onChange(selectedItem?.display_name, selectedItem?.lat, selectedItem?.lon);
     setIsOpen(false);
   };
 
@@ -102,7 +114,7 @@ const PlaceInput: React.FC<PlaceInputProps> = ({
           placeholder={placeholder}
           onChange={(e) => setInputValue(e.target.value)}
           onFocus={() => inputValue.length >= 3 && setIsOpen(true)}
-          className="w-full pl-10 pr-10 py-2.5 outline-none transition font-body text-text-primary placeholder:text-xs placeholder:text-placeholder/80 text-xs md:text-base"
+          className="w-full pl-10 pr-10 py-2.5 capitalize outline-none transition font-body text-text-primary placeholder:text-xs placeholder:text-placeholder/80 text-xs md:text-base"
         />
         {loading && (
           <div className="absolute right-3 top-2.5">
@@ -111,19 +123,31 @@ const PlaceInput: React.FC<PlaceInputProps> = ({
         )}
       </div>
 
-      {/* Results Portal Overlay */}
-      {isOpen && results.length > 0 && (
-        <ul className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto divide-y divide-gray-100">
-          {results.map((item) => (
-            <li
-              key={item.place_id}
-              onClick={() => handleSelection(item)}
-              className="px-4 py-2.5 hover:bg-slate-50 active:bg-slate-100 cursor-pointer text-sm text-gray-700 transition duration-150 ease-in-out"
-            >
-              {item.display_name}
-            </li>
-          ))}
-        </ul>
+      {/* Results / No-Results Dropdown Overlay */}
+      {isOpen && !loading && (
+        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+          {results.length > 0 ? (
+            <ul className="divide-y divide-gray-100">
+              {results.map((item) => (
+                <li
+                  key={item.place_id}
+                  onClick={() => handleSelection(item)}
+                  className="px-4 py-2.5 hover:bg-slate-50 active:bg-slate-100 cursor-pointer text-sm text-gray-700 transition duration-150 ease-in-out"
+                >
+                  {item.display_name}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            /* Empty state when searched but no results found */
+            hasSearched && (
+              <div className="flex items-center gap-2 px-4 py-3 text-sm text-gray-500">
+                <MapPinOff size={16} className="text-gray-400 shrink-0" />
+                <span>{emptyMessage}</span>
+              </div>
+            )
+          )}
+        </div>
       )}
     </div>
   );

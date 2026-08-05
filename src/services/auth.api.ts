@@ -18,7 +18,7 @@ export const VerifyOtpApi = async (data: any) => {
   return await axiosInstance.post("/verify-otp", data);
 };
 
-export const CreatePasswordApi = async (data: any) => {
+export const CreatePinApi = async (data: any) => {
   return await axiosInstance.post("/create-password", data);
 };
 
