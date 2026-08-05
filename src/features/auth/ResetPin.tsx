@@ -1,6 +1,7 @@
 import Logo from "@/assets/splash/zodimithra.gif";
 import ZodiMithra from "@/assets/splash/ZODIMITHRA.png";
 import ToastModal from "@/components/common/ToastModal";
+import { useToastModal } from "@/hooks/useToastModal";
 import { CreatePinApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { Check, Eye, EyeOff, X } from "lucide-react";
@@ -10,28 +11,17 @@ import { useNavigate } from "react-router-dom";
 export default function ResetPin() {
   const navigate = useNavigate();
   const { phoneNumber, setToken, setIsLoggedIn } = useAuthStore();
+  const { toastState, showSuccess, showError, hideToast } = useToastModal();
 
   const [pin, setPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
   const [showPin, setShowPin] = useState(false);
   const [showConfirmPin, setShowConfirmPin] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [modalState, setModalState] = useState<{
-    isOpen: boolean;
-    status: boolean;
-    title: string;
-    description: string;
-  }>({
-    isOpen: false,
-    status: true,
-    title: "",
-    description: "",
-  });
 
   // Validation Rules
   const isFourDigits = /^\d{4}$/.test(pin);
   const pinsMatch = pin.length === 4 && pin === confirmPin;
-
   const isFormValid = isFourDigits && pinsMatch;
 
   // Input Sanitizer: Allows only numeric input up to 4 digits
@@ -45,22 +35,27 @@ export default function ResetPin() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+    if (!isFormValid || isSubmitting) return;
+
     setIsSubmitting(true);
     try {
       const response = await CreatePinApi({
         phone: phoneNumber,
-        password: pin, // Passing PIN as the credential parameter
+        password: pin,
       });
+
       if (response.status === 200 || response.status === 201) {
         setToken(response.data.token);
         if (response?.data?.on_boarding) {
-          setModalState({
-            isOpen: true,
-            status: true,
-            title: "PIN Reset Successfully",
-            description: "Your PIN has been reset successfully!",
-          });
+          showSuccess(
+            "PIN Reset Successfully",
+            "Your PIN has been reset successfully!",
+            "Continue",
+            () => {
+              setIsLoggedIn(true);
+              navigate("/home");
+            },
+          );
         } else {
           setIsLoggedIn(false);
           navigate("/birth-details-form");
@@ -68,22 +63,9 @@ export default function ResetPin() {
       }
     } catch (error) {
       console.error("Reset PIN Error:", error);
-      setModalState({
-        isOpen: true,
-        status: false,
-        title: "Error",
-        description: "Failed to reset PIN. Please try again.",
-      });
+      showError("Error", "Failed to reset PIN. Please try again.");
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handleDone = () => {
-    setModalState((prev) => ({ ...prev, isOpen: false }));
-    if (modalState.status) {
-      setIsLoggedIn(true);
-      navigate("/home");
     }
   };
 
@@ -205,13 +187,14 @@ export default function ResetPin() {
           </div>
         </form>
       </div>
+
       <ToastModal
-        isOpen={modalState.isOpen}
-        status={modalState.status}
-        title={modalState.title}
-        description={modalState.description}
-        buttonText="Continue"
-        onDone={handleDone}
+        isOpen={toastState.isOpen}
+        status={toastState.status}
+        title={toastState.title}
+        description={toastState.description}
+        buttonText={toastState.buttonText}
+        onDone={hideToast}
       />
     </div>
   );

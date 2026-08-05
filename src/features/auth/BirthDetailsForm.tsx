@@ -1,7 +1,3 @@
-import { Mars, User, Venus, VenusAndMars } from "lucide-react";
-import React, { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
-
 import DateInput from "@/components/common/DateInput";
 import GenderButtonGroup from "@/components/common/GenderButtonGroup";
 import Input from "@/components/common/Input";
@@ -9,9 +5,13 @@ import PlaceInput from "@/components/common/PlaceInput";
 import RadioGroup from "@/components/common/RadioGroup";
 import TimeInput from "@/components/common/TimeInput";
 import ToastModal from "@/components/common/ToastModal";
+import { useToastModal } from "@/hooks/useToastModal";
 import { useGetCurrentLocationQuery } from "@/queries/locationQueries";
 import { RegistrationApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
+import { Mars, User, Venus, VenusAndMars } from "lucide-react";
+import React, { useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 
 export interface FormState {
   fullName: string;
@@ -55,19 +55,10 @@ export default function BirthDetailsForm() {
   const navigate = useNavigate();
   const { phoneNumber, setToken, setIsLoggedIn } = useAuthStore();
   const { data: currentLocation } = useGetCurrentLocationQuery();
+  const { toastState, showSuccess, showError, hideToast } = useToastModal();
+
   const [formData, setFormData] = useState<FormState>(initialFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [modalState, setModalState] = useState<{
-    isOpen: boolean;
-    status: boolean;
-    title: string;
-    description: string;
-  }>({
-    isOpen: false,
-    status: true,
-    title: "",
-    description: "",
-  });
 
   // Generic handler for standard inputs and custom selectors
   const updateField = (field: keyof FormState, value: string) => {
@@ -94,62 +85,55 @@ export default function BirthDetailsForm() {
   };
 
   // Check if any required string field is empty
-  const isFormIncomplete = Object.values(formData).some((val) => !val.trim());
+  const isFormIncomplete = Object.values(formData).some(
+    (val) => typeof val === "string" && !val.trim(),
+  );
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // Prevent double submission
-    if (isSubmitting) return;
+    if (isSubmitting || isFormIncomplete) return;
 
-    if (!isFormIncomplete) {
-      setIsSubmitting(true);
-      try {
-        const formDeatils = new FormData();
+    setIsSubmitting(true);
+    try {
+      const formDetails = new FormData();
 
-        formDeatils.append("name", formData.fullName);
-        formDeatils.append("gender", formData.gender);
-        formDeatils.append("marital_status", formData.relationshipStatus ?? "");
-        formDeatils.append("date_of_birth", formData.dob ?? "");
-        formDeatils.append("birth_time", formData.tob ?? "");
-        formDeatils.append("birth_place", formData.pob ?? "");
-        formDeatils.append("latitude", formData.lat ?? "");
-        formDeatils.append("longitude", formData.lon ?? "");
-        formDeatils.append("role", "customer");
-        formDeatils.append("phone", phoneNumber ?? "");
-        formDeatils.append("onboarding_completed", "1");
-        formDeatils.append("current_location", currentLocation?.city ?? "");
-        formDeatils.append("profile_image", "");
+      formDetails.append("name", formData.fullName);
+      formDetails.append("gender", formData.gender);
+      formDetails.append("marital_status", formData.relationshipStatus ?? "");
+      formDetails.append("date_of_birth", formData.dob ?? "");
+      formDetails.append("birth_time", formData.tob ?? "");
+      formDetails.append("birth_place", formData.pob ?? "");
+      formDetails.append("latitude", formData.lat ?? "");
+      formDetails.append("longitude", formData.lon ?? "");
+      formDetails.append("role", "customer");
+      formDetails.append("phone", phoneNumber ?? "");
+      formDetails.append("onboarding_completed", "1");
+      formDetails.append("current_location", currentLocation?.city ?? "");
+      formDetails.append("profile_image", "");
 
-        const response = await RegistrationApi(formDeatils);
-        if (response?.status === 200) {
-          setToken(response.data?.token);
-          setModalState({
-            isOpen: true,
-            status: true,
-            title: "Registration Successful",
-            description: "Your account has been created successfully!",
-          });
+      const response = await RegistrationApi(formDetails);
+      if (response?.status === 200) {
+        if (response.data?.token) {
+          setToken(response.data.token);
         }
-      } catch (error) {
-        console.error("Registration failed:", error);
-        setModalState({
-          isOpen: true,
-          status: false,
-          title: "Registration Failed",
-          description:
-            "An error occurred while creating your account. Please try again.",
-        });
-      } finally {
-        setIsSubmitting(false);
+        showSuccess(
+          "Registration Successful",
+          "Your account has been created successfully!",
+          "Continue",
+          () => {
+            setIsLoggedIn(true);
+            navigate("/home");
+          },
+        );
       }
-    }
-  };
-
-  const handleDone = () => {
-    setModalState((prev) => ({ ...prev, isOpen: false }));
-    if (modalState.status) {
-      setIsLoggedIn(true);
-      navigate("/home");
+    } catch (error) {
+      console.error("Registration failed:", error);
+      showError(
+        "Registration Failed",
+        "An error occurred while creating your account. Please try again.",
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -213,19 +197,20 @@ export default function BirthDetailsForm() {
           <button
             type="submit"
             disabled={isFormIncomplete || isSubmitting}
-            className="w-full mt-6 font-body bg-primary text-white font-semibold py-2.5 px-4 rounded-lg transition outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-6 font-body bg-primary text-white font-semibold py-2.5 px-4 rounded-lg transition outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-500 active:scale-98"
           >
             {isSubmitting ? "Verifying..." : "Submit"}
           </button>
         </form>
       </div>
+
       <ToastModal
-        isOpen={modalState.isOpen}
-        status={modalState.status}
-        title={modalState.title}
-        description={modalState.description}
-        buttonText="Continue"
-        onDone={handleDone}
+        isOpen={toastState.isOpen}
+        status={toastState.status}
+        title={toastState.title}
+        description={toastState.description}
+        buttonText={toastState.buttonText}
+        onDone={hideToast}
       />
     </div>
   );

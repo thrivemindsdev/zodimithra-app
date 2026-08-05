@@ -3,7 +3,7 @@ import { create } from "zustand";
 import type { StateStorage } from "zustand/middleware";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-// 1. Create the native Capacitor storage adapter
+// Native Capacitor Preferences storage adapter for persistent mobile/web state
 const capacitorStorage: StateStorage = {
   getItem: async (name: string): Promise<string | null> => {
     const { value } = await Preferences.get({ key: name });
@@ -17,20 +17,22 @@ const capacitorStorage: StateStorage = {
   },
 };
 
-interface AuthStore {
+export interface AuthState {
   phoneNumber: string | null;
   token: string | null;
   isLoggedIn: boolean;
+
+  // Actions
   setIsLoggedIn: (status: boolean) => void;
   clearIsLoggedIn: () => void;
   setPhoneNumber: (num: string) => void;
   clearPhoneNumber: () => void;
   setToken: (token: string) => void;
   clearToken: () => void;
-  logout: () => void; // Convenient single action to reset auth state
+  logout: () => void;
 }
 
-export const useAuthStore = create<AuthStore>()(
+export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       // Initial States
@@ -39,18 +41,18 @@ export const useAuthStore = create<AuthStore>()(
       isLoggedIn: false,
 
       // Login Status Actions
-      setIsLoggedIn: (status) => set({ isLoggedIn: status }),
+      setIsLoggedIn: (status: boolean) => set({ isLoggedIn: status }),
       clearIsLoggedIn: () => set({ isLoggedIn: false }),
 
       // Phone Actions
-      setPhoneNumber: (num) => set({ phoneNumber: num }),
+      setPhoneNumber: (num: string) => set({ phoneNumber: num }),
       clearPhoneNumber: () => set({ phoneNumber: null }),
 
       // Token Actions
-      setToken: (token) => set({ token }),
+      setToken: (token: string) => set({ token }),
       clearToken: () => set({ token: null }),
 
-      // Logout Action
+      // Full Logout Action
       logout: () =>
         set({
           phoneNumber: null,
@@ -59,8 +61,8 @@ export const useAuthStore = create<AuthStore>()(
         }),
     }),
     {
-      name: "auth-storage", // Key used in native Preferences
-      storage: createJSONStorage(() => capacitorStorage), // Plug in Capacitor storage
+      name: "auth-storage", // Preference key in native storage
+      storage: createJSONStorage(() => capacitorStorage),
       partialize: (state) => ({
         phoneNumber: state.phoneNumber,
         token: state.token,

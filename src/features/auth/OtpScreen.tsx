@@ -2,6 +2,7 @@ import Logo from "@/assets/splash/zodimithra.gif";
 import ZodiMithra from "@/assets/splash/ZODIMITHRA.png";
 import ToastModal from "@/components/common/ToastModal";
 import { useHardwareBack } from "@/hooks/useHardwareBack";
+import { useToastModal } from "@/hooks/useToastModal";
 import { SendOtpApi, VerifyOtpApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { OTPInput, REGEXP_ONLY_DIGITS } from "input-otp";
@@ -14,20 +15,11 @@ export default function OtpScreen() {
   const { phoneNumber, setToken } = useAuthStore();
   const [otpValue, setOtpValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [modalState, setModalState] = useState<{
-    isOpen: boolean;
-    status: boolean;
-    title: string;
-    description: string;
-  }>({
-    isOpen: false,
-    status: true,
-    title: "",
-    description: "",
-  });
+  const { toastState, showSuccess, showError, hideToast } = useToastModal();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (otpValue.length < 4 || isSubmitting) return;
 
     setIsSubmitting(true);
     try {
@@ -44,23 +36,18 @@ export default function OtpScreen() {
           navigate("/create-pin");
         }
       }
-    } catch (error: any) {
-      if (error?.response?.status === 400) {
-        setModalState({
-          isOpen: true,
-          status: false,
-          title: "Invalid OTP",
-          description:
-            "The OTP you entered is incorrect. Please check the code and try again.",
-        });
+    } catch (error: unknown) {
+      const axiosErr = error as { response?: { status?: number } };
+      if (axiosErr?.response?.status === 400) {
+        showError(
+          "Invalid OTP",
+          "The OTP you entered is incorrect. Please check the code and try again.",
+        );
       } else {
-        setModalState({
-          isOpen: true,
-          status: false,
-          title: "Network Error",
-          description:
-            "Could not verify OTP. Please check your internet connection and try again.",
-        });
+        showError(
+          "Network Error",
+          "Could not verify OTP. Please check your internet connection and try again.",
+        );
       }
     } finally {
       setIsSubmitting(false);
@@ -73,26 +60,15 @@ export default function OtpScreen() {
     try {
       const response = await SendOtpApi({ phone: phoneNumber });
       if (response?.status === 200) {
-        setModalState({
-          isOpen: true,
-          status: true,
-          title: "Success",
-          description: "OTP resent successfully!",
-        });
+        showSuccess("Success", "OTP resent successfully!");
       }
     } catch (error) {
-      setModalState({
-        isOpen: true,
-        status: false,
-        title: "Network Error",
-        description:
-          "Unable to resend OTP. Please check your internet connection.",
-      });
+      console.error("Resend OTP Error:", error);
+      showError(
+        "Network Error",
+        "Unable to resend OTP. Please check your internet connection.",
+      );
     }
-  };
-
-  const handleDone = () => {
-    setModalState((prev) => ({ ...prev, isOpen: false }));
   };
 
   return (
@@ -124,7 +100,6 @@ export default function OtpScreen() {
               onChange={setOtpValue}
               pattern={REGEXP_ONLY_DIGITS}
               containerClassName="group flex items-center gap-4"
-              // Automatically triggers mobile SMS code suggestion
               autoComplete="one-time-code"
               autoFocus
               render={({ slots }) => (
@@ -169,13 +144,14 @@ export default function OtpScreen() {
           </div>
         </form>
       </div>
+
       <ToastModal
-        isOpen={modalState.isOpen}
-        status={modalState.status}
-        title={modalState.title}
-        description={modalState.description}
-        buttonText="Close"
-        onDone={handleDone}
+        isOpen={toastState.isOpen}
+        status={toastState.status}
+        title={toastState.title}
+        description={toastState.description}
+        buttonText={toastState.buttonText}
+        onDone={hideToast}
       />
     </div>
   );

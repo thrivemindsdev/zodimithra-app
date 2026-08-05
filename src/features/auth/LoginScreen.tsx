@@ -1,6 +1,7 @@
 import Logo from "@/assets/splash/zodimithra.gif";
 import ZodiMithra from "@/assets/splash/ZODIMITHRA.png";
 import ToastModal from "@/components/common/ToastModal";
+import { useToastModal } from "@/hooks/useToastModal";
 import { CheckPhoneApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { useState, type FormEvent } from "react";
@@ -12,18 +13,8 @@ export default function LoginScreen() {
   const navigate = useNavigate();
   const [phoneValue, setPhoneValue] = useState<string | undefined>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { setPhoneNumber } = useAuthStore();
-  const [modalState, setModalState] = useState<{
-    isOpen: boolean;
-    status: boolean;
-    title: string;
-    description: string;
-  }>({
-    isOpen: false,
-    status: true,
-    title: "",
-    description: "",
-  });
+  const setPhoneNumber = useAuthStore((state) => state.setPhoneNumber);
+  const { toastState, showError, hideToast } = useToastModal();
 
   // Helper boolean to cleanly check valid phone status
   const isPhoneValid = Boolean(phoneValue && isValidPhoneNumber(phoneValue));
@@ -46,21 +37,14 @@ export default function LoginScreen() {
         }
       }
     } catch (error) {
-      console.error("Send OTP Error:", error);
-      setModalState({
-        isOpen: true,
-        status: false,
-        title: "Network Error",
-        description:
-          "Unable to reach the server. Please check your internet connection.",
-      });
+      console.error("Check Phone Error:", error);
+      showError(
+        "Network Error",
+        "Unable to reach the server. Please check your internet connection and try again.",
+      );
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleDone = () => {
-    setModalState((prev) => ({ ...prev, isOpen: false }));
   };
 
   return (
@@ -122,13 +106,14 @@ export default function LoginScreen() {
           </div>
         </form>
       </div>
+
       <ToastModal
-        isOpen={modalState.isOpen}
-        status={modalState.status}
-        title={modalState.title}
-        description={modalState.description}
-        buttonText="Close"
-        onDone={handleDone}
+        isOpen={toastState.isOpen}
+        status={toastState.status}
+        title={toastState.title}
+        description={toastState.description}
+        buttonText={toastState.buttonText}
+        onDone={hideToast}
       />
     </div>
   );

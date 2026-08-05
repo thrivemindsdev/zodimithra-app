@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-interface Language {
+export interface Language {
   id: string;
   nativeChar: string;
   name: string;
@@ -30,9 +30,9 @@ export const LANGUAGES: Language[] = [
 export default function LanguageScreen() {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
-  const selectedLanguae = i18n.language ?? "en";
+  const activeLanguage = i18n.language ?? "en";
   const [selectedLanguage, setSelectedLanguage] =
-    useState<string>(selectedLanguae);
+    useState<string>(activeLanguage);
 
   const fullWidthLang = LANGUAGES.find((lang) => lang.layout === "full");
   const gridLangs = LANGUAGES.filter((lang) => lang.layout === "grid");
@@ -47,7 +47,7 @@ export default function LanguageScreen() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4 font-body">
       <div className="w-full max-w-md bg-white rounded-4xl border border-gray-100 shadow-sm p-6 sm:p-8">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 tracking-tight">

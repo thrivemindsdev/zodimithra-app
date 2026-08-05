@@ -1,6 +1,7 @@
 import Logo from "@/assets/splash/zodimithra.gif";
 import ZodiMithra from "@/assets/splash/ZODIMITHRA.png";
 import ToastModal from "@/components/common/ToastModal";
+import { useToastModal } from "@/hooks/useToastModal";
 import { VerifyPasswordApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { Eye, EyeOff, Lock } from "lucide-react";
@@ -9,23 +10,12 @@ import { useNavigate } from "react-router-dom";
 
 export default function PasswordScreen() {
   const navigate = useNavigate();
-
   const { phoneNumber, setToken, setIsLoggedIn } = useAuthStore();
+  const { toastState, showSuccess, showError, hideToast } = useToastModal();
 
   const [pin, setPin] = useState("");
   const [showPin, setShowPin] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [modalState, setModalState] = useState<{
-    isOpen: boolean;
-    status: boolean;
-    title: string;
-    description: string;
-  }>({
-    isOpen: false,
-    status: true,
-    title: "",
-    description: "",
-  });
 
   const handlePinChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, ""); // Allow digits only
@@ -36,6 +26,8 @@ export default function PasswordScreen() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (pin.length !== 4 || isSubmitting) return;
+
     setIsSubmitting(true);
     try {
       const response = await VerifyPasswordApi({
@@ -46,34 +38,24 @@ export default function PasswordScreen() {
       if (response?.status === 200) {
         setToken(response.data.token);
         if (response?.data?.on_boarding) {
-          setModalState({
-            isOpen: true,
-            status: true,
-            title: "Login Successful",
-            description: "You have been logged in successfully!",
-          });
+          showSuccess(
+            "Login Successful",
+            "You have been logged in successfully!",
+            "Continue",
+            () => {
+              setIsLoggedIn(true);
+              navigate("/home");
+            },
+          );
         } else {
           navigate("/birth-details-form");
         }
       }
     } catch (error) {
       console.error("PIN Verification Error:", error);
-      setModalState({
-        isOpen: true,
-        status: false,
-        title: "Error",
-        description: "Unable to verify PIN. Please try again later.",
-      });
+      showError("Error", "Unable to verify PIN. Please try again later.");
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handleDone = () => {
-    setModalState((prev) => ({ ...prev, isOpen: false }));
-    if (modalState.status) {
-      setIsLoggedIn(true);
-      navigate("/home");
     }
   };
 
@@ -164,13 +146,14 @@ export default function PasswordScreen() {
           </div>
         </form>
       </div>
+
       <ToastModal
-        isOpen={modalState.isOpen}
-        status={modalState.status}
-        title={modalState.title}
-        description={modalState.description}
-        buttonText="Close"
-        onDone={handleDone}
+        isOpen={toastState.isOpen}
+        status={toastState.status}
+        title={toastState.title}
+        description={toastState.description}
+        buttonText={toastState.buttonText}
+        onDone={hideToast}
       />
     </div>
   );
