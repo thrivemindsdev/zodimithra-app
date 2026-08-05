@@ -3,10 +3,12 @@ import Header from "@/components/layout/Header";
 import { useGetAshramamByIdQuery } from "@/queries/ashramsQueries";
 import { Star } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import SubscriptionModal from "./SubscriptionModal";
 
 export default function AshramaDetails() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
 
@@ -104,7 +106,7 @@ export default function AshramaDetails() {
               type="button"
               className="shrink-0 rounded-xl border border-primary bg-white px-4 py-2 font-body text-sm font-bold text-primary"
             >
-              Subscribed
+              {t("ashrams.subscribed", "Subscribed")}
             </button>
           ) : (
             <button
@@ -112,14 +114,14 @@ export default function AshramaDetails() {
               onClick={() => setOpen(true)}
               className="shrink-0 rounded-lg bg-indigo-900 px-5 py-2 text-sm text-white"
             >
-              Subscribe
+              {t("ashrams.subscribe", "Subscribe")}
             </button>
           )}
         </div>
 
         {ashramaDetails?.about && (
           <>
-            <h2 className="mb-2 font-light text-lg text-primary">About</h2>
+            <h2 className="mb-2 font-light text-lg text-primary">{t("ashrams.about", "About")}</h2>
 
             <p className="font-body text-sm leading-6 text-text-secondary">
               {ashramaDetails?.about}

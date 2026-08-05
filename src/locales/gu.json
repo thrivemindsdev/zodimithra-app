@@ -146,7 +146,8 @@
     "Vikram Samvat": "વિક્રમ સંવત",
     "month": "માસ",
     "Shaka Samvat": "શક સંવત",
-    "paksha": "પક્ષ"
+    "paksha": "પક્ષ",
+    "today": "આજે"
   },
   "freeKundli": {
     "title": "મફત કુંડળી",
@@ -271,7 +272,68 @@
   "numerologyCalculator": {
     "title": "અંકશાસ્ત્ર કેલ્ક્યુલેટર",
     "subTitle": "નંબરો સાથે તમારું ભાગ્ય શોધો",
-    "personalDetails": "વ્યક્તિગત વિગતો"
+    "personalDetails": "વ્યક્તિગત વિગતો",
+    "resultTitle": "અંકશાસ્ત્ર પરિણામ",
+    "lifePathNumber": "જીવન પથ અંક (લાઇફ પાથ નંબર)",
+    "birthdayNumber": "જન્મ તારીખ અંક",
+    "personalityNumber": "વ્યક્તિત્વ અંક",
+    "calculate": "ગણતરી કરો"
+  },
+  "tarotReading": {
+    "title": "ટેરો રીડિંગ",
+    "subTitle": "ટેરો તમને જીવન માટે માર્ગદર્શન આપે છે",
+    "cardOfTheDay": "દિવસનું કાર્ડ",
+    "cardOfTheDayDesc": "તમારા માટે પસંદ કરેલ આજનું કાર્ડ જુઓ",
+    "yesOrNo": "હા કે ના",
+    "yesOrNoDesc": "તમારા મનમાં મૂંઝવતો પ્રશ્ન પૂછો",
+    "askQuestion": "અહીં તમારો પ્રશ્ન પૂછો!",
+    "typeHere": "અહીં ટાઇપ કરો",
+    "result": "પરિણામ",
+    "health": "આરોગ્ય",
+    "relationship": "સંબંધો",
+    "career": "કારકિર્દી",
+    "finance": "નાણાકીય"
+  },
+  "ashrams": {
+    "title": "આશ્રમ",
+    "upcoming": "આગામી",
+    "live": "લાઇવ",
+    "liveNow": "અત્યારે લાઇવ",
+    "joinOngoing": "ચાલુ સત્રોમાં જોડાઓ",
+    "liveNotStarted": "લાઇવ હજુ શરૂ થયું નથી",
+    "subscribed": "સબ્સ્ક્રાઇબ કરેલ",
+    "subscribe": "સબ્સ્ક્રાઇબ કરો",
+    "about": "વિશે",
+    "aboutSession": "આ સત્ર વિશે",
+    "journeyAwaits": "તમારી આધ્યાત્મિક યાત્રા રાહ જોઈ રહી છે",
+    "membershipDesc": "પ્રીમિયમ સબ્સ્ક્રિપ્શન સાથે શીખવાનું ચાલુ રાખો અને તમારો આધ્યાત્મિક અનુભવ વધારો.",
+    "feature1": "એક મહિના માટે અમર્યાદિત લાઇવ સત્રો",
+    "feature2": "વિશ્વસનીય વૈદિક વિદ્વાનો સાથે ઝડપથી જોડાઓ",
+    "feature3": "માત્ર સભ્યો માટે જ વિશિષ્ટ માહિતી",
+    "perMonth": "/ મહિનો",
+    "subscribeFor": "સબ્સ્ક્રાઇબ કરો",
+    "monthlyBilled": "માસિક બિલ · ગમે ત્યારે રદ કરો",
+    "continuePreview": "પૂર્વાવલોકન જોવાનું ચાલુ રાખો"
+  },
+  "wellbeing": {
+    "title": "વેલબીઇંગ (સુખાકારી)",
+    "subtitle": "તમારા માટે ઉત્તમ જ્યોતિષી શોધો",
+    "mindfulJourneys": "માઇન્ડફુલ યાત્રાઓ",
+    "sacredWellness": "પવિત્ર સુખાકારી",
+    "sacredRituals": "પવિત્ર અનુષ્ઠાન",
+    "ancientScience": "પ્રાચીન વિજ્ઞાન",
+    "cosmicAlignments": "બ્રહ્માંડિય ગોઠવણી",
+    "mantrasDesc": "આંતરિક શાંતિ માટે માર્ગદર્શિત સત્રો",
+    "healingDesc": "થેટા, રેકી, પ્રાણિક અને વધુ",
+    "poojaDesc": "પવિત્ર મંદિરોમાં વૈદિક વિધિઓ",
+    "vastuDesc": "તમારી જગ્યા અને ભવિષ્ય બદલો",
+    "dyaanDesc": "તમારા માટે વ્યક્તિગત ધ્યાન સત્રો",
+    "sacredSounds": "તમારા આત્મા માટે પવિત્ર અવાજો",
+    "mantras": "મંત્રો",
+    "healing": "હીલિંગ",
+    "ePooja": "ઈ-પૂજા",
+    "vastuShastra": "વાસ્તુ શાસ્ત્ર",
+    "dyaan": "ધ્યાન"
   },
   "language": {
     "title": "તમારી ભાષા",
@@ -301,7 +363,18 @@
     "didntReceiveOtp": "કોડ મળ્યો નથી?",
     "resendOtp": "OTP ફરી મોકલો",
     "otpResent": "OTP સફળતાપૂર્વક ફરી મોકલ્યો!",
-    "proceed": "આગળ વધો"
+    "proceed": "આગળ વધો",
+    "invalidPin": "અમાન્ય પિન",
+    "invalidPinDesc": "તમે દાખલ કરેલ પિન ખોટો છે. કૃપા કરીને ફરી પ્રયાસ કરો.",
+    "loginSuccess": "લૉગિન સફળ",
+    "loginSuccessDesc": "તમે સફળતાપૂર્વક લૉગ ઇન થયા છો!",
+    "verifyPinError": "પિન ચકાસવામાં અસમર્થ. કૃપા કરીને પછીથી ફરી પ્રયાસ કરો.",
+    "welcomeBack": "પાછા સ્વાગત છે",
+    "enterPinFor": "માટે 4-અંકનો પિન દાખલ કરો",
+    "enterPinPrompt": "સાઇન ઇન કરવા માટે તમારો 4-અંકનો પિન દાખલ કરો.",
+    "fourDigitPin": "4-અંકનો પિન",
+    "signingIn": "સાઇન ઇન થઇ રહ્યું છે...",
+    "login": "લૉગિન"
   },
   "nav": {
     "home": "હોમ",
@@ -328,6 +401,36 @@
     "comingSoon": "ટૂંક સમયમાં આવી રહ્યું છે",
     "comingSoonDesc": "આ સુવિધા હાલમાં વિકાસ હેઠળ છે અને શિઘ્ર ઉપલબ્ધ થશે.",
     "success": "સફળતા",
-    "error": "ભૂલ"
+    "error": "ભૂલ",
+    "share": "શેર કરો"
+  },
+  "payment": {
+    "successTitle": "ચુકવણી સફળ રહી",
+    "failureTitle": "ચુકવણી નિષ્ફળ ગઈ",
+    "premiumSuccessDesc": "તમારું પ્રીમિયમ સબ્સ્ક્રિપ્શન સફળતાપૂર્વક સક્રિય કરવામાં આવ્યું છે.",
+    "ashramSuccessDesc": "તમારું {{name}} સબ્સ્ક્રિપ્શન સફળતાપૂર્વક સક્રિય કરવામાં આવ્યું છે.",
+    "failureDesc": "તમારી ચુકવણી પૂર્ણ થઈ શકી નથી. કૃપા કરીને ફરી પ્રયાસ કરો.",
+    "done": "પૂર્ણ"
+  },
+  "family": {
+    "title": "પરિવારના સભ્યો",
+    "searchPlaceholder": "સભ્યો શોધો",
+    "limitReachedTitle": "મર્યાદા પૂર્ણ",
+    "limitReachedDesc": "તમે મહત્તમ 4 પરિવારના સભ્યોની મર્યાદા સુધી પહોંચી ગયા છો.",
+    "addTitle": "પરિવારના સભ્ય ઉમેરો",
+    "addDesc": "તમારા પરિવારના સભ્યની જન્મ વિગતો દાખલ કરો",
+    "fullName": "પૂરું નામ",
+    "relation": "સંબંધ",
+    "selectRelation": "સંબંધ પસંદ કરો",
+    "dateOfBirth": "જન્મ તારીખ",
+    "timeOfBirth": "જન્મ સમય",
+    "placeOfBirth": "જન્મ સ્થળ",
+    "addMember": "સભ્ય ઉમેરો",
+    "spouse": "જીવનસાથી",
+    "parent": "માતા-પિતા",
+    "child": "બાળક",
+    "sibling": "ભાઈ-બહેન",
+    "relative": "સગાં",
+    "friend": "મિત્ર"
   }
 }

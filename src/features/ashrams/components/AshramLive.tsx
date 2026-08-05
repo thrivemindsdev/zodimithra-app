@@ -5,9 +5,11 @@ import { useGetUserDetailsQuery } from "@/queries/userQueries";
 import type { LiveSession } from "@/types/ashrams.types";
 import { Maximize, Minimize } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
 const AshramaLive = () => {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const ashramamId = Number(id);
   const location = useLocation();
@@ -63,8 +65,8 @@ const AshramaLive = () => {
   return (
     <>
       <Header
-        title="Live Now"
-        subtitle="join the ongoing sessions"
+        title={t("ashrams.liveNow", "Live Now")}
+        subtitle={t("ashrams.joinOngoing", "join the ongoing sessions")}
         showBackButton
         redirectPath="/ashrams"
       />
@@ -122,7 +124,7 @@ const AshramaLive = () => {
                 </div>
               ) : (
                 <div className="mb-4 flex h-40 items-center justify-center rounded-2xl bg-black text-white">
-                  Live not yet started
+                  {t("ashrams.liveNotStarted", "Live not yet started")}
                 </div>
               )}
 
@@ -151,7 +153,7 @@ const AshramaLive = () => {
                   type="button"
                   className="rounded-xl border border-primary bg-white px-4 py-2 font-body text-sm font-bold text-primary"
                 >
-                  Subscribed
+                  {t("ashrams.subscribed", "Subscribed")}
                 </button>
               </div>
 
@@ -159,7 +161,7 @@ const AshramaLive = () => {
               {data?.description && (
                 <div>
                   <h3 className="font-body text-lg font-bold text-text-primary">
-                    About This Session
+                    {t("ashrams.aboutSession", "About This Session")}
                   </h3>
 
                   <p className="font-body text-sm font-normal text-text-secondary">

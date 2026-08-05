@@ -297,8 +297,20 @@
   "ashrams": {
     "title": "Ashrams",
     "upcoming": "Upcoming",
+    "live": "Live",
+    "liveNow": "Live Now",
+    "joinOngoing": "join the ongoing sessions",
+    "liveNotStarted": "Live not yet started",
+    "subscribed": "Subscribed",
+    "subscribe": "Subscribe",
+    "about": "About",
+    "aboutSession": "About This Session",
     "journeyAwaits": "Your spiritual journey awaits",
     "membershipDesc": "Continue learning and elevate your spiritual experience with a premium membership.",
+    "feature1": "Unlimited live sessions for a month",
+    "feature2": "Connect with trusted Vedic scholars faster",
+    "feature3": "Exclusive members-only insights",
+    "perMonth": "/ month",
     "subscribeFor": "Subscribe for",
     "monthlyBilled": "billed monthly · cancel anytime",
     "continuePreview": "Continue watching preview"
@@ -351,7 +363,18 @@
     "didntReceiveOtp": "Didn't receive code?",
     "resendOtp": "Resend OTP",
     "otpResent": "OTP resent successfully!",
-    "proceed": "Proceed"
+    "proceed": "Proceed",
+    "invalidPin": "Invalid PIN",
+    "invalidPinDesc": "The PIN you entered is incorrect. Please try again.",
+    "loginSuccess": "Login Successful",
+    "loginSuccessDesc": "You have been logged in successfully!",
+    "verifyPinError": "Unable to verify PIN. Please try again later.",
+    "welcomeBack": "Welcome Back",
+    "enterPinFor": "Enter 4-digit PIN for",
+    "enterPinPrompt": "Enter your 4-digit PIN to sign in.",
+    "fourDigitPin": "4-Digit PIN",
+    "signingIn": "Signing in...",
+    "login": "Login"
   },
   "nav": {
     "home": "Home",
@@ -378,6 +401,36 @@
     "comingSoon": "Coming Soon",
     "comingSoonDesc": "This feature is currently under development and will be available soon.",
     "success": "Success",
-    "error": "Error"
+    "error": "Error",
+    "share": "Share"
+  },
+  "payment": {
+    "successTitle": "Payment Successful",
+    "failureTitle": "Payment Failed",
+    "premiumSuccessDesc": "Your premium subscription has been activated successfully.",
+    "ashramSuccessDesc": "Your {{name}} subscription has been activated successfully.",
+    "failureDesc": "Your payment could not be completed. Please try again.",
+    "done": "Done"
+  },
+  "family": {
+    "title": "Family Members",
+    "searchPlaceholder": "Search Members",
+    "limitReachedTitle": "Limit Reached",
+    "limitReachedDesc": "You have reached the maximum limit of 4 family members.",
+    "addTitle": "Add Family Member",
+    "addDesc": "Enter the birth details of your family member",
+    "fullName": "Full Name",
+    "relation": "Relation",
+    "selectRelation": "Select relation",
+    "dateOfBirth": "Date of Birth",
+    "timeOfBirth": "Time of Birth",
+    "placeOfBirth": "Place of Birth",
+    "addMember": "Add Member",
+    "spouse": "Spouse",
+    "parent": "Parent",
+    "child": "Child",
+    "sibling": "Sibling",
+    "relative": "Relative",
+    "friend": "Friend"
   }
 }

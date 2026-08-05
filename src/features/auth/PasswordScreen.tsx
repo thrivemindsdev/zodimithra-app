@@ -53,15 +53,24 @@ export default function PasswordScreen() {
           navigate("/birth-details-form");
         }
       }
-    } catch (error) {
-      console.error("PIN Verification Error:", error);
-      showError(
-        t("common.error", "Error"),
-        t(
-          "auth.verifyPinError",
-          "Unable to verify PIN. Please try again later.",
-        ),
-      );
+    } catch (error: any) {
+      if (error.response.status === 400) {
+        showError(
+          t("auth.invalidPin", "Invalid PIN"),
+          t(
+            "auth.invalidPinDesc",
+            "The PIN you entered is incorrect. Please try again.",
+          ),
+        );
+      } else {
+        showError(
+          t("common.error", "Error"),
+          t(
+            "auth.verifyPinError",
+            "Unable to verify PIN. Please try again later.",
+          ),
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }

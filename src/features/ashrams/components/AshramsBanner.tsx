@@ -45,7 +45,7 @@ const AshramsBanner = () => {
   return (
     <>
       <SessionCarousel
-        title={t("nav.live", "Live")}
+        title={t("ashrams.live", "Live")}
         sessions={data?.livesessions ?? []}
         loading={isLoading}
         onSessionClick={handleSessionClick}

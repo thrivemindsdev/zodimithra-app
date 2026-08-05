@@ -14,14 +14,16 @@ import ScorpioImage from "@/assets/signs/SCORPION.png";
 import TaurusImage from "@/assets/signs/TAURUS.png";
 import VirgoImage from "@/assets/signs/VIRGO.png";
 import HomeGreetings from "@/features/home/components/HomeGreetings";
+import { useToastModal } from "@/hooks/useToastModal";
 import {
   useGetFamilyMembersQuery,
   useGetUserDetailsQuery,
 } from "@/queries/userQueries";
 import { useActiveUserStore } from "@/store/useActiveUserStore";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import GlobalLoader from "../common/GlobalLoader";
-import PaymentStatusModal from "../common/PaymentStatusModal";
+import ToastModal from "../common/ToastModal";
 import BodyLayout from "../layout/BodyLayout";
 import Header from "../layout/Header";
 import AddFamilyMemberModal from "./AddFamilyMemberModal";
@@ -42,13 +44,11 @@ const zodiacSigns: Record<string, string> = {
 };
 
 const FamilyMembers = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
-  const [alertOpen, setAlertOpen] = useState({
-    open: false,
-    status: "failed" as "failed",
-  });
+  const { toastState, showError, hideToast } = useToastModal();
   const { data: familyMembersData, isLoading } = useGetFamilyMembersQuery();
   const { data: userData, isLoading: isUserLoading } = useGetUserDetailsQuery();
   const isPremium = userData?.is_subscribed;
@@ -75,10 +75,14 @@ const FamilyMembers = () => {
       if (count < 4) {
         setOpen(true);
       } else {
-        setAlertOpen({
-          open: true,
-          status: "failed",
-        });
+        showError(
+          t("family.limitReachedTitle", "Limit Reached"),
+          t(
+            "family.limitReachedDesc",
+            "You have reached the maximum limit of 4 family members.",
+          ),
+          t("payment.done", "Done"),
+        );
       }
     }
   };
@@ -89,7 +93,11 @@ const FamilyMembers = () => {
 
   return (
     <>
-      <Header title="Family Members" showBackButton redirectPath="/home" />
+      <Header
+        title={t("family.title", "Family Members")}
+        showBackButton
+        redirectPath="/home"
+      />
       <BodyLayout>
         <HomeGreetings
           loading={isUserLoading}
@@ -103,7 +111,7 @@ const FamilyMembers = () => {
 
             <input
               type="text"
-              placeholder="Search Members"
+              placeholder={t("family.searchPlaceholder", "Search Members")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="ml-3 w-full bg-transparent text-sm font-medium outline-none placeholder:text-text-secondary capitalize"
@@ -145,36 +153,37 @@ const FamilyMembers = () => {
                 </h2>
 
                 <p className="text-sm font-body-content font-normal text-text-secondary">
-                  {member.zodiac_sign}
+                  {String(
+                    t(
+                      `freeKundli.${member.zodiac_sign.toLowerCase()}`,
+                      member.zodiac_sign,
+                    ),
+                  )}
                 </p>
               </div>
 
               {/* Relation */}
               <span className="rounded-full bg-[#0000001A] px-3 py-1 text-[10px] font-semibold tracking-wide text-text-primary">
-                {member.relation}
+                {String(
+                  t(
+                    `family.${member.relation?.toLowerCase()}`,
+                    member.relation || "",
+                  ),
+                )}
               </span>
             </div>
           ))}
         </div>
       </BodyLayout>
       {open && <AddFamilyMemberModal open={open} setOpen={setOpen} />}
-      {alertOpen.open && (
-        <PaymentStatusModal
-          isOpen={alertOpen.open}
-          status={alertOpen.status}
-          title={"Failed"}
-          description={
-            "You have reached the maximum limit of 4 family members."
-          }
-          buttonText="Done"
-          onDone={() => {
-            setAlertOpen((prev) => ({
-              ...prev,
-              open: false,
-            }));
-          }}
-        />
-      )}
+      <ToastModal
+        isOpen={toastState.isOpen}
+        status={toastState.status}
+        title={toastState.title}
+        description={toastState.description}
+        buttonText={toastState.buttonText}
+        onDone={hideToast}
+      />
     </>
   );
 };

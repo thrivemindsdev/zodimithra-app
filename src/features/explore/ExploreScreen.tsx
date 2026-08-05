@@ -259,49 +259,76 @@ const ExploreScreen = () => {
         </div>
 
         <div className="space-y-4 font-body pt-8">
-          {cardsData.map((card) => (
-            <div
-              key={card.id}
-              className="relative group h-44 rounded-2xl overflow-hidden shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-[1.01]"
-              onClick={() =>
-                card.id === "1"
-                  ? navigate("/mantras")
-                  : navigate("/coming-soon")
-              }
-            >
-              {/* Background Image */}
-              <img
-                src={card.imageUrl}
-                alt={t(card.title, card.title)}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+          {cardsData.map((card) => {
+            const categoryKey = `wellbeing.${
+              card.id === "1"
+                ? "mindfulJourneys"
+                : card.id === "2"
+                  ? "sacredWellness"
+                  : card.id === "3"
+                    ? "sacredRituals"
+                    : card.id === "4"
+                      ? "ancientScience"
+                      : "cosmicAlignments"
+            }`;
+            const titleKey = `wellbeing.${
+              card.id === "1"
+                ? "mantras"
+                : card.id === "2"
+                  ? "healing"
+                  : card.id === "3"
+                    ? "ePooja"
+                    : card.id === "4"
+                      ? "vastuShastra"
+                      : "dyaan"
+            }`;
+            const descKey = `wellbeing.${
+              card.id === "1"
+                ? "mantrasDesc"
+                : card.id === "2"
+                  ? "healingDesc"
+                  : card.id === "3"
+                    ? "poojaDesc"
+                    : card.id === "4"
+                      ? "vastuDesc"
+                      : "dyaanDesc"
+            }`;
 
-              {/* Dark Overlay Gradient */}
-              <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
+            return (
+              <div
+                key={card.id}
+                className="relative group h-44 rounded-2xl overflow-hidden shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-[1.01]"
+                onClick={() =>
+                  card.id === "1"
+                    ? navigate("/mantras")
+                    : navigate("/coming-soon")
+                }
+              >
+                {/* Background Image */}
+                <img
+                  src={card.imageUrl}
+                  alt={t(titleKey, card.title)}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
 
-              {/* Text Content */}
-              <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
-                <span className="text-xs uppercase tracking-widest text-gray-200/90 font-medium mb-1">
-                  {t(
-                    `wellbeing.${card.id === "1" ? "mindfulJourneys" : card.id === "2" ? "sacredWellness" : card.id === "3" ? "sacredRituals" : card.id === "4" ? "ancientScience" : "cosmicAlignments"}`,
-                    card.category,
-                  )}
-                </span>
-                <h3 className="text-xl font-bold mb-1 tracking-wide">
-                  {t(
-                    `wellbeing.${card.id === "1" ? "mantras" : card.id === "2" ? "healing" : card.id === "3" ? "ePooja" : card.id === "4" ? "vastuShastra" : "dyaan"}`,
-                    card.title,
-                  )}
-                </h3>
-                <p className="text-sm text-gray-200/90 font-light">
-                  {t(
-                    `wellbeing.${card.id === "1" ? "mantrasDesc" : card.id === "2" ? "healingDesc" : card.id === "3" ? "poojaDesc" : card.id === "4" ? "vastuDesc" : "dyaanDesc"}`,
-                    card.description,
-                  )}
-                </p>
+                {/* Dark Overlay Gradient */}
+                <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
+
+                {/* Text Content */}
+                <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
+                  <span className="text-xs uppercase tracking-widest text-gray-200/90 font-medium mb-1">
+                    {t(categoryKey, card.category)}
+                  </span>
+                  <h3 className="text-xl font-bold mb-1 tracking-wide">
+                    {t(titleKey, card.title)}
+                  </h3>
+                  <p className="text-sm text-gray-200/90 font-light">
+                    {t(descKey, card.description)}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </BodyLayout>
     </>

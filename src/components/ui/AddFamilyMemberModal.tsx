@@ -7,6 +7,7 @@ import Input from "../common/Input";
 import { AddFamilyMember } from "@/services/user.api";
 import { useQueryClient } from "@tanstack/react-query";
 import { USER_QUERY_KEYS } from "@/queries/userQueries";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   open: boolean;
@@ -43,6 +44,7 @@ const RELATION_OPTIONS = [
 ];
 
 const AddFamilyMemberModal = ({ open, setOpen }: Props) => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState<FormState>(initialFormState);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -146,17 +148,17 @@ const AddFamilyMemberModal = ({ open, setOpen }: Props) => {
           </button>
         </div>
         <h2 className="text-xl text-center font-body-content font-bold text-gradient">
-          Add Family Member
+          {t("family.addTitle", "Add Family Member")}
         </h2>
         <p className="pt-1 pb-4 text-sm text-center text-text-secondary">
-          Enter the birth details of your family member
+          {t("family.addDesc", "Enter the birth details of your family member")}
         </p>
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Full Name */}
           <Input
-            label="Full Name"
+            label={t("family.fullName", "Full Name")}
             name="fullName"
             icon={User}
             value={formData.fullName}
@@ -167,7 +169,7 @@ const AddFamilyMemberModal = ({ open, setOpen }: Props) => {
           {/* Custom Relation Dropdown (UL/LI) */}
           <div className="relative flex flex-col gap-1.5" ref={dropdownRef}>
             <label className="text-xs font-semibold text-text-primary">
-              Relation
+              {t("family.relation", "Relation")}
             </label>
             <button
               type="button"
@@ -179,7 +181,9 @@ const AddFamilyMemberModal = ({ open, setOpen }: Props) => {
                   formData.relation ? "text-text-primary" : "text-gray-400"
                 }
               >
-                {formData.relation || "Select relation"}
+                {formData.relation
+                  ? String(t(`family.${formData.relation.toLowerCase()}`, formData.relation))
+                  : String(t("family.selectRelation", "Select relation"))}
               </span>
               <ChevronDown
                 size={18}
@@ -201,7 +205,7 @@ const AddFamilyMemberModal = ({ open, setOpen }: Props) => {
                         : "text-text-primary"
                     }`}
                   >
-                    {option}
+                    {String(t(`family.${option.toLowerCase()}`, option))}
                   </li>
                 ))}
               </ul>
@@ -211,13 +215,13 @@ const AddFamilyMemberModal = ({ open, setOpen }: Props) => {
           {/* Date & Time Cluster Layout */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <DateInput
-              label="Date of Birth"
+              label={t("family.dateOfBirth", "Date of Birth")}
               name="dob"
               value={formData.dob}
               onChange={handleInputChange}
             />
             <TimeInput
-              label="Time of Birth"
+              label={t("family.timeOfBirth", "Time of Birth")}
               name="tob"
               value={formData.tob}
               onChange={handleInputChange}
@@ -226,7 +230,7 @@ const AddFamilyMemberModal = ({ open, setOpen }: Props) => {
 
           {/* Place of Birth */}
           <PlaceInput
-            label="Place of Birth"
+            label={t("family.placeOfBirth", "Place of Birth")}
             value={formData.pob}
             onChange={handlePlaceChange}
           />
@@ -238,14 +242,14 @@ const AddFamilyMemberModal = ({ open, setOpen }: Props) => {
               onClick={handleClose}
               className="w-full rounded-xl border border-primary bg-white py-2.5 text-sm font-semibold text-primary transition hover:bg-gray-50 focus:outline-none"
             >
-              Cancel
+              {t("common.cancel", "Cancel")}
             </button>
             <button
               type="submit"
               disabled={isFormIncomplete}
               className="w-full rounded-xl bg-primary py-2.5 text-sm font-semibold text-white transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none"
             >
-              Add Member
+              {t("family.addMember", "Add Member")}
             </button>
           </div>
         </form>

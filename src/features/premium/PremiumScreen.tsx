@@ -1,14 +1,18 @@
 import GlobalLoader from "@/components/common/GlobalLoader";
-import PaymentStatusModal from "@/components/common/PaymentStatusModal";
+import ToastModal from "@/components/common/ToastModal";
 import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";
+import { useToastModal } from "@/hooks/useToastModal";
 import { useGetPremiumPlansQuery } from "@/queries/premiumQueries";
 import { useGetUserDetailsQuery, USER_QUERY_KEYS } from "@/queries/userQueries";
 import {
   createRazorpayOrder,
   verifyRazorpayOrder,
 } from "@/services/premium.api";
+import { useAuthStore } from "@/store/authStore";
+import { Capacitor } from "@capacitor/core";
 import { useQueryClient } from "@tanstack/react-query";
+import { Checkout } from "capacitor-razorpay";
 import {
   CalendarDays,
   FileText,
@@ -22,12 +26,8 @@ import {
   Sun,
   Users,
 } from "lucide-react";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Capacitor } from "@capacitor/core";
-import { Checkout } from "capacitor-razorpay";
-import { useAuthStore } from "@/store/authStore";
 
 const features = [
   {
@@ -82,15 +82,7 @@ const PremiumScreen = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const phoneNumber = useAuthStore((state) => state.phoneNumber);
-  const [paymentModal, setPaymentModal] = useState<{
-    open: boolean;
-    status: "success" | "failed";
-    redirectTo: string;
-  }>({
-    open: false,
-    status: "success",
-    redirectTo: "",
-  });
+  const { toastState, showSuccess, showError, hideToast } = useToastModal();
 
   const { data: userDetails, isLoading: isUserLoading } =
     useGetUserDetailsQuery();
@@ -151,21 +143,28 @@ const PremiumScreen = () => {
               queryKey: [USER_QUERY_KEYS.userDetails],
             });
 
-            setPaymentModal({
-              open: true,
-              status: "success",
-              redirectTo: "/home",
-            });
+            showSuccess(
+              t("payment.successTitle", "Payment Successful"),
+              t(
+                "payment.premiumSuccessDesc",
+                "Your premium subscription has been activated successfully.",
+              ),
+              t("payment.done", "Done"),
+              () => navigate("/home"),
+            );
           } else {
             throw new Error("Invalid payment response structure");
           }
         } catch (checkoutError) {
           console.error("Native Checkout failed:", checkoutError);
-          setPaymentModal({
-            open: true,
-            status: "failed",
-            redirectTo: "/premium",
-          });
+          showError(
+            t("payment.failureTitle", "Payment Failed"),
+            t(
+              "payment.failureDesc",
+              "Your payment could not be completed. Please try again.",
+            ),
+            t("payment.done", "Done"),
+          );
         }
       } else {
         // Web flow
@@ -194,11 +193,14 @@ const PremiumScreen = () => {
           modal: {
             ondismiss: () => {
               console.log("Payment popup closed");
-              setPaymentModal({
-                open: true,
-                status: "failed",
-                redirectTo: "/premium",
-              });
+              showError(
+                t("payment.failureTitle", "Payment Failed"),
+                t(
+                  "payment.failureDesc",
+                  "Your payment could not be completed. Please try again.",
+                ),
+                t("payment.done", "Done"),
+              );
             },
           },
 
@@ -215,18 +217,25 @@ const PremiumScreen = () => {
                 queryKey: [USER_QUERY_KEYS.userDetails],
               });
 
-              setPaymentModal({
-                open: true,
-                status: "success",
-                redirectTo: "/home",
-              });
+              showSuccess(
+                t("payment.successTitle", "Payment Successful"),
+                t(
+                  "payment.premiumSuccessDesc",
+                  "Your premium subscription has been activated successfully.",
+                ),
+                t("payment.done", "Done"),
+                () => navigate("/home"),
+              );
             } catch (error) {
               console.error("Payment verification failed:", error);
-              setPaymentModal({
-                open: true,
-                status: "failed",
-                redirectTo: "/premium",
-              });
+              showError(
+                t("payment.failureTitle", "Payment Failed"),
+                t(
+                  "payment.failureDesc",
+                  "Your payment could not be completed. Please try again.",
+                ),
+                t("payment.done", "Done"),
+              );
             }
           },
         };
@@ -237,11 +246,14 @@ const PremiumScreen = () => {
     } catch (error) {
       console.error("Unable to initiate payment:", error);
 
-      setPaymentModal({
-        open: true,
-        status: "failed",
-        redirectTo: "/premium",
-      });
+      showError(
+        t("payment.failureTitle", "Payment Failed"),
+        t(
+          "payment.failureDesc",
+          "Your payment could not be completed. Please try again.",
+        ),
+        t("payment.done", "Done"),
+      );
     }
   };
 
@@ -428,34 +440,14 @@ const PremiumScreen = () => {
         </div>
       </BodyLayout>
 
-      {paymentModal.open && (
-        <PaymentStatusModal
-          isOpen={paymentModal.open}
-          status={paymentModal.status}
-          title={
-            paymentModal.status === "success"
-              ? "Payment Successful"
-              : "Payment Failed"
-          }
-          description={
-            paymentModal.status === "success"
-              ? "Your premium subscription has been activated successfully."
-              : "Your payment could not be completed. Please try again."
-          }
-          buttonText="Done"
-          onDone={() => {
-            const isSuccess = paymentModal.status === "success";
-            setPaymentModal((prev) => ({
-              ...prev,
-              open: false,
-            }));
-
-            if (isSuccess) {
-              navigate("/home");
-            }
-          }}
-        />
-      )}
+      <ToastModal
+        isOpen={toastState.isOpen}
+        status={toastState.status}
+        title={toastState.title}
+        description={toastState.description}
+        buttonText={toastState.buttonText}
+        onDone={hideToast}
+      />
     </>
   );
 };

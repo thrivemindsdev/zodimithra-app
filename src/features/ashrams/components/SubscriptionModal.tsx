@@ -1,5 +1,6 @@
 import starImage from "@/assets/ashrams/star.png";
-import PaymentStatusModal from "@/components/common/PaymentStatusModal";
+import ToastModal from "@/components/common/ToastModal";
+import { useToastModal } from "@/hooks/useToastModal";
 import { ASHRAMS_QUERY_KEYS } from "@/queries/ashramsQueries";
 import { useGetUserDetailsQuery } from "@/queries/userQueries";
 import {
@@ -11,7 +12,6 @@ import { Capacitor } from "@capacitor/core";
 import { useQueryClient } from "@tanstack/react-query";
 import { Checkout } from "capacitor-razorpay";
 import { Check, X } from "lucide-react";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -21,10 +21,10 @@ interface SubscriptionModalProps {
   details: any;
 }
 
-const features = [
-  "Unlimited live sessions for a month",
-  "Connect with trusted Vedic scholars faster",
-  "Exclusive members-only insights",
+const featureKeys = [
+  { key: "ashrams.feature1", fallback: "Unlimited live sessions for a month" },
+  { key: "ashrams.feature2", fallback: "Connect with trusted Vedic scholars faster" },
+  { key: "ashrams.feature3", fallback: "Exclusive members-only insights" },
 ];
 
 export default function SubscriptionModal({
@@ -37,15 +37,7 @@ export default function SubscriptionModal({
   const queryClient = useQueryClient();
   const phoneNumber = useAuthStore((state) => state.phoneNumber);
   const { data: userDetails } = useGetUserDetailsQuery();
-  const [paymentModal, setPaymentModal] = useState<{
-    open: boolean;
-    status: "success" | "failed";
-    redirectTo: string;
-  }>({
-    open: false,
-    status: "success",
-    redirectTo: "",
-  });
+  const { toastState, showSuccess, showError, hideToast } = useToastModal();
 
   if (!isOpen) return null;
 
@@ -105,21 +97,44 @@ export default function SubscriptionModal({
               queryKey: [ASHRAMS_QUERY_KEYS.ashrams],
             });
 
-            setPaymentModal({
-              open: true,
-              status: "success",
-              redirectTo: "/ashrams",
+            await queryClient.invalidateQueries({
+              queryKey: [ASHRAMS_QUERY_KEYS.liveSessions],
             });
+
+            await queryClient.invalidateQueries({
+              queryKey: [ASHRAMS_QUERY_KEYS.ashramById, plan_id],
+            });
+
+            await queryClient.invalidateQueries({
+              queryKey: [ASHRAMS_QUERY_KEYS.liveSessionId, plan_id],
+            });
+
+            showSuccess(
+              t("payment.successTitle", "Payment Successful"),
+              t(
+                "payment.ashramSuccessDesc",
+                `Your ${details?.name ?? "Ashram"} subscription has been activated successfully.`,
+                { name: details?.name ?? "Ashram" },
+              ),
+              t("payment.done", "Done"),
+              () => {
+                onClose();
+                navigate("/ashrams");
+              },
+            );
           } else {
             throw new Error("Invalid payment response structure");
           }
         } catch (checkoutError) {
           console.error("Native Checkout failed:", checkoutError);
-          setPaymentModal({
-            open: true,
-            status: "failed",
-            redirectTo: "",
-          });
+          showError(
+            t("payment.failureTitle", "Payment Failed"),
+            t(
+              "payment.failureDesc",
+              "Your payment could not be completed. Please try again.",
+            ),
+            t("payment.done", "Done"),
+          );
         }
       } else {
         // Web flow
@@ -161,18 +176,29 @@ export default function SubscriptionModal({
                 queryKey: [ASHRAMS_QUERY_KEYS.liveSessionId, plan_id],
               });
 
-              setPaymentModal({
-                open: true,
-                status: "success",
-                redirectTo: "/ashrams",
-              });
+              showSuccess(
+                t("payment.successTitle", "Payment Successful"),
+                t(
+                  "payment.ashramSuccessDesc",
+                  `Your ${details?.name ?? "Ashram"} subscription has been activated successfully.`,
+                  { name: details?.name ?? "Ashram" },
+                ),
+                t("payment.done", "Done"),
+                () => {
+                  onClose();
+                  navigate("/ashrams");
+                },
+              );
             } catch (error) {
               console.error("Payment verification failed:", error);
-              setPaymentModal({
-                open: true,
-                status: "failed",
-                redirectTo: "",
-              });
+              showError(
+                t("payment.failureTitle", "Payment Failed"),
+                t(
+                  "payment.failureDesc",
+                  "Your payment could not be completed. Please try again.",
+                ),
+                t("payment.done", "Done"),
+              );
             }
           },
 
@@ -197,22 +223,28 @@ export default function SubscriptionModal({
 
         razorpay.on("payment.failed", (error: any) => {
           console.error("Payment Failed:", error);
-          setPaymentModal({
-            open: true,
-            status: "failed",
-            redirectTo: "",
-          });
+          showError(
+            t("payment.failureTitle", "Payment Failed"),
+            t(
+              "payment.failureDesc",
+              "Your payment could not be completed. Please try again.",
+            ),
+            t("payment.done", "Done"),
+          );
         });
 
         razorpay.open();
       }
     } catch (error) {
       console.error("Create order failed:", error);
-      setPaymentModal({
-        open: true,
-        status: "failed",
-        redirectTo: "",
-      });
+      showError(
+        t("payment.failureTitle", "Payment Failed"),
+        t(
+          "payment.failureDesc",
+          "Your payment could not be completed. Please try again.",
+        ),
+        t("payment.done", "Done"),
+      );
     }
   };
 
@@ -264,14 +296,14 @@ export default function SubscriptionModal({
             </p>
 
             <div className="mt-6 space-y-4">
-              {features.map((item) => (
-                <div key={item} className="flex items-center gap-3">
+              {featureKeys.map((item) => (
+                <div key={item.key} className="flex items-center gap-3">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-100">
                     <Check size={14} className="text-amber-600" />
                   </div>
 
                   <p className="text-sm font-body-content text-text-secondary">
-                    {item}
+                    {t(item.key, item.fallback)}
                   </p>
                 </div>
               ))}
@@ -284,7 +316,7 @@ export default function SubscriptionModal({
 
               <span className="font-body-content text-text-secondary">
                 {" "}
-                / month
+                {t("ashrams.perMonth", "/ month")}
               </span>
             </div>
 
@@ -314,31 +346,14 @@ export default function SubscriptionModal({
           </div>
         </div>
       </div>
-      {paymentModal.open && (
-        <PaymentStatusModal
-          isOpen={paymentModal.open}
-          status={paymentModal.status}
-          title={
-            paymentModal.status === "success"
-              ? "Payment Successful"
-              : "Payment Failed"
-          }
-          description={
-            paymentModal.status === "success"
-              ? `Your ${details?.name ?? "Ashram"} subscription has been activated successfully.`
-              : "Your payment could not be completed. Please try again."
-          }
-          buttonText="Done"
-          onDone={() => {
-            setPaymentModal((prev) => ({
-              ...prev,
-              open: false,
-            }));
-            onClose();
-            navigate("/ashrams");
-          }}
-        />
-      )}
+      <ToastModal
+        isOpen={toastState.isOpen}
+        status={toastState.status}
+        title={toastState.title}
+        description={toastState.description}
+        buttonText={toastState.buttonText}
+        onDone={hideToast}
+      />
     </div>
   );
 }

@@ -78,7 +78,7 @@ export default function ToastModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="toast-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in duration-200"
+      className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in duration-200"
       onClick={onDone} // Close when clicking backdrop
     >
       <div
