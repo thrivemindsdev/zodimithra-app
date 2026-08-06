@@ -1,6 +1,10 @@
 import BodyLayout from "@/components/layout/BodyLayout";
 import Header from "@/components/layout/Header";
-import { useGetMantrasQuery } from "@/queries/mantraQueries";
+import {
+  useGetMantraCategoryByIdQuery,
+  useGetMantrasCategoriesQuery,
+  useGetMantrasQuery,
+} from "@/queries/mantraQueries";
 import {
   Headphones,
   Loader2,
@@ -9,8 +13,9 @@ import {
   Pause,
   Play,
 } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 
 // --- TypeScript Interfaces matching API Response ---
 interface Pivot {
@@ -21,8 +26,8 @@ interface Pivot {
 interface Category {
   id: number;
   name: string;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
   pivot?: Pivot;
 }
 
@@ -76,11 +81,51 @@ export interface MantraItem {
 // Fixed Storage Base URL
 const STORAGE_BASE_URL = "https://backend.zodimithra.com/storage";
 
+// Helper function to build clean storage URLs for media assets
+const getStorageUrl = (path?: string | null): string | null => {
+  if (!path) return null;
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  const cleanPath = path.replace(/^\/?(storage\/)?/, "");
+  return `${STORAGE_BASE_URL}/${cleanPath}`;
+};
+
 const Mantras: React.FC = () => {
   const { t } = useTranslation();
-  const { data = [], isLoading } = useGetMantrasQuery();
+  const location = useLocation();
+  const initialCategoryId = location.state?.categoryId || "all";
+  const [activeTab, setActiveTab] = useState<string | number>(
+    initialCategoryId,
+  );
+
+  const { data: mantrasCategories = [], isLoading: isCategoriesLoading } =
+    useGetMantrasCategoriesQuery();
+
+  const isAllTab = activeTab === "all";
+  const selectedCategoryId = isAllTab ? 0 : Number(activeTab);
+
+  const { data: allMantras = [], isLoading: isAllLoading } =
+    useGetMantrasQuery();
+
+  const { data: categoryMantras = [], isLoading: isCategoryLoading } =
+    useGetMantraCategoryByIdQuery({
+      id: selectedCategoryId,
+    });
+
+  const mantrasData: MantraItem[] = isAllTab ? allMantras : categoryMantras;
+  const isMantrasLoading = isAllTab ? isAllLoading : isCategoryLoading;
+
   const [playingId, setPlayingId] = useState<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Audio cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   // Dynamic Audio Play / Pause Handler
   const togglePlay = (id: number, audioPath: string) => {
@@ -92,7 +137,9 @@ const Mantras: React.FC = () => {
         audioRef.current.pause();
       }
 
-      const audioUrl = `${STORAGE_BASE_URL}/${audioPath}`;
+      const audioUrl = getStorageUrl(audioPath);
+      if (!audioUrl) return;
+
       const newAudio = new Audio(audioUrl);
       audioRef.current = newAudio;
       newAudio
@@ -101,6 +148,10 @@ const Mantras: React.FC = () => {
       setPlayingId(id);
 
       newAudio.onended = () => {
+        setPlayingId(null);
+      };
+      newAudio.onerror = (err) => {
+        console.error("Audio playback error:", err);
         setPlayingId(null);
       };
     }
@@ -115,6 +166,11 @@ const Mantras: React.FC = () => {
     return count.toString();
   };
 
+  const categoriesList = [
+    { id: "all", name: t("common.all", "All") },
+    ...(mantrasCategories || []),
+  ];
+
   return (
     <>
       <Header
@@ -124,13 +180,36 @@ const Mantras: React.FC = () => {
         redirectPath="/explore"
       />
       <BodyLayout>
-        {isLoading ? (
+        <div className="flex overflow-x-auto hide-scrollbar mb-3 gap-3 bg-white rounded-[14px] py-2">
+          {categoriesList.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`whitespace-nowrap px-6 py-2 border font-body font-bold rounded-4xl text-xs transition-colors cursor-pointer ${
+                String(activeTab) === String(tab.id)
+                  ? "border-primary bg-primary text-white"
+                  : "border-primary text-primary"
+              }`}
+            >
+              {tab.name}
+            </button>
+          ))}
+        </div>
+
+        {isMantrasLoading || isCategoriesLoading ? (
           <div className="flex items-center justify-center min-h-75">
             <Loader2 className="w-8 h-8 text-amber-500 animate-spin" />
           </div>
+        ) : mantrasData.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center text-gray-500">
+            <Music className="w-12 h-12 text-amber-400 mb-2 opacity-60" />
+            <p className="text-sm font-medium">
+              {t("wellbeing.noMantrasFound", "No mantras found")}
+            </p>
+          </div>
         ) : (
           <div className="space-y-4">
-            {data.map((item: MantraItem) => {
+            {mantrasData.map((item: MantraItem) => {
               const isPlaying = playingId === item.id;
 
               const categoryName =
@@ -140,15 +219,10 @@ const Mantras: React.FC = () => {
                 .join(" • ");
 
               // Construct Storage Image URLs
-              const thumbnailUrl = item.thumbnail
-                ? `${STORAGE_BASE_URL}/${item.thumbnail.replace(/^\//, "")}`
-                : null;
-
+              const thumbnailUrl = getStorageUrl(item.thumbnail);
               const rawAstrologerImage =
                 item.astrologer?.image || item.astrologer?.user?.image;
-              const astrologerImageUrl = rawAstrologerImage
-                ? `${STORAGE_BASE_URL}/${rawAstrologerImage.replace(/^\//, "")}`
-                : null;
+              const astrologerImageUrl = getStorageUrl(rawAstrologerImage);
 
               return (
                 <div
@@ -163,7 +237,6 @@ const Mantras: React.FC = () => {
                         alt={item.title}
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          // Hide image and show icon on load error
                           (e.target as HTMLImageElement).style.display = "none";
                         }}
                       />
@@ -214,7 +287,7 @@ const Mantras: React.FC = () => {
                     <div className="flex items-center space-x-1">
                       <button
                         onClick={() => togglePlay(item.id, item.audio_file)}
-                        className="p-2 rounded-full bg-black text-white hover:bg-gray-800 transition-colors focus:outline-none"
+                        className="p-2 rounded-full bg-black text-white hover:bg-gray-800 transition-colors focus:outline-none cursor-pointer"
                         aria-label={isPlaying ? "Pause" : "Play"}
                       >
                         {isPlaying ? (
@@ -225,7 +298,7 @@ const Mantras: React.FC = () => {
                       </button>
 
                       <button
-                        className="p-1 text-gray-400 hover:text-gray-600 rounded-full transition-colors"
+                        className="p-1 text-gray-400 hover:text-gray-600 rounded-full transition-colors cursor-pointer"
                         aria-label="More options"
                       >
                         <MoreVertical className="w-5 h-5" />
