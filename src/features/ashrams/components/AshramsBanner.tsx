@@ -46,6 +46,7 @@ const AshramsBanner = () => {
     <>
       <SessionCarousel
         title={t("ashrams.live", "Live")}
+        type="live"
         sessions={data?.livesessions ?? []}
         loading={isLoading}
         onSessionClick={handleSessionClick}
@@ -53,6 +54,7 @@ const AshramsBanner = () => {
 
       <SessionCarousel
         title={t("ashrams.upcoming", "Upcoming")}
+        type="upcoming"
         sessions={data?.upcomingsessios ?? []}
         loading={isLoading}
         onSessionClick={handleSessionClick}

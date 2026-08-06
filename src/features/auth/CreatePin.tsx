@@ -4,6 +4,7 @@ import ToastModal from "@/components/common/ToastModal";
 import { useToastModal } from "@/hooks/useToastModal";
 import { CreatePinApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
+import { OTPInput, REGEXP_ONLY_DIGITS } from "input-otp";
 import { Check, Eye, EyeOff, X } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
@@ -25,15 +26,6 @@ export default function CreatePin() {
   const isFourDigits = /^\d{4}$/.test(pin);
   const pinsMatch = pin.length === 4 && pin === confirmPin;
   const isFormValid = isFourDigits && pinsMatch;
-
-  // Input Sanitizer: Allows only numeric input up to 4 digits
-  const handlePinChange = (
-    value: string,
-    setter: React.Dispatch<React.SetStateAction<string>>,
-  ) => {
-    const numericValue = value.replace(/\D/g, "").slice(0, 4);
-    setter(numericValue);
-  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -99,69 +91,118 @@ export default function CreatePin() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {/* New PIN Input */}
           <div>
-            <label
-              htmlFor="new-pin"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              {t("auth.enterPin", "Enter 4-Digit PIN")}
-            </label>
-            <div className="relative rounded-lg border border-input-border px-4 py-3 bg-input-bg flex items-center transition-all">
-              <input
-                id="new-pin"
-                type={showPin ? "text" : "password"}
-                inputMode="numeric"
-                maxLength={4}
-                placeholder={t("auth.enterPin", "Enter 4-digit PIN")}
-                value={pin}
-                onChange={(e) => handlePinChange(e.target.value, setPin)}
-                required
-                className="w-full bg-transparent border-0 p-0 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:ring-0 tracking-widest"
-              />
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-medium text-gray-700">
+                {t("auth.enterPin", "Enter 4-Digit PIN")}
+              </label>
               <button
                 type="button"
                 onClick={() => setShowPin(!showPin)}
-                className="ml-2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 focus:outline-none transition-colors"
+                aria-label={showPin ? "Hide PIN" : "Show PIN"}
               >
                 {showPin ? (
-                  <EyeOff className="h-5 w-5" />
+                  <>
+                    <EyeOff className="h-4 w-4" />
+                    <span>{t("common.hide", "Hide")}</span>
+                  </>
                 ) : (
-                  <Eye className="h-5 w-5" />
+                  <>
+                    <Eye className="h-4 w-4" />
+                    <span>{t("common.show", "Show")}</span>
+                  </>
                 )}
               </button>
+            </div>
+            <div className="flex justify-center">
+              <OTPInput
+                maxLength={4}
+                value={pin}
+                onChange={(val) => setPin(val.replace(/\D/g, ""))}
+                pattern={REGEXP_ONLY_DIGITS}
+                containerClassName="group flex items-center gap-3"
+                autoFocus
+                render={({ slots }) => (
+                  <div className="flex gap-3">
+                    {slots.map((slot, index) => (
+                      <div
+                        key={index}
+                        className={`w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center text-xl font-bold border rounded-xl transition-all outline-none ${
+                          slot.isActive
+                            ? "bg-white border-primary ring-2 ring-indigo-100"
+                            : "bg-gray-50 border-gray-300"
+                        }`}
+                      >
+                        {slot.char ? (
+                          showPin ? (
+                            <span className="text-gray-900">{slot.char}</span>
+                          ) : (
+                            <span className="h-3 w-3 rounded-full bg-gray-900" />
+                          )
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              />
             </div>
           </div>
 
           {/* Confirm PIN Input */}
           <div>
-            <label
-              htmlFor="confirm-pin"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
-              {t("auth.confirmPin", "Confirm 4-Digit PIN")}
-            </label>
-            <div className="relative rounded-lg border border-input-border px-4 py-3 bg-input-bg flex items-center transition-all">
-              <input
-                id="confirm-pin"
-                type={showConfirmPin ? "text" : "password"}
-                inputMode="numeric"
-                maxLength={4}
-                placeholder={t("auth.confirmPin", "Confirm 4-digit PIN")}
-                value={confirmPin}
-                onChange={(e) => handlePinChange(e.target.value, setConfirmPin)}
-                required
-                className="w-full bg-transparent border-0 p-0 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:ring-0 tracking-widest"
-              />
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-medium text-gray-700">
+                {t("auth.confirmPin", "Confirm 4-Digit PIN")}
+              </label>
               <button
                 type="button"
                 onClick={() => setShowConfirmPin(!showConfirmPin)}
-                className="ml-2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 focus:outline-none transition-colors"
+                aria-label={showConfirmPin ? "Hide PIN" : "Show PIN"}
               >
                 {showConfirmPin ? (
-                  <EyeOff className="h-5 w-5" />
+                  <>
+                    <EyeOff className="h-4 w-4" />
+                    <span>{t("common.hide", "Hide")}</span>
+                  </>
                 ) : (
-                  <Eye className="h-5 w-5" />
+                  <>
+                    <Eye className="h-4 w-4" />
+                    <span>{t("common.show", "Show")}</span>
+                  </>
                 )}
               </button>
+            </div>
+            <div className="flex justify-center">
+              <OTPInput
+                maxLength={4}
+                value={confirmPin}
+                onChange={(val) => setConfirmPin(val.replace(/\D/g, ""))}
+                pattern={REGEXP_ONLY_DIGITS}
+                containerClassName="group flex items-center gap-3"
+                render={({ slots }) => (
+                  <div className="flex gap-3">
+                    {slots.map((slot, index) => (
+                      <div
+                        key={index}
+                        className={`w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center text-xl font-bold border rounded-xl transition-all outline-none ${
+                          slot.isActive
+                            ? "bg-white border-primary ring-2 ring-indigo-100"
+                            : "bg-gray-50 border-gray-300"
+                        }`}
+                      >
+                        {slot.char ? (
+                          showConfirmPin ? (
+                            <span className="text-gray-900">{slot.char}</span>
+                          ) : (
+                            <span className="h-3 w-3 rounded-full bg-gray-900" />
+                          )
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              />
             </div>
           </div>
 

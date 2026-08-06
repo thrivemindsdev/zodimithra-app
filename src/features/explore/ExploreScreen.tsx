@@ -5,65 +5,43 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import babyImg from "@/assets/explore/baby_names.png";
 // import birthTimeImg from "@/assets/explore/birt_time_new.png";
-import freeKundliImg from "@/assets/explore/free_kundly_new.png";
-import gemstoneImg from "@/assets/explore/gem_stone.png";
-import kundliImg from "@/assets/explore/kundli.png";
+import freeKundliImg from "@/assets/explore/Free_Kundli.png";
+import gemstoneImg from "@/assets/explore/Birthstone_Finder.png";
+import kundliImg from "@/assets/explore/Kundli_Match.png";
 // import loveImg from "@/assets/explore/love_calcu.png";
-import mangalImg from "@/assets/explore/mangal_dosh.png";
+import mangalImg from "@/assets/explore/Mangal-Dosh.png";
 // import numerologyImg from "@/assets/explore/numerology_new.png";
-import panchangImg from "@/assets/explore/panchang_copy.png";
-import vastuImg from "@/assets/explore/vastu.png";
+import panchangImg from "@/assets/explore/Panchang.png";
+import vastuImg from "@/assets/explore/Vastu_Compass.png";
 // import vivahImg from "@/assets/explore/vivah_muhurt_new.png";
 import startImg from "@/assets/explore/staricon.png";
-import healingImg from "@/assets/well-being/healing.jpg";
-import mantrasImg from "@/assets/well-being/mantra.png";
-import poojaBookingImg from "@/assets/well-being/pooja.jpg";
-import vastuSastraImg from "@/assets/well-being/vastusastra.jpg";
+import healingImg from "@/assets/explore/healing.png";
+import mantrasImg from "@/assets/explore/mantras.png";
+import poojaBookingImg from "@/assets/explore/epooja.png";
+import vastuSastraImg from "@/assets/explore/vastu_shastra.png";
 import GlobalLoader from "@/components/common/GlobalLoader";
 import { useTranslation } from "react-i18next";
 
 interface CardData {
   id: string;
-  category: string;
-  title: string;
-  description: string;
   imageUrl: string;
 }
 
 const cardsData: CardData[] = [
   {
     id: "1",
-    category: "MINDFUL JOURNEYS",
-    title: "Mantras",
-    description: "Guided sessions for inner peace",
     imageUrl: mantrasImg,
   },
   {
     id: "2",
-    category: "SACRED WELLNESS",
-    title: "Healing",
-    description: "Theta, Reiki, Pranic & more",
     imageUrl: healingImg,
   },
   {
     id: "3",
-    category: "SACRED RITUALS",
-    title: "E-Pooja",
-    description: "Vedic rituals at sacred temples",
     imageUrl: poojaBookingImg,
   },
   {
     id: "4",
-    category: "ANCIENT SCIENCE",
-    title: "Vastu Shastra",
-    description: "Transform your space & future",
-    imageUrl: vastuSastraImg,
-  },
-  {
-    id: "5",
-    category: "COSMIC ALIGNMENTS",
-    title: "Dyaan",
-    description: "Personalized dyaans for you",
     imageUrl: vastuSastraImg,
   },
 ];
@@ -100,8 +78,6 @@ const ExploreScreen = () => {
       category: "tools",
       icon: gemstoneImg,
       path: "/gemstone",
-      bgColor: "bg-[#E6F5EC]",
-      borderColor: "border-[#17827D]",
       premium: false,
     },
     {
@@ -110,8 +86,6 @@ const ExploreScreen = () => {
       category: "readings",
       icon: panchangImg,
       path: "/panchang",
-      bgColor: "bg-[#FCECFF]",
-      borderColor: "border-[#AD82AC]",
       premium: false,
     },
     // {
@@ -130,8 +104,6 @@ const ExploreScreen = () => {
       category: "tools",
       icon: vastuImg,
       path: "/vastu-compass",
-      bgColor: "bg-[#F6EFE0]",
-      borderColor: "border-[#A75212]",
       premium: false,
     },
     {
@@ -140,8 +112,6 @@ const ExploreScreen = () => {
       category: "calculators",
       icon: kundliImg,
       path: "/kundli-match",
-      bgColor: "bg-[#F6EFE0]",
-      borderColor: "border-[#A75212]",
       premium: false,
     },
     // {
@@ -170,8 +140,6 @@ const ExploreScreen = () => {
       category: "readings",
       icon: freeKundliImg,
       path: "/free-kundli",
-      bgColor: "bg-[#EBF0FE]",
-      borderColor: "border-[#6488E4]",
       premium: false,
     },
     // {
@@ -190,8 +158,6 @@ const ExploreScreen = () => {
       category: "calculators",
       icon: mangalImg,
       path: "/mangal-dosh",
-      bgColor: "bg-[#FEEFE3]",
-      borderColor: "border-[#CD2A12]",
       premium: false,
     },
   ] as const;
@@ -233,7 +199,7 @@ const ExploreScreen = () => {
             return (
               <div
                 key={tool.id}
-                className={`${tool.bgColor} ${tool.borderColor} mt-12 border rounded-2xl p-3 flex flex-col justify-between h-22 relative`}
+                className="mt-12 bg-linear-to-b from-[#533372] to-[#0D0A34] rounded-2xl p-3 flex flex-col justify-between h-22 relative"
                 onClick={() => {
                   if (isLocked) {
                     navigate("/premium");
@@ -250,7 +216,7 @@ const ExploreScreen = () => {
                     <img src={startImg} alt={tool.label} className="w-3 h-3" />
                   </div>
                 )}
-                <p className="text-xs text-text-primary font-body text-center pt-6">
+                <p className="text-xs text-white font-body text-center pt-6">
                   {tool.label}
                 </p>
               </div>
@@ -259,76 +225,23 @@ const ExploreScreen = () => {
         </div>
 
         <div className="space-y-4 font-body pt-8">
-          {cardsData.map((card) => {
-            const categoryKey = `wellbeing.${
-              card.id === "1"
-                ? "mindfulJourneys"
-                : card.id === "2"
-                  ? "sacredWellness"
-                  : card.id === "3"
-                    ? "sacredRituals"
-                    : card.id === "4"
-                      ? "ancientScience"
-                      : "cosmicAlignments"
-            }`;
-            const titleKey = `wellbeing.${
-              card.id === "1"
-                ? "mantras"
-                : card.id === "2"
-                  ? "healing"
-                  : card.id === "3"
-                    ? "ePooja"
-                    : card.id === "4"
-                      ? "vastuShastra"
-                      : "dyaan"
-            }`;
-            const descKey = `wellbeing.${
-              card.id === "1"
-                ? "mantrasDesc"
-                : card.id === "2"
-                  ? "healingDesc"
-                  : card.id === "3"
-                    ? "poojaDesc"
-                    : card.id === "4"
-                      ? "vastuDesc"
-                      : "dyaanDesc"
-            }`;
-
-            return (
-              <div
-                key={card.id}
-                className="relative group h-44 rounded-2xl overflow-hidden shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-[1.01]"
-                onClick={() =>
-                  card.id === "1"
-                    ? navigate("/mantras")
-                    : navigate("/coming-soon")
-                }
-              >
-                {/* Background Image */}
-                <img
-                  src={card.imageUrl}
-                  alt={t(titleKey, card.title)}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-
-                {/* Dark Overlay Gradient */}
-                <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
-
-                {/* Text Content */}
-                <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">
-                  <span className="text-xs uppercase tracking-widest text-gray-200/90 font-medium mb-1">
-                    {t(categoryKey, card.category)}
-                  </span>
-                  <h3 className="text-xl font-bold mb-1 tracking-wide">
-                    {t(titleKey, card.title)}
-                  </h3>
-                  <p className="text-sm text-gray-200/90 font-light">
-                    {t(descKey, card.description)}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+          {cardsData.map((card) => (
+            <div
+              key={card.id}
+              onClick={() =>
+                card.id === "1"
+                  ? navigate("/mantras")
+                  : navigate("/coming-soon")
+              }
+              className="rounded-2xl overflow-hidden"
+            >
+              <img
+                src={card.imageUrl}
+                alt={`Card ${card.id}`}
+                className="w-full h-auto"
+              />
+            </div>
+          ))}
         </div>
       </BodyLayout>
     </>
