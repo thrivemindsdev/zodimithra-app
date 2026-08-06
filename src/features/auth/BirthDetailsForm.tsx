@@ -6,7 +6,10 @@ import RadioGroup from "@/components/common/RadioGroup";
 import TimeInput from "@/components/common/TimeInput";
 import ToastModal from "@/components/common/ToastModal";
 import { useToastModal } from "@/hooks/useToastModal";
-import { useGetCurrentLocationQuery } from "@/queries/locationQueries";
+import {
+  useGetCityNameQuery,
+  useGetCurrentLocationQuery,
+} from "@/queries/locationQueries";
 import { RegistrationApi } from "@/services/auth.api";
 import { useAuthStore } from "@/store/authStore";
 import { Mars, User, Venus, VenusAndMars } from "lucide-react";
@@ -43,6 +46,10 @@ export default function BirthDetailsForm() {
   const { t } = useTranslation();
   const { phoneNumber, setToken, setIsLoggedIn } = useAuthStore();
   const { data: currentLocation } = useGetCurrentLocationQuery();
+  const { data: cityDetails } = useGetCityNameQuery(
+    currentLocation?.latitude,
+    currentLocation?.longitude,
+  );
   const { toastState, showSuccess, showError, hideToast } = useToastModal();
 
   const [formData, setFormData] = useState<FormState>(initialFormState);
@@ -110,7 +117,7 @@ export default function BirthDetailsForm() {
       formDetails.append("role", "customer");
       formDetails.append("phone", phoneNumber ?? "");
       formDetails.append("onboarding_completed", "1");
-      formDetails.append("current_location", currentLocation?.city ?? "");
+      formDetails.append("current_location", cityDetails?.city ?? "");
       formDetails.append("profile_image", "");
 
       const response = await RegistrationApi(formDetails);

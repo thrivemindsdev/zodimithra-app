@@ -1,16 +1,21 @@
 import { Capacitor } from "@capacitor/core";
 import { Geolocation } from "@capacitor/geolocation";
 
-export interface LocationDetails {
-  city: string;
-  state: string;
-  country: string;
-  formatted: string;
+export interface Coordinates {
   latitude: number;
   longitude: number;
 }
 
-export const getCurrentLocation = async (): Promise<LocationDetails | null> => {
+export interface CityDetails {
+  city: string;
+  state: string;
+  country: string;
+  formatted: string;
+}
+
+export interface LocationDetails extends Coordinates, CityDetails {}
+
+export const getCurrentCoordinates = async (): Promise<Coordinates | null> => {
   try {
     // Permission checks are native-only; skip them when running on Web
     if (Capacitor.isNativePlatform()) {
@@ -33,9 +38,21 @@ export const getCurrentLocation = async (): Promise<LocationDetails | null> => {
       maximumAge: 3600000,
     });
 
-    const { latitude, longitude } = coords;
+    return {
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+    };
+  } catch (error) {
+    console.error("Error fetching coordinates:", error);
+    return null;
+  }
+};
 
-    // Reverse geocode
+export const getCityName = async (
+  latitude: number,
+  longitude: number,
+): Promise<CityDetails | null> => {
+  try {
     const response = await fetch(
       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
     );
@@ -57,11 +74,26 @@ export const getCurrentLocation = async (): Promise<LocationDetails | null> => {
       state,
       country,
       formatted: `${placeName}${country ? `, ${country}` : ""}`,
-      latitude,
-      longitude,
     };
   } catch (error) {
-    console.error("Error fetching location:", error);
+    console.error("Error fetching city name:", error);
     return null;
   }
 };
+
+export const getCurrentLocation = async (): Promise<LocationDetails | null> => {
+  const coords = await getCurrentCoordinates();
+  if (!coords) return null;
+
+  const cityDetails = await getCityName(coords.latitude, coords.longitude);
+
+  return {
+    latitude: coords.latitude,
+    longitude: coords.longitude,
+    city: cityDetails?.city || "",
+    state: cityDetails?.state || "",
+    country: cityDetails?.country || "",
+    formatted: cityDetails?.formatted || "",
+  };
+};
+

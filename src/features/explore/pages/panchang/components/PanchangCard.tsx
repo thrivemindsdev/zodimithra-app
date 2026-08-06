@@ -1,4 +1,7 @@
-import { useGetCurrentLocationQuery } from "@/queries/locationQueries";
+import {
+  useGetCityNameQuery,
+  useGetCurrentLocationQuery,
+} from "@/queries/locationQueries";
 import {
   getPanchangam,
   nakshatraNames,
@@ -61,6 +64,11 @@ export const PanchangCard: React.FC = () => {
     isLoading: isLocationLoading,
     error: locationError,
   } = useGetCurrentLocationQuery();
+
+  const { data: cityDetails } = useGetCityNameQuery(
+    location?.latitude,
+    location?.longitude,
+  );
 
   const formattedDate = new Date()
     .toLocaleDateString("en-US", {
@@ -293,7 +301,7 @@ export const PanchangCard: React.FC = () => {
         <div className="flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-white">
           <MapPin className="h-4 w-4 stroke-[2.5] text-white/90" />
           <span className="font-body font-medium tracking-wide text-sm">
-            {location?.city}
+            {cityDetails?.city || "..."}
           </span>
         </div>
       </div>
