@@ -31,9 +31,11 @@ export const getAshramams = async () => {
   }
 };
 
-export const getAshramamById = async ({ id }: { id: number }) => {
+export const getAshramamById = async ({ id, lang }: { id: number; lang: string }) => {
   try {
-    const response = await axiosInstance(`/asramams/${id}`);
+    const response = await axiosInstance(`/asramams/${id}`, {
+      params: { lang },
+    });
 
     return response.data?.data;
   } catch (error) {
@@ -41,9 +43,11 @@ export const getAshramamById = async ({ id }: { id: number }) => {
   }
 };
 
-export const getAshramamLiveSessionByID = async ({ id }: { id: number }) => {
+export const getAshramamLiveSessionByID = async ({ id, lang }: { id: number; lang: string }) => {
   try {
-    const response = await axiosInstance(`/asramams/live-sessions/${id}`);
+    const response = await axiosInstance(`/asramams/live-sessions/${id}`, {
+      params: { lang },
+    });
     return response.data?.data;
   } catch (error) {
     throw error;

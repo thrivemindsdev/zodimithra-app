@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
 const AshramaLive = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const ashramamId = Number(id);
   const location = useLocation();
@@ -21,6 +21,7 @@ const AshramaLive = () => {
 
   const { data, isLoading } = useGetAshramamLiveSessionByIDQuery({
     id: ashramamId,
+    lang: i18n.language ?? "en",
   });
 
   const isLive = data?.start_time && new Date() >= new Date(data.start_time);

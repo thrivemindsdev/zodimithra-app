@@ -82,10 +82,11 @@ export const useGetGemStoneFinderQuery = ({
   lat,
   lon,
   tz,
+  lang,
 }: BirthDetailsParams) => {
   return useQuery({
-    queryKey: [HOME_QUERY_KEYS.planetaryDetails, dob, lat, lon, tz],
-    queryFn: () => GetGemStoneFinderApi({ dob, lat, lon, tz }),
+    queryKey: [HOME_QUERY_KEYS.planetaryDetails, dob, lat, lon, tz, lang],
+    queryFn: () => GetGemStoneFinderApi({ dob, lat, lon, tz, lang }),
     enabled: Boolean(dob && lat && lon && tz),
   });
 };

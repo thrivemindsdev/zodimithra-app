@@ -83,10 +83,11 @@ export const GetGemStoneFinderApi = async ({
   lat,
   lon,
   tz,
+  lang,
 }: BirthDetailsParams) => {
   try {
     const response = await axiosSubInstance.get("/gemstone-finder", {
-      params: { dob, lat, lon, tz },
+      params: { dob, lat, lon, tz, lang },
     });
 
     return response?.data?.data;

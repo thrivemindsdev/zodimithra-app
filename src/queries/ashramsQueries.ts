@@ -30,16 +30,16 @@ export const useGetAshramamsQuery = () => {
   });
 };
 
-export const useGetAshramamByIdQuery = ({ id }: { id: number }) => {
+export const useGetAshramamByIdQuery = ({ id, lang }: { id: number; lang: string }) => {
   return useQuery({
-    queryKey: [ASHRAMS_QUERY_KEYS.ashramById, id],
-    queryFn: () => getAshramamById({ id }),
+    queryKey: [ASHRAMS_QUERY_KEYS.ashramById, id, lang],
+    queryFn: () => getAshramamById({ id, lang }),
   });
 };
 
-export const useGetAshramamLiveSessionByIDQuery = ({ id }: { id: number }) => {
+export const useGetAshramamLiveSessionByIDQuery = ({ id, lang }: { id: number; lang: string }) => {
   return useQuery({
-    queryKey: [ASHRAMS_QUERY_KEYS.liveSessionId, id],
-    queryFn: () => getAshramamLiveSessionByID({ id }),
+    queryKey: [ASHRAMS_QUERY_KEYS.liveSessionId, id, lang],
+    queryFn: () => getAshramamLiveSessionByID({ id, lang }),
   });
 };

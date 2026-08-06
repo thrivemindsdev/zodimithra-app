@@ -33,10 +33,11 @@ export const LuckyDetailsApi = async ({
   lat,
   lon,
   tz,
+  lang
 }: BirthDetailsParams) => {
   try {
     const response = await axiosSubInstance.get("/lucky-details", {
-      params: { dob, lat, lon, tz },
+      params: { dob, lat, lon, tz, lang },
     });
 
     return response?.data?.data;
@@ -66,9 +67,11 @@ export const GetDailyMantraApi = async () => {
   }
 };
 
-export const GetAffirmationApi = async () => {
+export const GetAffirmationApi = async ({ lang }: { lang: string }) => {
   try {
-    const response = await axiosInstance.get("/affirmation/daily");
+    const response = await axiosInstance.get("/affirmation/daily", {
+      params: { lang },
+    });
     return response?.data?.data;
   } catch (error) {
     console.error("Error fetching affirmation daily :", error);

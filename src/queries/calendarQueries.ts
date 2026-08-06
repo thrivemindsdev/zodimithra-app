@@ -42,9 +42,9 @@ export const useGetDayDetailsQuery = ({
   });
 };
 
-export const useGetEventsQuery = () => {
+export const useGetEventsQuery = ({ lang }: { lang: string }) => {
   return useQuery({
-    queryKey: [CALENDAR_QUERY_KEYS.events],
-    queryFn: GetEventsApi,
+    queryKey: [CALENDAR_QUERY_KEYS.events, lang],
+    queryFn: () => GetEventsApi({ lang }),
   });
 };

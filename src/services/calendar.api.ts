@@ -49,9 +49,11 @@ export const CreateEventApi = async (data: any) => {
   }
 };
 
-export const GetEventsApi = async () => {
+export const GetEventsApi = async ({ lang }: { lang: string }) => {
   try {
-    const response = await axiosInstance.get("/events");
+    const response = await axiosInstance.get("/events", {
+      params: { lang },
+    });
 
     return response?.data?.data;
   } catch (error) {

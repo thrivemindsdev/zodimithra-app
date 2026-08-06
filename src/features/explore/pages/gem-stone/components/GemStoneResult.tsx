@@ -68,7 +68,7 @@ const GemStoneResult = () => {
             {/* Gemstone Image */}
             <img
               src={GemstoneImage}
-              alt={result.gemstone}
+              alt={result?.gemstone}
               className="w-44 h-44 object-contain drop-shadow-md"
             />
           </div>
@@ -83,7 +83,7 @@ const GemStoneResult = () => {
 
           {/* Title */}
           <h2 className="text-2xl font-body font-bold text-primary mb-3">
-            {result.gemstone}
+            {result?.gemstone}
           </h2>
 
           {/* Subheading Badge */}
@@ -94,7 +94,7 @@ const GemStoneResult = () => {
 
           {/* About Description */}
           <p className="text-xs text-text-secondary leading-relaxed mb-6 max-w-xs">
-            {result.description.about}
+            {result?.description?.about}
           </p>
 
           {/* Benefits Section Label */}
@@ -104,7 +104,7 @@ const GemStoneResult = () => {
 
           {/* Dynamic Benefits List */}
           <div className="w-full space-y-3 text-left">
-            {result.description.benefits.map((benefit, index) => {
+            {result?.description?.benefits?.map((benefit, index) => {
               const IconComponent = DEFAULT_ICONS[index % DEFAULT_ICONS.length];
 
               return (

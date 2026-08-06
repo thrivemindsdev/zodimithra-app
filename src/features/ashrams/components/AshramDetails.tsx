@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import SubscriptionModal from "./SubscriptionModal";
 
 export default function AshramaDetails() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
 
@@ -16,17 +16,14 @@ export default function AshramaDetails() {
 
   const { data: ashramaDetails, isLoading } = useGetAshramamByIdQuery({
     id: ashramamId,
+    lang: i18n.language ?? "en",
   });
 
   if (isLoading) {
     return (
       <>
         {/* Header Skeleton */}
-        <Header
-          title=""
-          showBackButton
-          redirectPath="/ashrams"
-        />
+        <Header title="" showBackButton redirectPath="/ashrams" />
 
         <BodyLayout>
           {/* Hero Image Skeleton */}
@@ -94,7 +91,10 @@ export default function AshramaDetails() {
 
               <div className="flex items-center pt-1">
                 <p className="flex items-center gap-1 font-body text-sm text-text-secondary pr-2">
-                  <Star size={16} className="shrink-0 fill-primary text-primary" />
+                  <Star
+                    size={16}
+                    className="shrink-0 fill-primary text-primary"
+                  />
                   {ashramaDetails?.rating?.split(".")[0]}
                 </p>
               </div>
@@ -121,7 +121,9 @@ export default function AshramaDetails() {
 
         {ashramaDetails?.about && (
           <>
-            <h2 className="mb-2 font-light text-lg text-primary">{t("ashrams.about", "About")}</h2>
+            <h2 className="mb-2 font-light text-lg text-primary">
+              {t("ashrams.about", "About")}
+            </h2>
 
             <p className="font-body text-sm leading-6 text-text-secondary">
               {ashramaDetails?.about}

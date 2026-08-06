@@ -3,6 +3,7 @@ export interface BirthDetailsParams {
   lat: number;
   lon: number;
   tz: string;
+  lang?: string;
   isUserLoading?: boolean;
 }
 

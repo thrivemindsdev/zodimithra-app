@@ -28,7 +28,7 @@ const initialFormState: FormState = {
 };
 
 const GemStoneForm = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormState>(initialFormState);
 
@@ -40,6 +40,7 @@ const GemStoneForm = () => {
     lat: Number(formData?.lat) ?? 0,
     lon: Number(formData?.lon) ?? 0,
     tz: timeZone,
+    lang: i18n.language ?? "en",
   });
 
   const handlePlaceChange = (

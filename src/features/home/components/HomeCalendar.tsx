@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const { data: location, isLoading: isLocationLoading } =
     useGetCurrentLocationQuery();
@@ -58,7 +58,9 @@ const HomeCalendar = ({ isPremium }: { isPremium: boolean }) => {
     setWeekOffset((prev) => prev - 1);
   };
 
-  const { data, isLoading } = useGetAffirmationQuery();
+  const { data, isLoading } = useGetAffirmationQuery({
+    lang: i18n.language ?? "en",
+  });
 
   const affirmation = data?.description;
 

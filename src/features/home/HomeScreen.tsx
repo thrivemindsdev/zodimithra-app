@@ -16,9 +16,12 @@ import HomeTools from "./components/HomeTools";
 import HoroScope from "./components/HoroScope";
 import LuckyInfo from "./components/LuckyInfo";
 import { Capacitor } from "@capacitor/core";
+import { useTranslation } from "react-i18next";
 
 const HomeScreen = () => {
   useHardwareBack({ route: "/home" });
+
+  const { i18n } = useTranslation();
 
   const [activeTab, setActiveTab] = useState<TabId>("daily");
 
@@ -38,7 +41,7 @@ const HomeScreen = () => {
     useHoroscopeQuery({
       sign: zodiacSign,
       period: activeTab,
-      lang: "en",
+      lang: i18n.language ?? "en",
     });
 
   const dob = currentUser?.date_of_birth
@@ -50,6 +53,7 @@ const HomeScreen = () => {
     lat: currentUser?.latitude ?? 0,
     lon: currentUser?.longitude ?? 0,
     tz: timeZone,
+    lang: i18n.language ?? "en",
     isUserLoading,
   });
 
@@ -70,13 +74,11 @@ const HomeScreen = () => {
         <HomeCalendar isPremium={isPremium} />
         <div className="px-4">
           <DailyMantras />
-          {Capacitor.getPlatform() !== "ios" &&
-            <HomeTools />
-          }
+          {Capacitor.getPlatform() !== "ios" && <HomeTools />}
           <LuckyInfo loading={isLuckyLoading} data={luckyData} />
-          {Capacitor.getPlatform() !== "ios" &&
+          {Capacitor.getPlatform() !== "ios" && (
             <HomeServices isPremium={isPremium} />
-          }
+          )}
         </div>
       </BodyLayout>
     </>

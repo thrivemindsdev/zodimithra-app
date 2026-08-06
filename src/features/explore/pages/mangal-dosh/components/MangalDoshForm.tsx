@@ -26,7 +26,7 @@ const initialFormState: FormState = {
 };
 
 const MangalDoshForm = () => {
-  const {t} = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormState>(initialFormState);
 
@@ -58,6 +58,7 @@ const MangalDoshForm = () => {
         latitude: Number(formData.latitude),
         longitude: Number(formData.longitude),
         timezone: "+05:30",
+        lang: i18n.language ?? "en",
       };
 
       const response = await MangalDoshApi(payload);

@@ -54,7 +54,8 @@ const PlanetCard = ({ loading, planetData }: PlanetCardProps) => {
             {t("calendar.sun")}
           </p>
           <p className="font-serif text-sm font-bold text-text-primary">
-            {sunSign ? t(`freeKundli.${sunSign}`) : "-"}
+            {/* {sunSign ? t(`freeKundli.${sunSign}`) : "-"} */}
+            {sunSign ? sunSign : "-"}
           </p>
         </div>
       </div>
@@ -72,7 +73,8 @@ const PlanetCard = ({ loading, planetData }: PlanetCardProps) => {
             {t("calendar.moon")}
           </p>
           <p className="font-serif text-sm font-bold text-text-primary">
-            {moonSign ? t(`freeKundli.${moonSign}`) : "-"}
+            {/* {moonSign ? t(`freeKundli.${moonSign}`) : "-"} */}
+            {moonSign ? moonSign : "-"}
           </p>
         </div>
       </div>

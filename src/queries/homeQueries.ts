@@ -20,11 +20,7 @@ export const HOME_QUERY_KEYS = {
   affirmation: "affirmation",
 };
 
-export const useHoroscopeQuery = ({
-  sign,
-  period,
-  lang,
-}: HoroscopeParams) => {
+export const useHoroscopeQuery = ({ sign, period, lang }: HoroscopeParams) => {
   return useQuery({
     queryKey: [HOME_QUERY_KEYS.horoscope, sign, period, lang],
     queryFn: () => HoroscopeApi({ sign, period, lang }),
@@ -49,11 +45,12 @@ export const useLuckyDetailsQuery = ({
   lat,
   lon,
   tz,
+  lang,
   isUserLoading,
 }: BirthDetailsParams) => {
   return useQuery({
-    queryKey: [HOME_QUERY_KEYS.luckyDetails, dob, tz],
-    queryFn: () => LuckyDetailsApi({ dob, lat, lon, tz }),
+    queryKey: [HOME_QUERY_KEYS.luckyDetails, dob, tz, lang],
+    queryFn: () => LuckyDetailsApi({ dob, lat, lon, tz, lang }),
     enabled: Boolean(dob && lat && lon && tz && !isUserLoading),
     staleTime: getMillisecondsUntilTomorrow(),
     gcTime: 24 * 60 * 60 * 1000, // Keep cache for 1 day
@@ -78,10 +75,10 @@ export const useGetDailyMantraQuery = () => {
   });
 };
 
-export const useGetAffirmationQuery = () => {
+export const useGetAffirmationQuery = ({ lang }: { lang: string }) => {
   return useQuery({
-    queryKey: [HOME_QUERY_KEYS.affirmation],
-    queryFn: GetAffirmationApi,
+    queryKey: [HOME_QUERY_KEYS.affirmation, lang],
+    queryFn: () => GetAffirmationApi({ lang }),
     staleTime: getMillisecondsUntilTomorrow(),
     gcTime: 24 * 60 * 60 * 1000, // Keep cache for 1 day
   });

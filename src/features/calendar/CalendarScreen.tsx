@@ -19,11 +19,11 @@ import PlanetCard from "./components/PlanetCard";
 
 const CalendarScreen = () => {
   // const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const date = format(selectedDate, "yyyy-MM-dd");
   const { data: planetData, isLoading: isPlanetLoading } = useCosmicEnergyQuery(
-    { lang: "en" },
+    { lang: i18n.language ?? "en" },
   );
   const { data: festivalData, isLoading: isFestivalLoading } =
     useGetFestivalsQuery({
@@ -36,7 +36,9 @@ const CalendarScreen = () => {
   const { data: location, isLoading: isLocationLoading } =
     useGetCurrentLocationQuery();
 
-  const { data: eventsData, isLoading: isEventsLoading } = useGetEventsQuery();
+  const { data: eventsData, isLoading: isEventsLoading } = useGetEventsQuery({
+    lang: i18n.language ?? "en",
+  });
 
   const { data: dayDetails, isLoading: isDayDetailsLoading } =
     useGetDayDetailsQuery({
