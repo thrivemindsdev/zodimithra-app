@@ -104,7 +104,7 @@ class PushNotificationService {
           description: "General app notifications and alerts",
           importance: 5, // High importance (shows heads-up notification and plays sound)
           visibility: 1, // Public visibility
-          sound: "default",
+          sound: "droplets",
           vibration: true,
           lights: true,
           lightColor: "#FF6B00",
@@ -223,6 +223,14 @@ class PushNotificationService {
           image: payload.notification?.image || payload.data?.image,
           data: payload.data,
         };
+
+        // Play custom notification sound on foreground web push
+        try {
+          const audio = new Audio("/droplets.wav");
+          audio.play().catch((e) => console.warn("[PushService] Could not play notification audio:", e));
+        } catch (err) {
+          console.warn("[PushService] Audio playback error:", err);
+        }
 
         this.onNotificationReceivedCallbacks.forEach((cb) => cb(notif));
       });

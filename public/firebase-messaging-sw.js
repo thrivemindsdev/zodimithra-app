@@ -29,6 +29,7 @@ if (firebaseConfig.projectId) {
       icon: payload.notification?.icon || payload.data?.icon || "/ic_launcher_foreground.png",
       image: payload.notification?.image || payload.data?.image || undefined,
       badge: "/ic_launcher_foreground.png",
+      sound: "/droplets.wav",
       data: payload.data || {},
     };
 
