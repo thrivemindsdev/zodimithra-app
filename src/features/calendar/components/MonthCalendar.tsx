@@ -1,5 +1,5 @@
 import { type ActivePhase, getPhaseForDateSync } from "@/utils/getMoonPhase";
-import { type LocationDetails } from "@/utils/location-utils";
+import { type Coordinates } from "@/utils/location-utils";
 import {
   addDays,
   addMonths,
@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 interface MonthCalendarProps {
   selectedDate: Date;
   onSelectDate: (date: Date) => void;
-  location: LocationDetails | null | undefined;
+  location: Coordinates | null | undefined;
 }
 
 interface CalendarDay {

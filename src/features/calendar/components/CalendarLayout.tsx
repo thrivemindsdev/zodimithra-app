@@ -5,13 +5,13 @@ import MonthCalendar from "./MonthCalendar";
 import WeekCalendar from "./WeekCalendar";
 
 import { type ActivePhase, getPhaseForDateSync } from "@/utils/getMoonPhase";
-import { type LocationDetails } from "@/utils/location-utils";
+import { type Coordinates } from "@/utils/location-utils";
 import { Moon } from "lunarphase-js";
 
 interface CalendarLayoutProps {
   selectedDate: Date;
   setSelectedDate: (date: Date) => void;
-  location: LocationDetails | null | undefined;
+  location: Coordinates | null | undefined;
   loading: boolean;
 }
 

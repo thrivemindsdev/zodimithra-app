@@ -39,8 +39,8 @@ const PlanetCard = ({ loading, planetData }: PlanetCardProps) => {
     );
   }
 
-  const sunSign = planetData?.sun?.toLowerCase();
-  const moonSign = planetData?.moon?.toLowerCase();
+  const sunSign = planetData?.sun;
+  const moonSign = planetData?.moon;
 
   return (
     <div className="my-6 flex items-center justify-between rounded-2xl p-4 card-shadow">

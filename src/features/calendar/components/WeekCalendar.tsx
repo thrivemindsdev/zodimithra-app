@@ -1,5 +1,5 @@
 import { type ActivePhase, getPhaseForDateSync } from "@/utils/getMoonPhase";
-import { type LocationDetails } from "@/utils/location-utils";
+import { type Coordinates } from "@/utils/location-utils";
 import { addDays, addWeeks, format, isSameDay, startOfWeek } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 interface WeekCalendarProps {
   selectedDate: Date;
   setSelectedDate: (date: Date) => void;
-  location: LocationDetails | null | undefined;
+  location: Coordinates | null | undefined;
 }
 
 interface WeekDayItem {
